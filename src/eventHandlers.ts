@@ -1,60 +1,71 @@
 import {produce} from 'immer';
 
-import {EntityTypes, GameState, CardDataModel} from '../../common/dataModelDefinitions'
-import {MouseInput, MouseInputTypes} from '../../common/mouseEventTypes';
+import {GameState} from '../../common/dataModelDefinitions'
+import {SharedVerbTypes, VerbTypes, Verb, VerbClasses, CardVerbTypes} from "../../common/verbTypes";
 import {extractGrabbedEntityOfClientById, extractClientById} from './extractors';
 
-export function handleMouseInput(state: GameState, input: MouseInput){
-    switch(input.type){
-        case MouseInputTypes.LEFT_BUTTON_DOWN:
-            return handleLeftMouseDown(state, input);
-        case MouseInputTypes.LEFT_BUTTON_UP:
-            return handleLeftMouseUp(state, input);
-        case MouseInputTypes.MOUSE_MOVE:
-            return handleMouseMove(state, input);
-        default:
-            return state;
-    }
+export function handleVerbs(state: GameState, verb: Verb){
+    switch(verb.class) {
+        case VerbClasses.SHARED:
+            return handleSharedVerbs(state, verb);
+        case VerbClasses.CARD:
+            return handleCardVerbs(state, verb);
+        case VerbClasses.DECK:
+            return handleDeckVerbs(state, verb);
+        }
 }
 
-export function handleLeftMouseDown(state: GameState , input: MouseInput){
-    switch(input.entityType){
-        case EntityTypes.CARD:
-            const {cursorX, cursorY, entityId, entityType} = input;
+export function handleSharedVerbs (state: GameState , verb: Verb){
+    switch(verb.type){
+        case SharedVerbTypes.GRAB:
+            const {cursorX, cursorY, entityId, entityType} = verb;
             return produce(state, draft => {
-                extractClientById(draft, input.clientId).grabbedEntitiy = {
+                extractClientById(draft, verb.clientId).grabbedEntitiy = {
                     entityId,
                     entityType,
                     grabbedAtX: cursorX,
                     grabbedAtY: cursorY
                 }
             })
+        
+        case SharedVerbTypes.MOVE:
+            return produce(state, draft => {
+                const grabbedEntity = extractGrabbedEntityOfClientById(draft, verb.clientId);
+                if(grabbedEntity){
+                    const {cursorX, cursorY} = verb;
+                    let movedCard = draft.cards.find(card => card.entityId === grabbedEntity.entityId);
+                    if(movedCard){
+                        const offsetX = cursorX - grabbedEntity.grabbedAtX;
+                        const offsetY = cursorY - grabbedEntity.grabbedAtY;
+                        
+                        movedCard.positionX = movedCard.positionX + offsetX;
+                        movedCard.positionY = movedCard.positionY + offsetY;
+                        grabbedEntity.grabbedAtX = cursorX;
+                        grabbedEntity.grabbedAtY = cursorY;
+                    }
+                }
+            })
+
+        case SharedVerbTypes.RELEASE:
+            return produce(state, draft => {
+                extractClientById(draft, verb.clientId).grabbedEntitiy = null
+            })
+
         default:
             return state;
     }
 }
 
-export function handleLeftMouseUp(state: GameState, input: MouseInput) {
-    return produce(state, draft => {
-        extractClientById(draft, input.clientId).grabbedEntitiy = null
-    })
+export function handleCardVerbs(state: GameState , verb: Verb){
+    switch(verb.type){
+        default:
+            return state;
+    }
 }
 
-export function handleMouseMove(state: GameState, input: MouseInput){
-    return produce(state, draft => {
-        const grabbedEntity = extractGrabbedEntityOfClientById(draft, input.clientId);
-        if(grabbedEntity){
-            const {cursorX, cursorY} = input;
-            let movedCard = draft.cards.find(card => card.entityId === grabbedEntity.entityId);
-            if(movedCard){
-                const offsetX = cursorX - grabbedEntity.grabbedAtX;
-                const offsetY = cursorY - grabbedEntity.grabbedAtY;
-                
-                movedCard.positionX = movedCard.positionX + offsetX;
-                movedCard.positionY = movedCard.positionY + offsetY;
-                grabbedEntity.grabbedAtX = cursorX;
-                grabbedEntity.grabbedAtY = cursorY;
-            }
-        }
-    })
+export function handleDeckVerbs (state: GameState , verb: Verb){
+    switch(verb.type){
+        default:
+            return state;
+    }
 }
