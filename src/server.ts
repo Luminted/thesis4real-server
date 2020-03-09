@@ -7,9 +7,10 @@ import * as uuidv4 from 'uuid/v4';
 import {cardConfig} from './gameConfig';
 import {CardDataModel, GameState, EntityTypes, Client} from '../../common/dataModelDefinitions';
 import {SocketEventTypes} from '../../common/socketEventTypes'
-import {handleMouseInput} from './eventHandlers'
+import {handleVerbs} from './eventHandlers'
 import { MouseInput } from '../../common/mouseEventTypes';
 import {clientFactory, cardFactory} from './factories';
+import { Verb } from '../../common/verbTypes';
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -43,9 +44,9 @@ io.on('connection', function(socket){
         draft.clients.push(newClient);
     });
 
-    socket.on(SocketEventTypes.MOUSE_INPUT, (input: MouseInput) =>{
-        serverState.gameState = handleMouseInput(serverState.gameState, input);
-        console.log(`Event type: ${input.type}`);
+    socket.on(SocketEventTypes.ENTITY_INTERACTION, (verb: Verb) =>{
+        serverState.gameState = handleVerbs(serverState.gameState, verb);
+        console.log(`Verb type: ${verb.type}`);
         io.emit(SocketEventTypes.SYNC, serverState.gameState);
     });
 
