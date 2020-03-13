@@ -4,7 +4,7 @@ import {produce} from 'immer';
 
 import {handleCardVerbs, handleDeckVerbs, handleSharedVerbs} from './eventHandlers';
 import {GameState, EntityTypes, CardDataModel} from '../../common/dataModelDefinitions';
-import {CardVerb, DeckVerb, SharedVerb, SharedVerbTypes, VerbClasses} from '../../common/verbTypes';
+import {CardVerb, DeckVerb, SharedVerb, SharedVerbTypes} from '../../common/verbTypes';
 import { clientFactory, cardFactory } from './factories';
 import {extractClientById, extractGrabbedEntityOfClientById, extractCardById} from './extractors';
 
@@ -24,7 +24,6 @@ describe('handler tests', function() {
     })    
 
 describe('Shared verb handlers', function(){
-    const testedVerbClass = VerbClasses.SHARED;
         describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
             const testedVerbType = SharedVerbTypes.GRAB;
             describe(`EntityType: ${EntityTypes.CARD}`, function(){
@@ -34,7 +33,6 @@ describe('Shared verb handlers', function(){
                     const cursorX = 1;
                     const cursorY = 2;
                     const verb: SharedVerb = {
-                        class: testedVerbClass,
                         type: testedVerbType,
                         clientId: client.clientInfo.clientId,
                         cursorX,
@@ -60,7 +58,6 @@ describe('Shared verb handlers', function(){
                     const cursorX = 1;
                     const cursorY = 2;
                     const verb: SharedVerb = {
-                        class: testedVerbClass,
                         type: testedVerbType,
                         clientId: client.clientInfo.clientId,
                         cursorX,
@@ -97,7 +94,6 @@ describe('Shared verb handlers', function(){
 
                     // LEFT
                     verb = {
-                        class: testedVerbClass,
                         type: testedVerbType,
                         cursorX: 1,
                         cursorY: 2,
@@ -112,7 +108,6 @@ describe('Shared verb handlers', function(){
 
                     // RIGHT
                     verb = {
-                        class: testedVerbClass,
                         type: testedVerbType,
                         cursorX: 3,
                         cursorY: 2,
@@ -128,7 +123,6 @@ describe('Shared verb handlers', function(){
 
                     // UP
                     verb = {
-                        class: testedVerbClass,
                         type: testedVerbType,
                         cursorX: 2,
                         cursorY: 1,
@@ -144,7 +138,6 @@ describe('Shared verb handlers', function(){
 
                     // DOWN
                     verb = {
-                        class: testedVerbClass,
                         type: testedVerbType,
                         cursorX: 2,
                         cursorY: 3,
@@ -160,7 +153,6 @@ describe('Shared verb handlers', function(){
                 })
                 it('should ignore input if the entityId in the input is null', function(){
                     const verb: SharedVerb = {
-                        class: testedVerbClass,
                         entityId: null,
                         entityType: EntityTypes.CARD,
                         clientId: client.clientInfo.clientId,

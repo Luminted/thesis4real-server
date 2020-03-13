@@ -44,7 +44,7 @@ io.on('connection', function(socket){
         draft.clients.push(newClient);
     });
 
-    socket.on(SocketEventTypes.ENTITY_INTERACTION, (verb: Verb) =>{
+    socket.on(SocketEventTypes.VERB, (verb: Verb) =>{
         serverState.gameState = handleVerbs(serverState.gameState, verb);
         console.log(`Verb type: ${verb.type}`);
         io.emit(SocketEventTypes.SYNC, serverState.gameState);

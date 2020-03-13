@@ -1,21 +1,18 @@
 import {produce} from 'immer';
 
-import {GameState} from '../../common/dataModelDefinitions'
-import {SharedVerbTypes, VerbTypes, Verb, VerbClasses, CardVerbTypes} from "../../common/verbTypes";
+import {GameState, EntityTypes} from '../../common/dataModelDefinitions'
+import {SharedVerbTypes, VerbTypes, Verb, CardVerbTypes} from "../../common/verbTypes";
 import {extractGrabbedEntityOfClientById, extractClientById} from './extractors';
+import { MaybeUndefined } from '../../common/genericTypes';
 
 export function handleVerbs(state: GameState, verb: Verb){
-    switch(verb.class) {
-        case VerbClasses.SHARED:
-            return handleSharedVerbs(state, verb);
-        case VerbClasses.CARD:
-            return handleCardVerbs(state, verb);
-        case VerbClasses.DECK:
-            return handleDeckVerbs(state, verb);
-        }
+    return handleCardVerbs(state, verb) || handleDeckVerbs(state, verb) || handleSharedVerbs(state, verb) || state;
 }
 
-export function handleSharedVerbs (state: GameState , verb: Verb){
+export function handleSharedVerbs (state: GameState , verb: Verb): MaybeUndefined<GameState>{
+    // debugger
+    console.log('received ',verb.type,'matched against', SharedVerbTypes.GRAB)
+    console.log(verb.type == SharedVerbTypes.GRAB, '======')
     switch(verb.type){
         case SharedVerbTypes.GRAB:
             const {cursorX, cursorY, entityId, entityType} = verb;
@@ -52,20 +49,20 @@ export function handleSharedVerbs (state: GameState , verb: Verb){
             })
 
         default:
-            return state;
+            return undefined;
     }
 }
 
-export function handleCardVerbs(state: GameState , verb: Verb){
+export function handleCardVerbs(state: GameState , verb: Verb): MaybeUndefined<GameState>{
     switch(verb.type){
         default:
-            return state;
+            return undefined;
     }
 }
 
-export function handleDeckVerbs (state: GameState , verb: Verb){
+export function handleDeckVerbs (state: GameState , verb: Verb): MaybeUndefined<GameState>{
     switch(verb.type){
         default:
-            return state;
+            return undefined;
     }
 }
