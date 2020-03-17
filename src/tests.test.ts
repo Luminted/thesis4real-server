@@ -1,8 +1,8 @@
-import 'mocha';
+import 'mocha'
 import * as assert from 'assert';
 import {produce} from 'immer';
 
-import {handleCardVerbs, handleDeckVerbs, handleSharedVerbs} from './eventHandlers';
+import {handleGrab, handleMove, handleRelease, handleVerb, handleSharedVerbs} from './eventHandlers';
 import {GameState, EntityTypes, CardDataModel} from '../../common/dataModelDefinitions';
 import {CardVerb, DeckVerb, SharedVerb, SharedVerbTypes} from '../../common/verbTypes';
 import { clientFactory, cardFactory } from './factories';
@@ -21,9 +21,9 @@ describe('handler tests', function() {
             draft.cards = [cardFactory(0,0), cardFactory(0,100), cardFactory(100,0)]
             draft.clients.push(client);
         })
-    })    
+    })
 
-describe('Shared verb handlers', function(){
+    describe('Shared verb handlers', function(){
         describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
             const testedVerbType = SharedVerbTypes.GRAB;
             describe(`EntityType: ${EntityTypes.CARD}`, function(){
@@ -40,7 +40,7 @@ describe('Shared verb handlers', function(){
                         entityId,
                         entityType
                     }
-                    const nextState = handleSharedVerbs(gameState,verb);
+                    const nextState = handleGrab(gameState,verb);
                     const grabbedEntity = extractGrabbedEntityOfClientById(nextState, verb.clientId);
                     assert.equal(grabbedEntity.entityId, entityId);
                     assert.equal(grabbedEntity.grabbedAtX, cursorX);
@@ -65,7 +65,7 @@ describe('Shared verb handlers', function(){
                         entityId,
                         entityType
                     }
-                    const nextState = handleSharedVerbs(gameState,verb);
+                    const nextState = handleRelease(gameState,verb);
                     const grabbedEntity =extractGrabbedEntityOfClientById(nextState, verb.clientId);
                     assert.equal(grabbedEntity, null);
                 })
@@ -101,7 +101,7 @@ describe('Shared verb handlers', function(){
                         entityType,
                         clientId: client.clientInfo.clientId
                     }
-                    nextState = handleSharedVerbs(gameState, verb);
+                    nextState = handleMove(gameState, verb);
                     movedCard = extractCardById(nextState, entityId);
                     assert.equal(movedCard.positionX, originalCard.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
                     assert.equal(movedCard.positionY, originalCard.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
@@ -116,7 +116,7 @@ describe('Shared verb handlers', function(){
                         clientId: client.clientInfo.clientId
 
                     }
-                    nextState = handleSharedVerbs(gameState, verb);
+                    nextState = handleMove(gameState, verb);
                     movedCard = nextState.cards.find(card => card.entityId === entityId);
                     assert.equal(movedCard.positionX, originalCard.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
                     assert.equal(movedCard.positionY, originalCard.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
@@ -131,7 +131,7 @@ describe('Shared verb handlers', function(){
                         clientId: client.clientInfo.clientId
 
                     }
-                    nextState = handleSharedVerbs(gameState, verb);
+                    nextState = handleMove(gameState, verb);
                     movedCard = nextState.cards.find(card => card.entityId === entityId);
                     assert.equal(movedCard.positionX, originalCard.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
                     assert.equal(movedCard.positionY, originalCard.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
@@ -146,7 +146,7 @@ describe('Shared verb handlers', function(){
                         clientId: client.clientInfo.clientId
 
                     }
-                    nextState = handleSharedVerbs(gameState, verb);
+                    nextState = handleMove(gameState, verb);
                     movedCard = nextState.cards.find(card => card.entityId === entityId);
                     assert.equal(movedCard.positionX, originalCard.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
                     assert.equal(movedCard.positionY, originalCard.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
@@ -160,7 +160,7 @@ describe('Shared verb handlers', function(){
                         cursorX:1,
                         cursorY: 1,
                     }
-                    const nextState = handleSharedVerbs(gameState, verb);
+                    const nextState = handleMove(gameState, verb);
                     assert.deepEqual(nextState.cards, gameState.cards);
                 })
             })

@@ -7,7 +7,7 @@ import * as uuidv4 from 'uuid/v4';
 import {cardConfig} from './gameConfig';
 import {CardDataModel, GameState, EntityTypes, Client} from '../../common/dataModelDefinitions';
 import {SocketEventTypes} from '../../common/socketEventTypes'
-import {handleVerbs} from './eventHandlers'
+import {handleVerb} from './eventHandlers'
 import { MouseInput } from '../../common/mouseEventTypes';
 import {clientFactory, cardFactory} from './factories';
 import { Verb } from '../../common/verbTypes';
@@ -41,12 +41,19 @@ io.on('connection', function(socket){
 
     let newClient = clientFactory();
     serverState.gameState = produce(serverState.gameState, draft => {
-        draft.clients.push(newClient);
+        //TODO: THIS IS TEMPORARY UNTIL MULTIPLE CLIENTS ARE GETTING TESTED
+        // draft.clients = [newClient];
+        draft.clients.push(newClient)
     });
 
     socket.on(SocketEventTypes.VERB, (verb: Verb) =>{
-        serverState.gameState = handleVerbs(serverState.gameState, verb);
-        console.log(`Verb type: ${verb.type}`);
+        try{
+            console.log(`Verb type: ${verb.type}`);
+            serverState.gameState = handleVerb(serverState.gameState, verb);
+        }
+        catch(e){
+            console.error(e)
+        }
         io.emit(SocketEventTypes.SYNC, serverState.gameState);
     });
 
