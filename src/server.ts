@@ -4,13 +4,11 @@ var io = require('socket.io')(http);
 import {produce} from 'immer';
 import * as uuidv4 from 'uuid/v4';
 
-import {frenchCardConfig} from './gameConfig';
-import {CardEntity, DeckEntity, GameState, EntityTypes, Client} from '../../common/dataModelDefinitions';
+import {CardEntity, DeckEntity, GameState} from '../../common/dataModelDefinitions';
 import {SocketEventTypes} from '../../common/socketEventTypes'
-import {handleVerb} from './eventHandlers'
-import { MouseInput } from '../../common/mouseEventTypes';
+import {handleVerb} from './handlers/verbs'
 import {clientFactory, cardFactory, deckFactory} from './factories';
-import { Verb, DeckVerbTypes } from '../../common/verbTypes';
+import { Verb } from '../../common/verbTypes';
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -31,7 +29,7 @@ const serverState: ServerState ={
 function init() {
     serverState.gameState = produce(serverState.gameState, draft => {
         const newCards: CardEntity[] = [cardFactory(0, 0, 'A'), cardFactory(0, 100, '2'), cardFactory(100, 0, 'Q')];
-        const newDecks: DeckEntity[] = [deckFactory(100, 100, 10, 10)]
+        const newDecks: DeckEntity[] = [deckFactory(100, 100)]
         draft.cards = newCards;
         draft.decks = newDecks;
     })
@@ -44,8 +42,7 @@ io.on('connection', function(socket){
 
     let newClient = clientFactory();
     serverState.gameState = produce(serverState.gameState, draft => {
-        //TODO: THIS IS TEMPORARY UNTIL MULTIPLE CLIENTS ARE GETTING TESTED
-        // draft.clients = [newClient];
+        //TODO: clear out list on disconnect
         draft.clients.push(newClient)
     });
 
