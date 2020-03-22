@@ -54,7 +54,6 @@ io.on('connection', function(socket){
         catch(e){
             console.error(e)
         }
-        console.log(serverState.gameState.decks[0].cards)
         io.emit(SocketEventTypes.SYNC, serverState.gameState);
     });
 
