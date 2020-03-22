@@ -1,4 +1,4 @@
-import {GameState} from '../../common/dataModelDefinitions'
+import {GameState} from './types/dataModelDefinitions'
 
 export function extractClientById(state: GameState, clientId: string){
     return state.clients.find(c => c.clientInfo.clientId === clientId);

@@ -1,7 +1,7 @@
 import {produce} from 'immer';
 
-import {EntityTypes, GameState, CardDataModel} from '../../common/dataModelDefinitions'
-import {MouseInput, MouseInputTypes} from '../../common/mouseEventTypes';
+import {EntityTypes, GameState, CardDataModel} from './types/dataModelDefinitions'
+import {MouseInput, MouseInputTypes} from './types/mouseEventTypes';
 import {extractGrabbedEntityOfClientById, extractClientById} from './extractors';
 
 export function handleMouseInput(state: GameState, input: MouseInput){

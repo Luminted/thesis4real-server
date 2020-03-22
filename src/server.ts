@@ -2,13 +2,11 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 import {produce} from 'immer';
-import * as uuidv4 from 'uuid/v4';
 
-import {cardConfig} from './gameConfig';
-import {CardDataModel, GameState, EntityTypes, Client} from '../../common/dataModelDefinitions';
-import {SocketEventTypes} from '../../common/socketEventTypes'
+import {CardDataModel, GameState} from './types/dataModelDefinitions';
+import {SocketEventTypes} from './types/socketEventTypes'
 import {handleMouseInput} from './eventHandlers'
-import { MouseInput } from '../../common/mouseEventTypes';
+import { MouseInput } from './types/mouseEventTypes';
 import {clientFactory, cardFactory} from './factories';
 
 app.get('/', function(req, res){
