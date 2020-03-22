@@ -2,7 +2,6 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 import {produce} from 'immer';
-import * as uuidv4 from 'uuid/v4';
 
 import {CardEntity, DeckEntity, GameState} from '../../common/dataModelDefinitions';
 import {SocketEventTypes} from '../../common/socketEventTypes'
