@@ -1,5 +1,5 @@
-import { GameState } from "../../../../../../common/dataModelDefinitions";
-import { DeckVerb } from "../../../../../../common/verbTypes";
+import { GameState } from "../../../.././types/dataModelDefinitions";
+import { DeckVerb } from "../../../.././types/verbTypes";
 import produce from "immer";
 import { extractDeckById } from "../../../../extractors";
 import { cardFactory } from "../../../../factories";

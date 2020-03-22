@@ -1,8 +1,8 @@
 import * as assert from 'assert'
 
 import { handleGrab } from "./handleGrab";
-import { SharedVerbTypes, SharedVerb } from "../../../../../../common/verbTypes";
-import { EntityTypes, GameState, Client } from "../../../../../../common/dataModelDefinitions";
+import { SharedVerbTypes, SharedVerb } from "../../../.././types/verbTypes";
+import { EntityTypes, GameState, Client } from "../../../.././types/dataModelDefinitions";
 import { extractGrabbedEntityOfClientById } from "../../../../extractors";
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import produce from 'immer';

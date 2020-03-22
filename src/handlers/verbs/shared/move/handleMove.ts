@@ -1,7 +1,7 @@
 import produce from "immer";
 
-import { GameState } from "../../../../../../common/dataModelDefinitions";
-import { SharedVerb } from "../../../../../../common/verbTypes";
+import { GameState } from "../../../.././types/dataModelDefinitions";
+import { SharedVerb } from "../../../.././types/verbTypes";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId } from "../../../../extractors";
 
 export function handleMove(state: GameState, verb: SharedVerb) {

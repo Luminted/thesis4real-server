@@ -3,11 +3,11 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 import {produce} from 'immer';
 
-import {CardEntity, DeckEntity, GameState} from '../../common/dataModelDefinitions';
-import {SocketEventTypes} from '../../common/socketEventTypes'
+import {CardEntity, DeckEntity, GameState} from './types/dataModelDefinitions';
+import {SocketEventTypes} from './types/socketEventTypes'
 import {handleVerb} from './handlers/verbs'
 import {clientFactory, cardFactory, deckFactory} from './factories';
-import { Verb } from '../../common/verbTypes';
+import { Verb } from './types/verbTypes';
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');

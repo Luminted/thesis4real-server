@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 import {produce} from 'immer';
 
-import { DeckVerbTypes, DeckVerb } from '../../../../../../common/verbTypes';
-import { GameState, EntityTypes } from '../../../../../../common/dataModelDefinitions';
+import { DeckVerbTypes, DeckVerb } from '../../../.././types/verbTypes';
+import { GameState, EntityTypes } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import {handleReset} from './handleReset'
 

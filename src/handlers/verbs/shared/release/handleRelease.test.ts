@@ -2,8 +2,8 @@ import produce from "immer";
 import * as assert from 'assert';
 
 import { handleRelease } from './handleRelease';
-import { SharedVerbTypes, SharedVerb } from "../../../../../../common/verbTypes";
-import { GameState, EntityTypes } from "../../../../../../common/dataModelDefinitions";
+import { SharedVerbTypes, SharedVerb } from "../../../.././types/verbTypes";
+import { GameState, EntityTypes } from "../../../.././types/dataModelDefinitions";
 import { clientFactory, cardFactory, deckFactory } from "../../../../factories";
 import { extractGrabbedEntityOfClientById } from "../../../../extractors";
 

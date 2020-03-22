@@ -2,8 +2,8 @@ import * as assert from 'assert';
 import produce from 'immer';
 
 import { handleDrawFaceUp } from './handleDrawFaceUp'
-import { DeckVerbTypes, DeckVerb } from '../../../../../../common/verbTypes';
-import { GameState, BaseCard } from '../../../../../../common/dataModelDefinitions';
+import { DeckVerbTypes, DeckVerb } from '../../../.././types/verbTypes';
+import { GameState, BaseCard } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import { extractCardById, extractDeckById } from '../../../../extractors';
 

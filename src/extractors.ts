@@ -1,4 +1,4 @@
-import {GameState, EntityTypes} from '../../common/dataModelDefinitions'
+import {GameState, EntityTypes} from './types/dataModelDefinitions'
 //TODO: implement in a way where state does not need to be passed
 
 

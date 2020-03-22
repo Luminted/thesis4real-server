@@ -1,4 +1,4 @@
 export enum SocketEventTypes {
-    MOUSE_INPUT = 'MOUSE_INPUt',
+    VERB = 'VERB',
     SYNC = 'SYNC'
 }

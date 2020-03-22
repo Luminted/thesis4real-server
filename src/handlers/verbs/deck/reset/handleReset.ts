@@ -1,7 +1,7 @@
 import produce from 'immer';
 
-import { DeckVerb } from '../../../../../../common/verbTypes'
-import { GameState } from '../../../../../../common/dataModelDefinitions';
+import { DeckVerb } from '../../../.././types/verbTypes'
+import { GameState } from '../../../.././types/dataModelDefinitions';
 
 export function handleReset(state: GameState, verb: DeckVerb): GameState {
     return produce(state, draft => {

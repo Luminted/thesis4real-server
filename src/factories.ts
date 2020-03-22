@@ -1,6 +1,6 @@
 import * as uuidv4 from 'uuid/v4';
 
-import {Client, CardEntity, DeckEntity, EntityTypes, BaseCard} from '../../common/dataModelDefinitions';
+import {Client, CardEntity, DeckEntity, EntityTypes, BaseCard} from './types/dataModelDefinitions';
 import {frenchCardConfig} from './gameConfig';
 
 export function clientFactory(): Client {

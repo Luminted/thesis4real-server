@@ -1,5 +1,5 @@
-import { GameState } from "../../../../common/dataModelDefinitions";
-import { Verb, SharedVerbTypes, DeckVerbTypes } from "../../../../common/verbTypes";
+import { GameState } from "../.././types/dataModelDefinitions";
+import { Verb, SharedVerbTypes, DeckVerbTypes } from "../.././types/verbTypes";
 import {handleGrab, handleMove, handleRelease, handleRemove} from './shared';
 import {handleDrawFaceUp, handleReset} from './deck'
 
