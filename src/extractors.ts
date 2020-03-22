@@ -23,7 +23,6 @@ export function extractEntityByTypeAndId(state: GameState, entityType: EntityTyp
         return extractCardById(state, entityId);
     }
     else if(entityType === EntityTypes.DECK){
-        debugger
         return extractDeckById(state, entityId);
     }
 }
