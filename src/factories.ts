@@ -1,8 +1,7 @@
 import * as uuidv4 from 'uuid/v4';
 
-import {Client, CardEntity, DeckEntity, EntityTypes} from '../../common/dataModelDefinitions';
+import {Client, CardEntity, DeckEntity, EntityTypes, BaseCard} from '../../common/dataModelDefinitions';
 import {frenchCardConfig} from './gameConfig';
-import { CardVerbTypes } from '../../common/verbTypes';
 
 export function clientFactory(): Client {
     return {
@@ -13,20 +12,31 @@ export function clientFactory(): Client {
     }
 }
 
-export function cardFactory(positionX: number, positionY: number, face?: string): CardEntity {
-    return {
+export function cardFactory(positionX: number, positionY: number, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null): CardEntity {
+    let card: CardEntity =  {
         face,
-        entityId: uuidv4(),
+        entityId: entityId || uuidv4(),
         entityType: EntityTypes.CARD,
         width: frenchCardConfig.baseWidth,
         height: frenchCardConfig.baseHeight,
         scale: frenchCardConfig.scale,
         positionX,
         positionY,
+        turnedUp,
+        ownerDeck
+    }
+    return card;
+}
+
+export function baseCardFactory(face: string): BaseCard {
+    return {
+        entityId: uuidv4(),
+        entityType: EntityTypes.CARD,
+        face
     }
 }
 
-export function deckFactory(positionX: number, positionY: number, spawnOffsetX: number, spawnOffsetY: number): DeckEntity {
+export function deckFactory(positionX: number, positionY: number): DeckEntity {
     const {baseHeight, baseWidth,scale, suits, cardRange} = frenchCardConfig;
     return {
         entityId: uuidv4(),
@@ -36,6 +46,7 @@ export function deckFactory(positionX: number, positionY: number, spawnOffsetX: 
         scale: scale,
         positionX,
         positionY,
-        cards: suits.map(suite => (cardRange.map(card => cardFactory(positionX + spawnOffsetX, positionY + spawnOffsetY, `${suite} ${card}  `)))).reduce((acc, curr) => acc.concat(curr), [])
+        drawIndex: 0,
+        cards: suits.map(suite => (cardRange.map(card => baseCardFactory(`${suite} ${card}  `)))).reduce((acc, curr) => acc.concat(curr), [])
     }
 }
