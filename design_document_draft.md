@@ -1,3 +1,7 @@
+* NOTES
+
+Start docker image: docker run -it -p 8080:80 card-table-client
+
 * Project setup
 * Design documents
 	* deck

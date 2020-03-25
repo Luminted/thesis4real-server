@@ -1,6 +1,8 @@
-var app = require('express')();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
+const app = require('express')();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+import cors from 'cors';
+
 import {produce} from 'immer';
 
 import {CardEntity, DeckEntity, GameState} from './types/dataModelDefinitions';
@@ -8,6 +10,8 @@ import {SocketEventTypes} from './types/socketEventTypes'
 import {handleVerb} from './handlers/verbs'
 import {clientFactory, cardFactory, deckFactory} from './factories';
 import { Verb } from './types/verbTypes';
+
+// app.use(cors());
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -65,6 +69,6 @@ io.on('connection', function(socket){
     io.emit(SocketEventTypes.SYNC, serverState.gameState);
 });
 
-http.listen(3001, function(){
+http.listen(3001, '172.17.0.3', function(){
   console.log('listening on localhost:3001');
 });
