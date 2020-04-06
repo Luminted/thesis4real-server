@@ -10,7 +10,7 @@ export function handleDrawFaceUp(state: GameState, verb: DeckVerb): GameState {
         const deck = extractDeckById(draft, entityId);
         const drawnCard = deck.cards[deck.drawIndex];
         deck.drawIndex++;
-        const spawnedCard = cardFactory(deck.positionX, deck.positionY, drawnCard.face, true, drawnCard.entityId, deck.entityId);
+        const spawnedCard = cardFactory(deck.positionX, deck.positionY, drawnCard.cardType, drawnCard.face, true, drawnCard.entityId, deck.entityId);
         draft.cards.push(spawnedCard);
     })
 }

@@ -3,24 +3,22 @@ import produce from 'immer';
 
 import { handleDrawFaceUp } from './handleDrawFaceUp'
 import { DeckVerbTypes, DeckVerb } from '../../../.././types/verbTypes';
-import { GameState, BaseCard } from '../../../.././types/dataModelDefinitions';
+import { GameState, BaseCard, CardTypes } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
+import {initialGameState} from '../../../../__mocks__/initialGameState'
 import { extractCardById, extractDeckById } from '../../../../extractors';
 
 describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
-    let initialGameState: GameState = {
-        cards: [],
-        decks: [],
-        clients: []
-    };
+
     let gameState: GameState;
-    let client = clientFactory();
+    let client = clientFactory('socket-1');
 
     beforeEach('Setting up test data...', () => {
         gameState = produce(initialGameState, draft => {
-            draft.cards = [cardFactory(0,0), cardFactory(0,100), cardFactory(100,0)]
-            draft.decks = [deckFactory(10,12)]
+            draft.cards = [cardFactory(0,0, CardTypes.FRENCH), cardFactory(0,100, CardTypes.FRENCH), cardFactory(100,0, CardTypes.FRENCH)]
+            draft.decks = [deckFactory(CardTypes.FRENCH, 10,12)]
             draft.clients.push(client);
+            draft.hands
         })
     })
 
@@ -31,8 +29,8 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         const verb: DeckVerb = {
             type: testedVerbType,
             clientId: client.clientInfo.clientId,
-            cursorX: 0,
-            cursorY: 0,
+            positionX: 0,
+            positionY: 0,
             entityId: originalDeck.entityId,
             entityType: originalDeck.entityType,
         }
@@ -45,7 +43,7 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         assert.notEqual(poppedCard.entityId, nextDeck.cards[nextDeck.drawIndex].entityId);
         assert.equal(spawnedCard.positionX, originalDeck.positionX);
         assert.equal(spawnedCard.positionY, originalDeck.positionY);
-        assert.equal(spawnedCard.turnedUp, true);
+        assert.equal(spawnedCard.faceUp, true);
     })
 
     it('should set correct decks entityId to spawned card', function() {
@@ -53,8 +51,8 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         const verb: DeckVerb = {
             type: testedVerbType,
             clientId: client.clientInfo.clientId,
-            cursorX: 0,
-            cursorY: 0,
+            positionX: 0,
+            positionY: 0,
             entityId: originalDeck.entityId,
             entityType: originalDeck.entityType,
         }
@@ -69,8 +67,8 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         const verb: DeckVerb = {
             type: testedVerbType,
             clientId: client.clientInfo.clientId,
-            cursorX: 0,
-            cursorY: 0,
+            positionX: 0,
+            positionY: 0,
             entityId: originalDeck.entityId,
             entityType: originalDeck.entityType,
         }

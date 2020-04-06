@@ -1,0 +1,1 @@
+export {handleGrabFromHand} from './handleGrabFromHand'

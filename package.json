@@ -4,8 +4,9 @@
     "description": "",
     "main": "src/server.ts",
     "scripts": {
-        "start": "node --inspect=5858 -r ts-node/register ./src/server.ts",
-        "start:watch": "nodemon",
+        "start": "node -r ts-node/register ./src/server.ts",
+        "start:debug": "node --inspect=5859 -r ts-node/register ./src/server.ts",
+        "dev": "nodemon",
         "build": "tsc",
         "test": "mocha src/**/*.test.* -r ts-node/register",
         "test:debug": "mocha src/**/*.test.* --inspect=5859 -r ts-node/register"

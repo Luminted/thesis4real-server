@@ -9,16 +9,16 @@ export function handleMove(state: GameState, verb: SharedVerb) {
         const grabbedEntity = extractGrabbedEntityOfClientById(draft, verb.clientId);
         if(grabbedEntity){
             const {entityId, entityType} = grabbedEntity
-            const {cursorX, cursorY} = verb;
+            const {positionX: positionX, positionY} = verb;
             let movedEntity = extractEntityByTypeAndId(draft, entityType, entityId);
             if(movedEntity){
-                const offsetX = cursorX - grabbedEntity.grabbedAtX;
-                const offsetY = cursorY - grabbedEntity.grabbedAtY;
+                const offsetX = positionX - grabbedEntity.grabbedAtX;
+                const offsetY = positionY - grabbedEntity.grabbedAtY;
                 
                 movedEntity.positionX = movedEntity.positionX + offsetX;
                 movedEntity.positionY = movedEntity.positionY + offsetY;
-                grabbedEntity.grabbedAtX = cursorX;
-                grabbedEntity.grabbedAtY = cursorY;
+                grabbedEntity.grabbedAtX = positionX;
+                grabbedEntity.grabbedAtY = positionY;
             }
         }
     })

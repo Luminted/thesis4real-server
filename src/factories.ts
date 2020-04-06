@@ -1,52 +1,67 @@
 import * as uuidv4 from 'uuid/v4';
 
-import {Client, CardEntity, DeckEntity, EntityTypes, BaseCard} from './types/dataModelDefinitions';
-import {frenchCardConfig} from './gameConfig';
+import {Client, DisplayCardEntity, DeckEntity, EntityTypes, BaseCard, ClientHand, Directions, CardTypes} from './types/dataModelDefinitions';
+import {cardConfigLookup} from './config';
+import { getGameState } from './state';
 
-export function clientFactory(): Client {
+export function clientFactory(socketId: string, seatedAt?: Directions): Client {
     return {
+        socketId,
         clientInfo:{
             clientId: uuidv4(),
+            seatedAt
         },
         grabbedEntitiy: null
     }
 }
 
-export function cardFactory(positionX: number, positionY: number, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null): CardEntity {
-    let card: CardEntity =  {
+export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number): DisplayCardEntity {
+    let cardConfig = cardConfigLookup[cardType];
+    let card: DisplayCardEntity =  {
         face,
+        cardType,
         entityId: entityId || uuidv4(),
         entityType: EntityTypes.CARD,
-        width: frenchCardConfig.baseWidth,
-        height: frenchCardConfig.baseHeight,
-        scale: frenchCardConfig.scale,
+        width: cardConfig.baseWidth,
+        height: cardConfig.baseHeight,
+        scale: scale || getGameState().cardScale,
         positionX,
         positionY,
-        turnedUp,
-        ownerDeck
+        faceUp: turnedUp,
+        ownerDeck,
     }
     return card;
 }
 
-export function baseCardFactory(face: string): BaseCard {
+export function baseCardFactory(cardType: CardTypes, face: string, entityId?: string, ownerDeck?: string, faceUp?: boolean): BaseCard {
     return {
-        entityId: uuidv4(),
+        cardType,
+        entityId: entityId || uuidv4(),
         entityType: EntityTypes.CARD,
-        face
+        face,
+        ownerDeck: ownerDeck || null,
+        faceUp: faceUp || true
     }
 }
 
-export function deckFactory(positionX: number, positionY: number): DeckEntity {
-    const {baseHeight, baseWidth,scale, suits, cardRange} = frenchCardConfig;
+export function deckFactory(cardType: CardTypes, positionX: number, positionY: number, scale?: number): DeckEntity {
+    const {baseHeight, baseWidth, suits, cardRange} = cardConfigLookup[cardType];
     return {
         entityId: uuidv4(),
         entityType: EntityTypes.DECK,
         width: baseWidth,
         height: baseHeight,
-        scale: scale,
+        scale: scale || getGameState().cardScale,
         positionX,
         positionY,
         drawIndex: 0,
-        cards: suits.map(suite => (cardRange.map(card => baseCardFactory(`${suite} ${card}  `)))).reduce((acc, curr) => acc.concat(curr), [])
+        cards: suits.map(suite => (cardRange.map(card => baseCardFactory(cardType, `${suite} ${card}  `)))).reduce((acc, curr) => acc.concat(curr), [])
+    }
+}
+
+export function clientHandFactory(clientId: string): ClientHand {
+    return {
+        clientId,
+        cards: []
     }
 }

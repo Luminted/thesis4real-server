@@ -3,23 +3,19 @@ import * as assert from 'assert';
 
 import { handleMove } from './handleMove';
 import { SharedVerbTypes, SharedVerb } from "../../../.././types/verbTypes";
-import { EntityTypes, GameState, CardEntity, DeckEntity } from "../../../.././types/dataModelDefinitions";
+import { EntityTypes, GameState, DisplayCardEntity, DeckEntity, CardTypes } from "../../../.././types/dataModelDefinitions";
 import { clientFactory, cardFactory, deckFactory } from "../../../../factories";
 import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractDeckById } from "../../../../extractors";
+import {initialGameState} from '../../../../__mocks__/initialGameState'
 
 describe(`handle ${SharedVerbTypes.MOVE}`, function(){
-    let initialGameState: GameState = {
-        cards: [],
-        decks: [],
-        clients: []
-    };
     let gameState: GameState;
-    let client = clientFactory();
+    let client = clientFactory('socket-1');
 
     beforeEach('Setting up test data...', () => {
         gameState = produce(initialGameState, draft => {
-            draft.cards = [cardFactory(0,0), cardFactory(0,100), cardFactory(100,0)]
-            draft.decks = [deckFactory(10,10)]
+            draft.cards = [cardFactory(0,0, CardTypes.FRENCH), cardFactory(0,100, CardTypes.FRENCH), cardFactory(100,0, CardTypes.FRENCH)]
+            draft.decks = [deckFactory(CardTypes.FRENCH, 10,10)]
             draft.clients.push(client);
         })
     })
@@ -30,7 +26,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             let verb: SharedVerb;
             let entityType = EntityTypes.CARD;
             let nextState: GameState;
-            let movedCard: CardEntity;
+            let movedCard: DisplayCardEntity;
             const originalCard = gameState.cards[0];
             let entityId =  originalCard.entityId;
             
@@ -46,22 +42,22 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             // LEFT
             verb = {
                 type: testedVerbType,
-                cursorX: 1,
-                cursorY: 2,
+                positionX: 1,
+                positionY: 2,
                 entityId,
                 entityType,
                 clientId: client.clientInfo.clientId
             }
             nextState = handleMove(gameState, verb);
             movedCard = extractCardById(nextState, entityId);
-            assert.equal(movedCard.positionX, originalCard.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
-            assert.equal(movedCard.positionY, originalCard.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
+            assert.equal(movedCard.positionX, originalCard.positionX + verb.positionX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
+            assert.equal(movedCard.positionY, originalCard.positionY + verb.positionY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
 
             // RIGHT
             verb = {
                 type: testedVerbType,
-                cursorX: 3,
-                cursorY: 2,
+                positionX: 3,
+                positionY: 2,
                 entityId,
                 entityType,
                 clientId: client.clientInfo.clientId
@@ -69,14 +65,14 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             }
             nextState = handleMove(gameState, verb);
             movedCard = nextState.cards.find(card => card.entityId === entityId);
-            assert.equal(movedCard.positionX, originalCard.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
-            assert.equal(movedCard.positionY, originalCard.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
+            assert.equal(movedCard.positionX, originalCard.positionX + verb.positionX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
+            assert.equal(movedCard.positionY, originalCard.positionY + verb.positionY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
 
             // UP
             verb = {
                 type: testedVerbType,
-                cursorX: 2,
-                cursorY: 1,
+                positionX: 2,
+                positionY: 1,
                 entityId,
                 entityType,
                 clientId: client.clientInfo.clientId
@@ -84,14 +80,14 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             }
             nextState = handleMove(gameState, verb);
             movedCard = nextState.cards.find(card => card.entityId === entityId);
-            assert.equal(movedCard.positionX, originalCard.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
-            assert.equal(movedCard.positionY, originalCard.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
+            assert.equal(movedCard.positionX, originalCard.positionX + verb.positionX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
+            assert.equal(movedCard.positionY, originalCard.positionY + verb.positionY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
 
             // DOWN
             verb = {
                 type: testedVerbType,
-                cursorX: 2,
-                cursorY: 3,
+                positionX: 2,
+                positionY: 3,
                 entityId,
                 entityType,
                 clientId: client.clientInfo.clientId
@@ -99,8 +95,8 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             }
             nextState = handleMove(gameState, verb);
             movedCard = nextState.cards.find(card => card.entityId === entityId);
-            assert.equal(movedCard.positionX, originalCard.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
-            assert.equal(movedCard.positionY, originalCard.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
+            assert.equal(movedCard.positionX, originalCard.positionX + verb.positionX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
+            assert.equal(movedCard.positionY, originalCard.positionY + verb.positionY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
         })
         it('should ignore input if the entityId in the input is null', function(){
             const verb: SharedVerb = {
@@ -108,8 +104,8 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 entityType: EntityTypes.CARD,
                 clientId: client.clientInfo.clientId,
                 type: testedVerbType,
-                cursorX:1,
-                cursorY: 1,
+                positionX:1,
+                positionY: 1,
             }
             const nextState = handleMove(gameState, verb);
             assert.deepEqual(nextState.cards, gameState.cards);
@@ -137,22 +133,22 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             // LEFT
             verb = {
                 type: testedVerbType,
-                cursorX: 1,
-                cursorY: 2,
+                positionX: 1,
+                positionY: 2,
                 entityId,
                 entityType,
                 clientId: client.clientInfo.clientId
             }
             nextState = handleMove(gameState, verb);
             movedDeck = extractDeckById(nextState, entityId);
-            assert.equal(movedDeck.positionX, originalDeck.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
-            assert.equal(movedDeck.positionY, originalDeck.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
+            assert.equal(movedDeck.positionX, originalDeck.positionX + verb.positionX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
+            assert.equal(movedDeck.positionY, originalDeck.positionY + verb.positionY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
 
             // RIGHT
             verb = {
                 type: testedVerbType,
-                cursorX: 3,
-                cursorY: 2,
+                positionX: 3,
+                positionY: 2,
                 entityId,
                 entityType,
                 clientId: client.clientInfo.clientId
@@ -160,14 +156,14 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             }
             nextState = handleMove(gameState, verb);
             movedDeck = nextState.decks.find(card => card.entityId === entityId);
-            assert.equal(movedDeck.positionX, originalDeck.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
-            assert.equal(movedDeck.positionY, originalDeck.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
+            assert.equal(movedDeck.positionX, originalDeck.positionX + verb.positionX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
+            assert.equal(movedDeck.positionY, originalDeck.positionY + verb.positionY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
 
             // UP
             verb = {
                 type: testedVerbType,
-                cursorX: 2,
-                cursorY: 1,
+                positionX: 2,
+                positionY: 1,
                 entityId,
                 entityType,
                 clientId: client.clientInfo.clientId
@@ -175,14 +171,14 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             }
             nextState = handleMove(gameState, verb);
             movedDeck = nextState.decks.find(card => card.entityId === entityId);
-            assert.equal(movedDeck.positionX, originalDeck.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
-            assert.equal(movedDeck.positionY, originalDeck.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
+            assert.equal(movedDeck.positionX, originalDeck.positionX + verb.positionX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
+            assert.equal(movedDeck.positionY, originalDeck.positionY + verb.positionY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
 
             // DOWN
             verb = {
                 type: testedVerbType,
-                cursorX: 2,
-                cursorY: 3,
+                positionX: 2,
+                positionY: 3,
                 entityId,
                 entityType,
                 clientId: client.clientInfo.clientId
@@ -190,8 +186,8 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             }
             nextState = handleMove(gameState, verb);
             movedDeck = nextState.decks.find(card => card.entityId === entityId);
-            assert.equal(movedDeck.positionX, originalDeck.positionX + verb.cursorX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
-            assert.equal(movedDeck.positionY, originalDeck.positionY + verb.cursorY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
+            assert.equal(movedDeck.positionX, originalDeck.positionX + verb.positionX - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtX);
+            assert.equal(movedDeck.positionY, originalDeck.positionY + verb.positionY - extractGrabbedEntityOfClientById(gameState, verb.clientId).grabbedAtY);
         })
         it('should ignore input if the entityId in the input is null', function(){
             const verb: SharedVerb = {
@@ -199,8 +195,8 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 entityType: EntityTypes.CARD,
                 clientId: client.clientInfo.clientId,
                 type: testedVerbType,
-                cursorX:1,
-                cursorY: 1,
+                positionX:1,
+                positionY: 1,
             }
             const nextState = handleMove(gameState, verb);
             assert.deepEqual(nextState.cards, gameState.cards);

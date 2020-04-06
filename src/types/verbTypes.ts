@@ -2,16 +2,19 @@ import { EntityTypes } from "./dataModelDefinitions";
 import { MaybeNull } from "./genericTypes";
 
 export enum SharedVerbTypes {
-    GRAB = 'GRAB',
+    GRAB_FROM_TABLE = 'GRAB_FROM_TABLE',
     MOVE = 'MOVE',
     RELEASE = 'RELEASE',
     REMOVE = 'REMOVE',
     ADD = 'ADD',
+    MOVE_TO = 'MOVE_TO'
 }
 
 export enum CardVerbTypes {
     FLIP = 'FLIP',
     PUT_IN_HAND = 'PUT_IN_HAND',
+    PUT_ON_TABLE = 'PUT_ON_TABLE',
+    GRAB_FROM_HAND = 'GRAB_FROM_HAND'
 }
 
 export enum DeckVerbTypes {
@@ -28,8 +31,8 @@ interface VerbCommonalities {
     entityId:MaybeNull<string>,
     entityType: MaybeNull<EntityTypes>,
     clientId: string,
-    cursorX: number,
-    cursorY: number 
+    positionX: number,
+    positionY: number 
 }
 
 export interface CardVerb extends VerbCommonalities {

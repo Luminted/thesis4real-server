@@ -2,25 +2,23 @@ import * as assert from 'assert';
 import produce from "immer";
 
 import { SharedVerbTypes, SharedVerb } from '../../../.././types/verbTypes';
-import { GameState, EntityTypes } from '../../../.././types/dataModelDefinitions';
+import { GameState, EntityTypes, CardTypes } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import { handleRemove } from './handleRemove';
+import {initialGameState} from '../../../../__mocks__/initialGameState'
+
 
 
 describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
-    let initialGameState: GameState = {
-        cards: [],
-        decks: [],
-        clients: []
-    };
+
     let gameState: GameState;
-    let client = clientFactory();
+    let client = clientFactory('socket-1');
     const verbType = SharedVerbTypes.REMOVE;
 
     beforeEach('Setting up test data...', () => {
         gameState = produce(initialGameState, draft => {
-            draft.cards = [cardFactory(100,0), cardFactory(100,0)]
-            draft.decks = [deckFactory(10,10), deckFactory(10,10)]
+            draft.cards = [cardFactory(100,0, CardTypes.FRENCH), cardFactory(100,0, CardTypes.FRENCH)]
+            draft.decks = [deckFactory(CardTypes.FRENCH, 10,10), deckFactory(CardTypes.FRENCH, 10,10)]
             draft.clients.push(client);
         })
     })
@@ -30,8 +28,8 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
         const verb: SharedVerb = {
             type: verbType,
             clientId: client.clientInfo.clientId,
-            cursorX: 0,
-            cursorY: 0,
+            positionX: 0,
+            positionY: 0,
             entityId: deckToRemove.entityId,
             entityType: EntityTypes.DECK
         }
@@ -45,8 +43,8 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
         const verb: SharedVerb = {
             type: verbType,
             clientId: client.clientInfo.clientId,
-            cursorX: 0,
-            cursorY: 0,
+            positionX: 0,
+            positionY: 0,
             entityId: cardToRemove.entityId,
             entityType: EntityTypes.CARD
         }
