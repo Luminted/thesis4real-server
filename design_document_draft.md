@@ -11,6 +11,9 @@
 
 # TODO
 * Input validator
+* refactor handlers for singleton
+* check/place return types on functions
+* rethink if width/height is needed to be stored on server side for entity objects
 
 ## Design Documents
 
@@ -20,6 +23,7 @@
 
 Nice to have:
 * Latency interpolation
+* reseating players
 
 ### Deck features
 Must:
@@ -68,6 +72,7 @@ Nice to have:
 * Highlight on hover
 * Auto-sort
 * Animation
+* Display is a drawer at the edge of the screen
 
 ### Table features
 Nice to have:
@@ -178,6 +183,7 @@ Players can hold cards in their hands.
 
 * A hitbox is defined for every players hand
 * Players can only add card to their own hands.
+* some visual indication of hovering over card.
 * if card is moved beyond table borders, and are released outside players hand, they snap back to their original position.
 
 # Story #12 - Deployment
@@ -188,7 +194,6 @@ Deploy project to a server. Add CI if possible.
 Game entities need to be locked for player who is interacting with them.
 
 # Story#11 - Spawn decks
-Mutiple type of decks can be spawned through a side menu.
 A deck can be made up of multiple decks
 
 # Story#5 - Further interaction with cards
@@ -233,7 +238,7 @@ Players can:
 # Story#10 - Room includes Lobby chat
 
 
-# Story#18 - Implemented needed socket communication steps
+# Story#18 - Implement needed socket communication steps
 * Handle connet
 * Handle disconnect
 * Handle reconnect
