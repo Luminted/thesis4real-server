@@ -3,7 +3,7 @@ import * as assert from 'assert';
 
 import { handleMove } from './handleMove';
 import { SharedVerbTypes, SharedVerb } from "../../../.././types/verbTypes";
-import { EntityTypes, GameState, DisplayCardEntity, DeckEntity, CardTypes } from "../../../.././types/dataModelDefinitions";
+import { EntityTypes, GameState, DisplayCardEntity, DeckEntity, CardTypes, Boundary } from "../../../.././types/dataModelDefinitions";
 import { clientFactory, cardFactory, deckFactory } from "../../../../factories";
 import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractDeckById } from "../../../../extractors";
 import {initialGameState} from '../../../../__mocks__/initialGameState'
@@ -11,11 +11,24 @@ import {initialGameState} from '../../../../__mocks__/initialGameState'
 describe(`handle ${SharedVerbTypes.MOVE}`, function(){
     let gameState: GameState;
     let client = clientFactory('socket-1');
+    const cardBoundary: Boundary = {
+        top: 0,
+        left: 1,
+        bottom: 110, 
+        right: 111,
+    }
+    const deckBoundary: Boundary = {
+        top: 10,
+        left: 11,
+        bottom: 120, 
+        right: 121,
+    }
+    const cardOutsideBoundary = cardFactory(1000,1000, CardTypes.FRENCH);
 
     beforeEach('Setting up test data...', () => {
         gameState = produce(initialGameState, draft => {
-            draft.cards = [cardFactory(0,0, CardTypes.FRENCH), cardFactory(0,100, CardTypes.FRENCH), cardFactory(100,0, CardTypes.FRENCH)]
-            draft.decks = [deckFactory(CardTypes.FRENCH, 10,10)]
+            draft.cards = [cardFactory(50,50, CardTypes.FRENCH), cardFactory(60,60, CardTypes.FRENCH), cardFactory(70,70, CardTypes.FRENCH), cardOutsideBoundary];
+            draft.decks = [deckFactory(CardTypes.FRENCH, 80,80)]
             draft.clients.push(client);
         })
     })
@@ -200,6 +213,149 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             }
             const nextState = handleMove(gameState, verb);
             assert.deepEqual(nextState.cards, gameState.cards);
+        })
+        it('should restrict card to boundary if given', function(){
+            const card = gameState.cards[0];
+            const {entityId, entityType} = card;
+            const cardWidth = card.width * card.scale;
+            const cardHeight = card.height * card.scale;
+            let verb: SharedVerb;
+            let nextState: GameState;
+            let movedCard: DisplayCardEntity;
+
+            gameState = produce(gameState, draft => {
+                draft.cardBoundary = cardBoundary;
+                extractClientById(draft, client.clientInfo.clientId).grabbedEntitiy = {
+                        entityId,
+                        entityType,
+                        grabbedAtX: 2,
+                        grabbedAtY: 2
+                    }
+                })
+
+            verb = {
+                entityId: entityId,
+                entityType: EntityTypes.CARD,
+                clientId: client.clientInfo.clientId,
+                type: testedVerbType,
+                positionX: -1000,
+                positionY: 0,
+            }
+
+            nextState = handleMove(gameState, verb);
+            movedCard = extractCardById(nextState, entityId);
+            assert.equal(movedCard.positionX === cardBoundary.left, true);
+
+            verb = {
+                entityId: entityId,
+                entityType: EntityTypes.CARD,
+                clientId: client.clientInfo.clientId,
+                type: testedVerbType,
+                positionX: 1000,
+                positionY: 0,
+            }
+
+            nextState = handleMove(gameState, verb);
+            movedCard = extractCardById(nextState, entityId);
+            assert.equal(movedCard.positionX === cardBoundary.right - cardWidth, true);
+
+            verb = {
+                entityId: entityId,
+                entityType: EntityTypes.CARD,
+                clientId: client.clientInfo.clientId,
+                type: testedVerbType,
+                positionX: 0,
+                positionY: -1000,
+            }
+
+            nextState = handleMove(gameState, verb);
+            movedCard = extractCardById(nextState, entityId);
+            assert.equal(movedCard.positionY === cardBoundary.top, true);
+
+            verb = {
+                entityId: entityId,
+                entityType: EntityTypes.CARD,
+                clientId: client.clientInfo.clientId,
+                type: testedVerbType,
+                positionX: 0,
+                positionY: 1000,
+            }
+
+            nextState = handleMove(gameState, verb);
+            movedCard = extractCardById(nextState, entityId);
+            assert.equal(movedCard.positionY === cardBoundary.bottom - cardHeight, true);
+        });
+
+        it('should restrict deck to boundary if given', function(){
+            const deck = gameState.decks[0];
+            const {entityId, entityType} = deck;
+            const deckWidth = deck.width * deck.scale;
+            const deckHeight = deck.height * deck.scale;
+            let verb: SharedVerb;
+            let nextState: GameState;
+            let movedDeck: DeckEntity;
+
+            gameState = produce(gameState, draft => {
+                draft.deckBoundary = deckBoundary;
+                extractClientById(draft, client.clientInfo.clientId).grabbedEntitiy = {
+                    entityId,
+                    entityType,
+                    grabbedAtX: 2,
+                    grabbedAtY: 2
+                }
+            })
+
+            verb = {
+                entityId: entityId,
+                entityType: EntityTypes.CARD,
+                clientId: client.clientInfo.clientId,
+                type: testedVerbType,
+                positionX: -1000,
+                positionY: 0,
+            }
+
+            nextState = handleMove(gameState, verb);
+            movedDeck = extractDeckById(nextState, entityId);
+            assert.equal(movedDeck.positionX === deckBoundary.left, true);
+
+            verb = {
+                entityId: entityId,
+                entityType: EntityTypes.CARD,
+                clientId: client.clientInfo.clientId,
+                type: testedVerbType,
+                positionX: 1000,
+                positionY: 0,
+            }
+
+            nextState = handleMove(gameState, verb);
+            movedDeck = extractDeckById(nextState, entityId);
+            assert.equal(movedDeck.positionX === deckBoundary.right - deckWidth, true);
+
+            verb = {
+                entityId: entityId,
+                entityType: EntityTypes.CARD,
+                clientId: client.clientInfo.clientId,
+                type: testedVerbType,
+                positionX: 0,
+                positionY: -1000,
+            }
+
+            nextState = handleMove(gameState, verb);
+            movedDeck = extractDeckById(nextState, entityId);
+            assert.equal(movedDeck.positionY === deckBoundary.top, true);
+
+            verb = {
+                entityId: entityId,
+                entityType: EntityTypes.CARD,
+                clientId: client.clientInfo.clientId,
+                type: testedVerbType,
+                positionX: 0,
+                positionY: 1000,
+            }
+
+            nextState = handleMove(gameState, verb);
+            movedDeck = extractDeckById(nextState, entityId);
+            assert.equal(movedDeck.positionY === deckBoundary.bottom - deckHeight, true);
         })
     })
 })

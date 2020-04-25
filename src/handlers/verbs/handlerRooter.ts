@@ -1,11 +1,12 @@
 import { GameState } from "../.././types/dataModelDefinitions";
 import { Verb, SharedVerbTypes, DeckVerbTypes, CardVerbTypes } from "../.././types/verbTypes";
-import {handleGrab, handleMove, handleRelease, handleRemove} from './shared';
+import {handleGrab, handleMove, handleRelease, handleRemove, handleMoveTo} from './shared';
 import {handleDrawFaceUp, handleReset} from './deck'
 import {handlePutInHand, handleGrabFromHand} from './card'
 
 
 export function handleVerb(state: GameState, verb: Verb){
+    //TODO: use state here
     switch(verb.type){
         case SharedVerbTypes.GRAB_FROM_TABLE:
             return handleGrab(state, verb);
@@ -15,6 +16,8 @@ export function handleVerb(state: GameState, verb: Verb){
             return handleMove(state, verb);
         case SharedVerbTypes.REMOVE:
             return handleRemove(state, verb);
+        case SharedVerbTypes.MOVE_TO:
+            return handleMoveTo(state, verb);
         case DeckVerbTypes.DRAW_FACE_UP:
             return handleDrawFaceUp(state, verb);
         case DeckVerbTypes.RESET:

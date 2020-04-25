@@ -48,3 +48,15 @@ export function extractDirections(state: ServerState): Directions[] {
 export function extractCardFromClientHandById(state: GameState, clientId:string, entityId: string) {
     return state.hands.find(hand => hand.clientId === clientId)?.cards.find(card => card.entityId === entityId);
 }
+
+export function extractBoundary(state: GameState, entityType) {
+    if(entityType === EntityTypes.CARD){
+        return state.cardBoundary;
+    }
+    else if(entityType === EntityTypes.DECK){
+        return state.deckBoundary;
+    }
+    else {
+        return null;
+    }
+}

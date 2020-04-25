@@ -4,7 +4,7 @@ import { SharedVerbTypes, SharedVerb } from '../../../../types/verbTypes';
 import { GameState, EntityTypes, CardTypes } from '../../../../types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import { initialGameState } from '../../../../__mocks__/initialGameState';
-import {handleMove} from './handleMoveTo';
+import {handleMoveTo} from './handleMoveTo';
 import { extractCardById, extractDeckById } from '../../../../extractors';
 
 describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
@@ -32,7 +32,7 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
             positionY: 777,
         }
 
-        let nextGameState = handleMove(gameState, verb);
+        let nextGameState = handleMoveTo(gameState, verb);
         let movedCard = extractCardById(nextGameState, cardToMove.entityId);
         assert.equal(movedCard.positionX, verb.positionX);
         assert.equal(movedCard.positionY, verb.positionY);
@@ -48,7 +48,7 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
             positionY: 999,
         }
 
-        let nextGameState = handleMove(gameState, verb);
+        let nextGameState = handleMoveTo(gameState, verb);
         let movedDeck = extractDeckById(nextGameState, deckToMove.entityId);
         assert.equal(movedDeck.positionX, verb.positionX);
         assert.equal(movedDeck.positionY, verb.positionY);

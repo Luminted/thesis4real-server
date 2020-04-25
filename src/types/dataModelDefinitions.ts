@@ -16,6 +16,16 @@ export interface FrenchCardConfig extends CardTypeConfig {
 
 export type CardConfig = FrenchCardConfig;
 
+export interface BaseEntity {
+    entityType: EntityTypes,
+    entityId: string,
+    height:number,
+    width: number,
+    scale: number,
+    positionX: number,
+    positionY: number
+}
+
 export interface BaseCard {
     cardType: CardTypes,
     entityId: string,
@@ -25,22 +35,18 @@ export interface BaseCard {
     ownerDeck: MaybeNull<string>
 }
 
-export interface DisplayCardEntity extends BaseCard {
-    width: number,
-    height: number,
-    scale: number,
-    positionX: number,
-    positionY: number,
+export interface DisplayCardEntity extends BaseEntity {
+    cardType: CardTypes,
+    entityId: string,
+    face: string,
+    entityType: EntityTypes.CARD,
+    faceUp: boolean,
+    ownerDeck: MaybeNull<string>
+    
 }
 
-export interface DeckEntity {
-    entityId: string,
+export interface DeckEntity extends BaseEntity {
     entityType: EntityTypes.DECK
-    positionX: number,
-    positionY: number,
-    width: number,
-    height: number
-    scale: number,
     cards: BaseCard[],
     drawIndex: number
 }
@@ -72,7 +78,7 @@ export type ClientHand = {
 export type ClientInfo ={
     clientId: string,
     clientName?: string,
-    seatedAt: MaybeNull<Directions>
+    seatedAt: Directions
 }
 
 export enum Directions {
@@ -84,10 +90,19 @@ export enum Directions {
     NORTH_EAST = 'NORTH_EAST'
 } 
 
+export type Boundary = {
+    top: number,
+    left: number,
+    bottom: number,
+    right: number
+}
+
 export interface GameState {
     cards: DisplayCardEntity[],
     decks: DeckEntity[],
     clients: Client[],
     hands: ClientHand[],
-    cardScale: number
+    cardScale: number,
+    cardBoundary: MaybeNull<Boundary>,
+    deckBoundary: MaybeNull<Boundary>
 }

@@ -5,5 +5,7 @@ export const initialGameState: GameState = {
     clients: [],
     decks: [],
     hands: [],
-    cardScale: 1
+    cardScale: 1,
+    cardBoundary: null,
+    deckBoundary: null
 }

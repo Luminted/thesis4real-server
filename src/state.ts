@@ -16,6 +16,13 @@ function initServerState(){
             decks: [],
             clients: [],
             hands: [],
+            cardBoundary: null,
+            deckBoundary: {
+                top: 0,
+                left: 0,
+                right: 806,
+                bottom: 443
+            },
             ...gameConfig
         },
         directions: []
