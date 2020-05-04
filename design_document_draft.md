@@ -218,7 +218,7 @@ Add skins for French and Hungarian cards
 Players can sit on opposit sides of the table. Players always see themselves sitting at the "bottom" of the table. Transformations are needed to be applied to the movement of cards.
 
 # Story#7 - Lobby
-Players can are furts put in a lobby where they can create, join and leave rooms.
+Players are put in a lobby where they can create, join and leave rooms.
 
 * Rooms can be set to private with passwords
 * Room can hold at least 4 persons
@@ -242,3 +242,49 @@ Players can:
 * Handle connet
 * Handle disconnect
 * Handle reconnect
+
+landing page
+	disconnected client can be ejected by others
+	proper disconnection by client | delete client ID from room
+	room disappears after 5 mins of being empty or hit room limit of server
+
+restrict movements --------LATER
+	snap back to original position
+Connection handling
+	session handling
+	terminating room
+	handling disconnect
+	handling reconnect
+player concurrency
+stress test backend
+optimize front end
+Lobby page
+	start
+	preload assets
+	share link to room
+inverting movement for opposing side of table
+z level handling
+seating
+Visuals
+	graphics
+	animations
+	cursor tracking
+	visual indications of interactions
+obstruct interaction until state is set up
+chat
+404 page redirect
+further verbs
+menu
+	spawning decks
+	spawning cards
+	removing cards
+error handling
+responsive design
+	position scaling
+	responsive css library
+revisit factories
+code cleanup
+	dependencies
+	exports
+	orgaize types
+	revisit state design
