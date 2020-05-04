@@ -1,11 +1,11 @@
-import {GameState, EntityTypes, ClientHand, Client, Directions} from './types/dataModelDefinitions'
-import { MaybeUndefined } from './types/genericTypes';
-import {ServerState} from './state'
+import {GameState, EntityTypes, ClientHand, Client, Directions} from '../types/dataModelDefinitions'
+import { MaybeUndefined } from '../types/genericTypes';
+import {ServerState} from '../state'
 //TODO: implement in a way where state does not need to be passed
-
+//TODO: create unified type for extractor functions
 
 export function extractClientById(state: GameState, clientId: string){
-    return state.clients.find(c => c.clientInfo.clientId === clientId);
+    return state.clients.find(c => c.clientInfo.clientId === clientId) || null;
 }
 
 export function extractGrabbedEntityOfClientById(state: GameState, clientId){
@@ -33,10 +33,6 @@ export function extractClientHandById(state: GameState, clientId: string): Maybe
     return state.hands.find(hand => hand.clientId === clientId);
 }
 
-export function extractClientBySocketId(state: GameState, socketId: string): MaybeUndefined<Client> {
-    return state.clients.find(client => client.socketId === socketId);
-}
-
 export function extractNumberOfClients(state: GameState) : number {
     return state.clients.length;
 }
@@ -59,4 +55,8 @@ export function extractBoundary(state: GameState, entityType) {
     else {
         return null;
     }
+}
+
+export function extractEmptySeats(state: GameState) {
+    return state.emptySeats;
 }

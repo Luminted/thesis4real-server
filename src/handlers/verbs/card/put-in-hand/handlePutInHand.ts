@@ -2,7 +2,7 @@ import { GameState } from "../../../../types/dataModelDefinitions";
 import { CardVerb } from "../../../../types/verbTypes";
 import produce from "immer";
 import { baseCardFactory} from "../../../../factories";
-import { extractCardById, extractClientHandById, extractClientById } from "../../../../extractors";
+import { extractCardById, extractClientHandById, extractClientById } from "../../../../extractors/gameStateExtractors";
 
 export function handlePutInHand(state: GameState, verb: CardVerb): GameState {
     return produce(state, draft => {

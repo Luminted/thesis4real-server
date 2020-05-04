@@ -1,31 +1,41 @@
-import { GameState, Directions } from "./types/dataModelDefinitions";
-import { gameConfig } from "./config";
+import { GameState, Directions, PlayTable } from "./types/dataModelDefinitions";
+import { serverConfig, ServerConfig } from "./config/serverConfig";
+import produce from "immer";
+import { server } from "./server";
+import { extractTableById } from "./extractors/serverStateExtractors";
 
+//TODO: serverState should have getters instead of extractors
+//TODO: think about making state gated to domains
 export type ServerState = {
-    gameState: GameState,
-    directions: Directions[]
+    directions: Directions[],
+    tables: PlayTable[],
+    serverConfig: ServerConfig
+}
+
+const initialServerState: ServerState = {
+    tables: [],
+    directions: [],
+    serverConfig: serverConfig
 }
 
 let serverState: ServerState;
-initServerState();
+// initServerState();
 
-function initServerState(){
-    serverState = {
-        gameState: {
-            cards:[],
-            decks: [],
-            clients: [],
-            hands: [],
-            cardBoundary: null,
-            deckBoundary: {
-                top: 0,
-                left: 0,
-                right: 806,
-                bottom: 443
-            },
-            ...gameConfig
-        },
-        directions: []
+export function initServerState(config?: ServerConfig){
+    serverState = produce(initialServerState, () => {
+        return {
+            ...initialServerState,
+            serverConfig: config || initialServerState.serverConfig
+        }
+    })
+}
+
+export function gameStateSetter(tableId: string){
+    return function (nextState: GameState){
+        serverState = produce(serverState, draft => {
+            const table = extractTableById(draft, tableId);
+            table.gameState = nextState;
+        })
     }
 }
 
@@ -36,16 +46,30 @@ export function getServerState(): ServerState {
     return serverState;
 }
 
-export function getGameState(): GameState {
-    if(serverState === undefined) {
-        initServerState();
-    }
-    return serverState.gameState;
-}
-
-export function setGameState(state: GameState): void {
+export function addTable(table: PlayTable) {
     if(serverState === undefined){
         initServerState();
     }
-    serverState.gameState = state;
+    serverState = produce(serverState, draft => {
+        draft.tables.push(table);
+    })
+}
+
+export function removeTable(tableId: string) {
+    if(serverState === undefined){
+        initServerState();
+    }
+    serverState = produce(serverState, draft => {
+        draft.tables = serverState.tables.filter(table => table.tableId !== tableId);
+    })
+}
+
+export function gameStateGetter(tableId: string) {
+    return function() {
+        if(serverState === undefined) {
+            initServerState();
+        }
+        //TODO: handle undefined
+        return serverState.tables.find(table => table.tableId === tableId).gameState;
+    }
 }

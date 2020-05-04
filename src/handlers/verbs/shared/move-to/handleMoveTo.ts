@@ -1,7 +1,7 @@
 import {produce} from 'immer';
 import { GameState } from '../../../../types/dataModelDefinitions';
 import { SharedVerb } from '../../../../types/verbTypes';
-import { extractEntityByTypeAndId } from '../../../../extractors';
+import { extractEntityByTypeAndId } from '../../../../extractors/gameStateExtractors';
 
 export function handleMoveTo(state: GameState, verb: SharedVerb) {
     return produce(state, draft => {

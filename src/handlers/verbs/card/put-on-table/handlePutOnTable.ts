@@ -2,7 +2,7 @@ import { GameState, DisplayCardEntity } from "../../../../types/dataModelDefinit
 import { CardVerb } from "../../../../types/verbTypes";
 import produce from "immer";
 import { cardFactory } from "../../../../factories";
-import { extractCardFromClientHandById, extractClientHandById } from "../../../../extractors";
+import { extractCardFromClientHandById, extractClientHandById } from "../../../../extractors/gameStateExtractors";
 
 export function handlePutOnTable(state: GameState, verb: CardVerb): GameState{
     return produce(state, draft => {

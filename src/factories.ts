@@ -1,15 +1,13 @@
-import * as uuidv4 from 'uuid/v4';
+import uuidv4 from 'uuid/v4';
 
 import {Client, DisplayCardEntity, DeckEntity, EntityTypes, BaseCard, ClientHand, Directions, CardTypes} from './types/dataModelDefinitions';
-import {cardConfigLookup} from './config';
-import { getGameState } from './state';
+import {cardConfigLookup, gameConfig} from './config';
 
 export function clientFactory(socketId: string, seatedAt?: Directions): Client {
     return {
-        socketId,
         clientInfo:{
-            clientId: uuidv4(),
-            seatedAt
+            clientId: socketId,
+            seatedAt: seatedAt || null
         },
         grabbedEntitiy: null
     }
@@ -24,7 +22,7 @@ export function cardFactory(positionX: number, positionY: number, cardType: Card
         entityType: EntityTypes.CARD,
         width: cardConfig.baseWidth,
         height: cardConfig.baseHeight,
-        scale: scale || getGameState().cardScale,
+        scale: scale || gameConfig.cardScale,
         positionX,
         positionY,
         faceUp: turnedUp,
@@ -51,7 +49,7 @@ export function deckFactory(cardType: CardTypes, positionX: number, positionY: n
         entityType: EntityTypes.DECK,
         width: baseWidth,
         height: baseHeight,
-        scale: scale || getGameState().cardScale,
+        scale: scale || gameConfig.cardScale,
         positionX,
         positionY,
         drawIndex: 0,

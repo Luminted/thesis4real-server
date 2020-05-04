@@ -1,4 +1,4 @@
-import { GameState } from "../types/dataModelDefinitions";
+import { GameState, Directions } from "../types/dataModelDefinitions";
 
 export const initialGameState: GameState = {
     cards: [],
@@ -7,5 +7,6 @@ export const initialGameState: GameState = {
     hands: [],
     cardScale: 1,
     cardBoundary: null,
-    deckBoundary: null
+    deckBoundary: null,
+    emptySeats: [Directions.NORTH, Directions.NORTH_EAST, Directions.NORTH_WEST, Directions.SOUTH, Directions.SOUTH_EAST, Directions.SOUTH_WEST]
 }

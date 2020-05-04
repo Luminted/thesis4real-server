@@ -2,7 +2,7 @@ import produce from "immer";
 
 import { GameState, Boundary, EntityTypes } from "../../../.././types/dataModelDefinitions";
 import { SharedVerb } from "../../../.././types/verbTypes";
-import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractBoundary } from "../../../../extractors";
+import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractBoundary } from "../../../../extractors/gameStateExtractors";
 import { clamp } from "../../../../utils";
 
 export function handleMove(state: GameState, verb: SharedVerb) {

@@ -3,7 +3,7 @@ import * as assert from 'assert'
 import { handleGrab } from "./handleGrabFromTable";
 import { SharedVerbTypes, SharedVerb } from "../../../../types/verbTypes";
 import { EntityTypes, GameState, Client, CardTypes } from "../../../../types/dataModelDefinitions";
-import { extractGrabbedEntityOfClientById } from "../../../../extractors";
+import { extractGrabbedEntityOfClientById } from "../../../../extractors/gameStateExtractors";
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import produce from 'immer';
 import {initialGameState} from '../../../../__mocks__/initialGameState'

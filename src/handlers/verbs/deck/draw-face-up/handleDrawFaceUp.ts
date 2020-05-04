@@ -1,7 +1,7 @@
 import { GameState } from "../../../.././types/dataModelDefinitions";
 import { DeckVerb } from "../../../.././types/verbTypes";
 import produce from "immer";
-import { extractDeckById } from "../../../../extractors";
+import { extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { cardFactory } from "../../../../factories";
 
 export function handleDrawFaceUp(state: GameState, verb: DeckVerb): GameState {

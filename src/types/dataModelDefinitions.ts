@@ -64,7 +64,6 @@ export type GrabbedEntity = MaybeNull<{
 }>
 
 export type Client = {
-    socketId: string,
     //TODO: flatten this out
     clientInfo: ClientInfo,
     grabbedEntitiy: GrabbedEntity
@@ -103,6 +102,13 @@ export interface GameState {
     clients: Client[],
     hands: ClientHand[],
     cardScale: number,
+    emptySeats: Directions[],
     cardBoundary: MaybeNull<Boundary>,
     deckBoundary: MaybeNull<Boundary>
+}
+
+export type PlayTable = {
+    tableId: string,
+    clientLimit: number
+    gameState: GameState,
 }

@@ -3,7 +3,7 @@ import produce from 'immer';
 import { DeckVerb } from '../../../.././types/verbTypes'
 import { GameState } from '../../../.././types/dataModelDefinitions';
 import { baseCardFactory } from '../../../../factories';
-import { extractDeckById } from '../../../../extractors';
+import { extractDeckById } from '../../../../extractors/gameStateExtractors';
 
 export function handleReset(state: GameState, verb: DeckVerb): GameState {
     return produce(state, draft => {
