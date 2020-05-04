@@ -5,7 +5,7 @@ import { handleMove } from './handleMove';
 import { SharedVerbTypes, SharedVerb } from "../../../.././types/verbTypes";
 import { EntityTypes, GameState, DisplayCardEntity, DeckEntity, CardTypes, Boundary } from "../../../.././types/dataModelDefinitions";
 import { clientFactory, cardFactory, deckFactory } from "../../../../factories";
-import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractDeckById } from "../../../../extractors";
+import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractDeckById } from "../../../../extractors/gameStateExtractors";
 import {initialGameState} from '../../../../__mocks__/initialGameState'
 
 describe(`handle ${SharedVerbTypes.MOVE}`, function(){

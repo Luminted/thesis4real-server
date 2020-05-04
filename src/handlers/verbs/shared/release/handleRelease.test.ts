@@ -5,7 +5,7 @@ import { handleRelease } from './handleRelease';
 import { SharedVerbTypes, SharedVerb } from "../../../.././types/verbTypes";
 import { GameState, EntityTypes, CardTypes } from "../../../.././types/dataModelDefinitions";
 import { clientFactory, cardFactory, deckFactory } from "../../../../factories";
-import { extractGrabbedEntityOfClientById } from "../../../../extractors";
+import { extractGrabbedEntityOfClientById } from "../../../../extractors/gameStateExtractors";
 import {initialGameState} from '../../../../__mocks__/initialGameState'
 
 

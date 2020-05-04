@@ -6,7 +6,7 @@ import { DeckVerbTypes, DeckVerb } from '../../../.././types/verbTypes';
 import { GameState, BaseCard, CardTypes } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import {initialGameState} from '../../../../__mocks__/initialGameState'
-import { extractCardById, extractDeckById } from '../../../../extractors';
+import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 
 describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
 

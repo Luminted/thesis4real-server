@@ -5,7 +5,7 @@ import { GameState, EntityTypes, CardTypes } from '../../../../types/dataModelDe
 import { clientFactory, cardFactory, deckFactory, clientHandFactory, baseCardFactory } from '../../../../factories';
 import { initialGameState } from '../../../../__mocks__/initialGameState';
 import produce from 'immer';
-import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById } from '../../../../extractors';
+import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 
 describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
     let gameState: GameState;

@@ -5,7 +5,7 @@ import { GameState, EntityTypes, CardTypes } from '../../../../types/dataModelDe
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import { initialGameState } from '../../../../__mocks__/initialGameState';
 import {handleMoveTo} from './handleMoveTo';
-import { extractCardById, extractDeckById } from '../../../../extractors';
+import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 
 describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
     let gameState: GameState;

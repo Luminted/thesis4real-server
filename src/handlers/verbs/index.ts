@@ -1,1 +1,1 @@
-export {handleVerb} from './handlerRooter'
+export {handleVerb} from './handleVerb'

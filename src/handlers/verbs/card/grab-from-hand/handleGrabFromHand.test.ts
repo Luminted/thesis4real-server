@@ -6,8 +6,7 @@ import { clientFactory, cardFactory, deckFactory, clientHandFactory } from "../.
 import produce from "immer";
 import { initialGameState } from "../../../../__mocks__/initialGameState";
 import { handleGrabFromHand } from "./handleGrabFromHand";
-import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractClientHandById } from '../../../../extractors';
-import { getGameState } from '../../../../state';
+import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { cardConfigLookup } from '../../../../config';
 
 describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
@@ -53,7 +52,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     });
 
     it('it should put the card at the correct position', function(){
-        const {cardScale} = getGameState();
+        const {cardScale} = gameState;
         const {baseHeight, baseWidth} = cardConfigLookup[cardToGrab.cardType];
         const nextState = handleGrabFromHand(gameState, verb);
         const grabbedCard = extractCardById(nextState, verb.entityId);

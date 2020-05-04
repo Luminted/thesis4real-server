@@ -32,7 +32,7 @@ interface VerbCommonalities {
     entityType: MaybeNull<EntityTypes>,
     clientId: string,
     positionX: number,
-    positionY: number 
+    positionY: number,
 }
 
 export interface CardVerb extends VerbCommonalities {
