@@ -16,7 +16,7 @@ describe(`Socket handler for: ${TableModuleClientEvents.JOIN_TABLE}`, function()
         socketId: 'socket-1'
     }
     
-    this.beforeEach(() => {
+    beforeEach(() => {
         initServerState();
         table = createTable(1);
         addTable(table);

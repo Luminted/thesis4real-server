@@ -11,7 +11,7 @@ describe('Testing route: /table', function(){
     let app;
     let server;
 
-    this.beforeEach((done) => {
+    beforeEach((done) => {
         app = express();
         server = http.createServer(app);
         app.use(express.json());
@@ -20,11 +20,11 @@ describe('Testing route: /table', function(){
             done();
         })
     })
-    this.afterEach(() => {
+    afterEach(() => {
         server.close();
     });
 
-    this.beforeEach(() => {
+    beforeEach(() => {
         initServerState();
     });
 

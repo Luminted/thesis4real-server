@@ -13,7 +13,7 @@ describe(`Event handler for: ${TableModuleClientEvents.DISCONNECT}`, function(){
     let client: Client;
     let hand: ClientHand;
 
-    this.beforeEach(() => {
+    beforeEach(() => {
         client = clientFactory(socketId);
         hand = clientHandFactory(socketId);
         gameState = produce(initialGameState, draft => {

@@ -23,7 +23,7 @@ describe(`Socket event: ${TableModuleClientEvents.JOIN_TABLE}`, function(){
     let socket: SocketIOClient.Socket;
     let playTable: PlayTable;
 
-    this.beforeEach((done)=> {
+    beforeEach((done)=> {
         initServerState();
         playTable = createTable(1);
         getGameState = gameStateGetter(playTable.tableId);
@@ -41,7 +41,7 @@ describe(`Socket event: ${TableModuleClientEvents.JOIN_TABLE}`, function(){
         })
     })
 
-    this.afterEach((done) => {
+    afterEach((done) => {
         if(socket.connected){
             socket.disconnect();
             setTimeout(done, 500)

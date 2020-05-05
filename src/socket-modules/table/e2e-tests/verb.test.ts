@@ -23,7 +23,7 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
     let playTable: PlayTable;
     let verb: Verb;
 
-    this.beforeEach((done)=> {
+    beforeEach((done)=> {
         initServerState();
         playTable = createTable(1);
         getGameState = gameStateGetter(playTable.tableId);
@@ -39,7 +39,7 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
         })
     })
 
-    this.afterEach((done) => {
+    afterEach((done) => {
         if(socket.connected){
             socket.disconnect();
             setTimeout(done, 500)
@@ -52,7 +52,7 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
     })
         
 
-    this.beforeEach(() => {
+    beforeEach(() => {
         verb = {
             clientId: socket.id,
             entityId: 'entity01',
