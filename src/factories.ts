@@ -13,7 +13,7 @@ export function clientFactory(socketId: string, seatedAt?: Directions): Client {
     }
 }
 
-export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number): DisplayCardEntity {
+export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number, grabLocked?: boolean): DisplayCardEntity {
     let cardConfig = cardConfigLookup[cardType];
     let card: DisplayCardEntity =  {
         face,
@@ -27,6 +27,7 @@ export function cardFactory(positionX: number, positionY: number, cardType: Card
         positionY,
         faceUp: turnedUp,
         ownerDeck,
+        grabLocked: grabLocked || false,
     }
     return card;
 }
@@ -52,6 +53,7 @@ export function deckFactory(cardType: CardTypes, positionX: number, positionY: n
         scale: scale || gameConfig.cardScale,
         positionX,
         positionY,
+        grabLocked: false,
         drawIndex: 0,
         cards: suits.map(suite => (cardRange.map(card => baseCardFactory(cardType, `${suite} ${card}  `)))).reduce((acc, curr) => acc.concat(curr), [])
     }

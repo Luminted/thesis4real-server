@@ -51,12 +51,11 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         assert.notEqual(grabbedCard, undefined);
     });
 
-    it('it should put the card at the correct position', function(){
+    it('should put the card at the correct position', function(){
         const {cardScale} = gameState;
         const {baseHeight, baseWidth} = cardConfigLookup[cardToGrab.cardType];
         const nextState = handleGrabFromHand(gameState, verb);
         const grabbedCard = extractCardById(nextState, verb.entityId);
-        const grabbedEntitiy = extractGrabbedEntityOfClientById(nextState, verb.clientId);
         const expectedPositionX = verb.positionX - Math.round(baseWidth * cardScale / 2);
         const expectedPositionY = verb.positionY - Math.round(baseHeight * cardScale / 2);
         assert.equal(grabbedCard.positionX, expectedPositionX);
@@ -66,5 +65,11 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         const nextState = handleGrabFromHand(gameState, verb);
         const nextHand = extractClientHandById(nextState, verb.clientId);
         assert.equal(nextHand.cards.some(card => card.entityId === verb.entityId), false);
+    })
+    it('should set cards grab lock to true', function(){
+        const {entityId} = cardToGrab;
+        const nextState = handleGrabFromHand(gameState, verb);
+        const grabbedCard = extractCardById(nextState, entityId);
+        assert.equal(grabbedCard.grabLocked, true);
     })
 })

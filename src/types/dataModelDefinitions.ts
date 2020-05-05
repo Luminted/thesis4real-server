@@ -23,7 +23,8 @@ export interface BaseEntity {
     width: number,
     scale: number,
     positionX: number,
-    positionY: number
+    positionY: number,
+    grabLocked: boolean
 }
 
 export interface BaseCard {
