@@ -1,7 +1,6 @@
+import produce from "immer";
 import { GameState, Directions, PlayTable } from "./types/dataModelDefinitions";
 import { serverConfig, ServerConfig } from "./config/serverConfig";
-import produce from "immer";
-import { server } from "./server";
 import { extractTableById } from "./extractors/serverStateExtractors";
 
 //TODO: serverState should have getters instead of extractors

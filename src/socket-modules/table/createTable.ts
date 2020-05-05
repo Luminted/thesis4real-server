@@ -1,11 +1,11 @@
 import {generate} from 'short-uuid';
 import {PlayTable, Boundary, Directions} from '../../types/dataModelDefinitions'
-import { MaybeNull, MaybeUndefined } from '../../types/genericTypes';
+import { MaybeNull } from '../../types/genericTypes';
 
 
-export function createTable(clientLimit: number, cardBoundary: MaybeNull<Boundary> = null, deckBoundary: MaybeNull<Boundary> = null): PlayTable {
+export function createTable(clientLimit: number, tableId?:string, cardBoundary: MaybeNull<Boundary> = null, deckBoundary: MaybeNull<Boundary> = null): PlayTable {
     return {
-        tableId: generate(),
+        tableId: tableId || generate(),
         clientLimit,
         gameState: {
             cards:[],

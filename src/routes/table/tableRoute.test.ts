@@ -1,10 +1,25 @@
 import assert from 'assert';
 import request from 'supertest'
-import {server} from '../../server';
+import express from 'express';
+import http from 'http';
 import { errorMapping } from './errorMapping';
 import {initServerState, getServerState} from '../../state';
+import { tableRouter } from './tableRoute';
 
 describe('Testing route: /table', function(){
+
+    let app;
+    let server;
+
+    this.beforeEach((done) => {
+        app = express();
+        server = http.createServer(app);
+        app.use(express.json());
+        app.use(tableRouter);
+        server.listen(8080, () => {
+            done();
+        })
+    })
     this.afterEach(() => {
         server.close();
     });

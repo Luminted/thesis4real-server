@@ -2,11 +2,11 @@
   "name": "server",
   "version": "0.0.0",
   "description": "",
-  "main": "src/server.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "node -r ts-node/register ./src/server.ts",
-    "start:debug": "node --inspect=5859 -r ts-node/register ./src/server.ts",
-    "dev": "nodemon",
+    "start": "node -r ts-node/register -r dotenv/config ./src/index.ts",
+    "start:debug": "NODE_ENV=development npm run start -- --inspect=9229 ",
+    "start:dev": "NODE_ENV=development nodemon",
     "build": "tsc",
     "test": "mocha src/**/*.test.* -r ts-node/register",
     "test:debug": "mocha ./src/routes/table/tableRoute.test.ts --inspect=5859 -r ts-node/register"
@@ -16,6 +16,8 @@
   "dependencies": {
     "@types/socket.io": "^2.1.4",
     "@types/uuid": "^3.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "immer": "^5.3.6",
     "install": "^0.13.0",
@@ -48,6 +50,7 @@
     "eslint-plugin-import": "^2.20.1",
     "mocha": "^7.0.1",
     "nodemon": "^2.0.2",
+    "ora": "^4.0.4",
     "sinon": "^9.0.2",
     "socket.io-client": "^2.3.0",
     "ts-node": "^8.6.2",
