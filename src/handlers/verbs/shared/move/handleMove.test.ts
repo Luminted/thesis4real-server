@@ -3,10 +3,10 @@ import * as assert from 'assert';
 
 import { handleMove } from './handleMove';
 import { SharedVerbTypes, SharedVerb } from "../../../.././types/verbTypes";
-import { EntityTypes, GameState, DisplayCardEntity, DeckEntity, CardTypes, Boundary } from "../../../.././types/dataModelDefinitions";
+import { EntityTypes, GameState, CardEntity, DeckEntity, CardTypes, Boundary } from "../../../.././types/dataModelDefinitions";
 import { clientFactory, cardFactory, deckFactory } from "../../../../factories";
 import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractDeckById } from "../../../../extractors/gameStateExtractors";
-import {initialGameState} from '../../../../__mocks__/initialGameState'
+import {initialGameState} from '../../../../mocks/initialGameState'
 
 describe(`handle ${SharedVerbTypes.MOVE}`, function(){
     let gameState: GameState;
@@ -39,7 +39,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             let verb: SharedVerb;
             let entityType = EntityTypes.CARD;
             let nextState: GameState;
-            let movedCard: DisplayCardEntity;
+            let movedCard: CardEntity;
             const originalCard = gameState.cards[0];
             let entityId =  originalCard.entityId;
             
@@ -221,7 +221,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             const cardHeight = card.height * card.scale;
             let verb: SharedVerb;
             let nextState: GameState;
-            let movedCard: DisplayCardEntity;
+            let movedCard: CardEntity;
 
             gameState = produce(gameState, draft => {
                 draft.cardBoundary = cardBoundary;

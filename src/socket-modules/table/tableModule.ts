@@ -35,15 +35,15 @@ export function TableModule(io: SocketIO.Server){
             });
         
             //VERB
-            socket.on(TableModuleClientEvents.VERB, (verb: Verb, acknowledgeFunction: Function) => {
+            socket.on(TableModuleClientEvents.VERB, (verb: Verb, ack: Function) => {
                 try{
                     if(verb && tableId){
                         const nextState = handleVerb(getGameState(), verb);
                         setGameState(nextState);
                         nspTable.to(tableId).emit(TableModuleServerEvents.SYNC, nextState);
                     }
-                    if(acknowledgeFunction){
-                        acknowledgeFunction();
+                    if(ack){
+                        ack();
                     }
                 }catch(err){
                     console.log(err);

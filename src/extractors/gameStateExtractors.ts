@@ -1,11 +1,9 @@
 import {GameState, EntityTypes, ClientHand, Client, Directions} from '../types/dataModelDefinitions'
 import { MaybeUndefined } from '../types/genericTypes';
 import {ServerState} from '../state'
-//TODO: implement in a way where state does not need to be passed
-//TODO: create unified type for extractor functions
 
 export function extractClientById(state: GameState, clientId: string){
-    return state.clients.find(c => c.clientInfo.clientId === clientId) || null;
+    return state.clients.get(clientId);
 }
 
 export function extractGrabbedEntityOfClientById(state: GameState, clientId){
@@ -13,11 +11,11 @@ export function extractGrabbedEntityOfClientById(state: GameState, clientId){
 }
 
 export function extractCardById(state: GameState, entityId: string){
-    return state.cards.find(c => c.entityId === entityId);
+    return state.cards.get(entityId);
 }
 
 export function extractDeckById(state: GameState, entityId: string){
-    return state.decks.find(d => d.entityId === entityId);
+    return state.decks.get(entityId);
 }
 
 export function extractEntityByTypeAndId(state: GameState, entityType: EntityTypes, entityId: string){
@@ -29,12 +27,12 @@ export function extractEntityByTypeAndId(state: GameState, entityType: EntityTyp
     }
 }
 
-export function extractClientHandById(state: GameState, clientId: string): MaybeUndefined<ClientHand> {
-    return state.hands.find(hand => hand.clientId === clientId);
+export function extractClientHandById(state: GameState, clientId: string) {
+    return state.hands.get(clientId);
 }
 
 export function extractNumberOfClients(state: GameState) : number {
-    return state.clients.length;
+    return state.clients.count();
 }
 
 export function extractDirections(state: ServerState): Directions[] {
@@ -42,7 +40,7 @@ export function extractDirections(state: ServerState): Directions[] {
 }
 
 export function extractCardFromClientHandById(state: GameState, clientId:string, entityId: string) {
-    return state.hands.find(hand => hand.clientId === clientId)?.cards.find(card => card.entityId === entityId);
+    return state.hands.get(clientId)?.cards.get(entityId);
 }
 
 export function extractBoundary(state: GameState, entityType) {

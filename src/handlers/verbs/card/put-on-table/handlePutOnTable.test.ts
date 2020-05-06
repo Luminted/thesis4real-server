@@ -3,7 +3,7 @@ import {handlePutOnTable} from './handlePutOnTable';
 import { CardVerbTypes, CardVerb } from '../../../../types/verbTypes';
 import { GameState, EntityTypes, CardTypes } from '../../../../types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory, clientHandFactory, baseCardFactory } from '../../../../factories';
-import { initialGameState } from '../../../../__mocks__/initialGameState';
+import { initialGameState } from '../../../../mocks/initialGameState';
 import produce from 'immer';
 import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 

@@ -3,7 +3,7 @@ import produce from 'immer';
 import { SharedVerbTypes, SharedVerb } from '../../../../types/verbTypes';
 import { GameState, EntityTypes, CardTypes } from '../../../../types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
-import { initialGameState } from '../../../../__mocks__/initialGameState';
+import { initialGameState } from '../../../../mocks/initialGameState';
 import {handleMoveTo} from './handleMoveTo';
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 

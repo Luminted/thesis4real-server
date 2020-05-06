@@ -4,7 +4,7 @@ import { handleDisconnect } from "./handleDisconnect";
 import { GameState, ClientHand, Client } from "../../../../types/dataModelDefinitions";
 import { extractEmptySeats } from "../../../../extractors/gameStateExtractors";
 import produce from "immer";
-import { initialGameState } from "../../../../__mocks__/initialGameState";
+import { initialGameState } from "../../../../mocks/initialGameState";
 import { clientFactory, clientHandFactory } from "../../../../factories";
 
 describe(`Event handler for: ${TableModuleClientEvents.DISCONNECT}`, function(){

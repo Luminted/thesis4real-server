@@ -5,7 +5,7 @@ import { SharedVerbTypes, SharedVerb } from '../../../.././types/verbTypes';
 import { GameState, EntityTypes, CardTypes } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import { handleRemove } from './handleRemove';
-import {initialGameState} from '../../../../__mocks__/initialGameState'
+import {initialGameState} from '../../../../mocks/initialGameState'
 
 
 

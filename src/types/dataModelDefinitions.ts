@@ -1,4 +1,5 @@
 import {MaybeNull} from './genericTypes'
+import Hashmap from 'hashmap'
 
 export enum CardTypes {
     FRENCH = 'FRENCH'
@@ -16,6 +17,21 @@ export interface FrenchCardConfig extends CardTypeConfig {
 
 export type CardConfig = FrenchCardConfig;
 
+export interface EntitySyncObject {
+    entityId: string,
+    positionX: number,
+    positionY: number,
+    grabLocked: boolean
+}
+
+export interface CardEntitySyncObject extends EntitySyncObject {
+    faceUp: boolean
+}
+
+export interface DeckEntitySyncObject extends EntitySyncObject {
+    cards: CardRepresentation[]
+}
+
 export interface BaseEntity {
     entityType: EntityTypes,
     entityId: string,
@@ -27,7 +43,7 @@ export interface BaseEntity {
     grabLocked: boolean
 }
 
-export interface BaseCard {
+export interface CardRepresentation {
     cardType: CardTypes,
     entityId: string,
     face: string,
@@ -36,19 +52,18 @@ export interface BaseCard {
     ownerDeck: MaybeNull<string>
 }
 
-export interface DisplayCardEntity extends BaseEntity {
+export interface CardEntity extends BaseEntity {
     cardType: CardTypes,
     entityId: string,
     face: string,
     entityType: EntityTypes.CARD,
     faceUp: boolean,
     ownerDeck: MaybeNull<string>
-    
 }
 
 export interface DeckEntity extends BaseEntity {
     entityType: EntityTypes.DECK
-    cards: BaseCard[],
+    cards: Hashmap<string,CardRepresentation>,
     drawIndex: number
 }
 
@@ -72,7 +87,7 @@ export type Client = {
 
 export type ClientHand = {
     clientId: string,
-    cards: BaseCard[],
+    cards: Hashmap<string,CardRepresentation>,
 }
 
 export type ClientInfo ={
@@ -98,10 +113,10 @@ export type Boundary = {
 }
 
 export interface GameState {
-    cards: DisplayCardEntity[],
-    decks: DeckEntity[],
-    clients: Client[],
-    hands: ClientHand[],
+    cards: Hashmap<string, CardEntity>,
+    decks: Hashmap<string, DeckEntity>,
+    clients: Hashmap<string, Client>,
+    hands: Hashmap<string, ClientHand>,
     cardScale: number,
     emptySeats: Directions[],
     cardBoundary: MaybeNull<Boundary>,
@@ -112,4 +127,9 @@ export type PlayTable = {
     tableId: string,
     clientLimit: number
     gameState: GameState,
+}
+
+export type SyncState = {
+    updatedCards: CardEntitySyncObject[];
+    newCards: CardEntity[];
 }

@@ -25,10 +25,18 @@ if(node_env === 'production'){
 }
 else if(node_env === 'development'){
     initServerState();
-    const devTable = createTable(6, 'dev');
-    addTable(devTable);
-    gameStateSetter(devTable.tableId)(produce(gameStateGetter(devTable.tableId)(), draft => {
-        for(let i=0; i < 200; i++){
+    const devTable1 = createTable(6, 'dev1');
+    const devTable2 = createTable(6, 'dev2');
+    addTable(devTable1);
+    addTable(devTable2);
+    gameStateSetter(devTable1.tableId)(produce(gameStateGetter(devTable1.tableId)(), draft => {
+        for(let i=0; i < 1000; i++){
+            draft.cards.push(cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, 'card-' + i));
+        }
+        console.log('ready for testing');
+    }))
+    gameStateSetter(devTable2.tableId)(produce(gameStateGetter(devTable2.tableId)(), draft => {
+        for(let i=0; i < 15; i++){
             draft.cards.push(cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, 'card-' + i));
         }
         console.log('ready for testing');

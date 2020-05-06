@@ -1,4 +1,5 @@
 export type AgentConfig = {
+    tableId: string
     cardId: string,
     frequency: number, //ms
     port: number,

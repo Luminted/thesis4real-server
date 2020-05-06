@@ -4,7 +4,7 @@ import { CardVerbTypes, CardVerb } from "../../../../types/verbTypes";
 import { GameState, GrabbedEntity, EntityTypes, CardTypes } from "../../../../types/dataModelDefinitions";
 import { clientFactory, cardFactory, deckFactory, clientHandFactory } from "../../../../factories";
 import produce from "immer";
-import { initialGameState } from "../../../../__mocks__/initialGameState";
+import { initialGameState } from "../../../../mocks/initialGameState";
 import { handleGrabFromHand } from "./handleGrabFromHand";
 import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { cardConfigLookup } from '../../../../config';
@@ -24,12 +24,11 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     } 
 
     beforeEach('Setting up test data...', () => {
+        const {clientId} = client.clientInfo;
         gameState = produce(initialGameState, draft => {
-            draft.cards = [cardFactory(0,0,CardTypes.FRENCH), cardFactory(0,100,CardTypes.FRENCH), cardFactory(100,0,CardTypes.FRENCH)]
-            draft.decks = [deckFactory(CardTypes.FRENCH, 10,12)]
-            draft.clients.push(client);
-            draft.hands = [clientHandFactory(client.clientInfo.clientId)];
-            draft.hands[0].cards.push(cardToGrab);
+            draft.clients.set(clientId, client);
+            draft.hands.set(clientId, clientHandFactory(clientId));
+            draft.hands.get(clientId).cards.set(cardToGrab.entityId, cardToGrab);
         })
     })
 
@@ -64,7 +63,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     it('should remove card from correct hand', function(){
         const nextState = handleGrabFromHand(gameState, verb);
         const nextHand = extractClientHandById(nextState, verb.clientId);
-        assert.equal(nextHand.cards.some(card => card.entityId === verb.entityId), false);
+        assert.equal(nextHand.cards.values().some(card => card.entityId === verb.entityId), false);
     })
     it('should set cards grab lock to true', function(){
         const {entityId} = cardToGrab;

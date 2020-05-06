@@ -4,7 +4,7 @@ import { clientFactory, cardFactory, deckFactory, clientHandFactory } from '../.
 import produce from 'immer';
 import { handlePutInHand } from './handlePutInHand';
 import { extractClientHandById, extractCardById, extractGrabbedEntityOfClientById } from '../../../../extractors/gameStateExtractors';
-import { initialGameState } from '../../../../__mocks__/initialGameState';
+import { initialGameState } from '../../../../mocks/initialGameState';
 import { GameState, CardTypes } from '../../../../types/dataModelDefinitions';
 
 describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {

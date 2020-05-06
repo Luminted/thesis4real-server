@@ -6,7 +6,7 @@ import { EntityTypes, GameState, Client, CardTypes } from "../../../../types/dat
 import { extractGrabbedEntityOfClientById, extractCardById, extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import produce from 'immer';
-import {initialGameState} from '../../../../__mocks__/initialGameState'
+import {initialGameState} from '../../../../mocks/initialGameState'
 
 
 

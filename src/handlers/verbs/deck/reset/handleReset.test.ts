@@ -2,10 +2,10 @@ import * as assert from 'assert';
 import {produce} from 'immer';
 
 import { DeckVerbTypes, DeckVerb } from '../../../.././types/verbTypes';
-import { GameState, EntityTypes, BaseCard, CardTypes } from '../../../.././types/dataModelDefinitions';
+import { GameState, EntityTypes, CardRepresentation, CardTypes } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory, clientHandFactory } from '../../../../factories';
 import {handleReset} from './handleReset'
-import {initialGameState} from '../../../../__mocks__/initialGameState'
+import {initialGameState} from '../../../../mocks/initialGameState'
 
 
 describe(`handle ${DeckVerbTypes.RESET} verb`, function() {

@@ -7,14 +7,31 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch via NPM",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script",
+                "start"
+            ],
+            "port": 9229,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Program",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/server.ts",
-            "preLaunchTask": "tsc: build - tsconfig.json",
+            "program": "${workspaceFolder}/dist/i.js",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
+            ],
+            "args": [
+                "-r",
+                "dotenv/config"
             ]
         },
         {
@@ -26,11 +43,11 @@
                 "-u",
                 "bdd",
                 "--timeout",
-                "999999",
+                "2000",
                 "--colors",
                 "-r",
                 "ts-node/register",
-                "${workspaceFolder}/src/tests.ts"
+                "${workspaceFolder}/src/socket-modules/table/e2e-tests/verb.test.ts"
             ],
             "internalConsoleOptions": "openOnSessionStart",
             "skipFiles": [

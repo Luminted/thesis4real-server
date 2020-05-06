@@ -1,4 +1,4 @@
-import { GameState, DisplayCardEntity } from "../../../../types/dataModelDefinitions";
+import { GameState, CardEntity } from "../../../../types/dataModelDefinitions";
 import { CardVerb } from "../../../../types/verbTypes";
 import produce from "immer";
 import { cardFactory } from "../../../../factories";
@@ -10,7 +10,7 @@ export function handlePutOnTable(state: GameState, verb: CardVerb): GameState{
         const cardPutOnTable = extractCardFromClientHandById(state, clientId, entityId);
         if(cardPutOnTable){
             const {face, faceUp, ownerDeck, cardType} = cardPutOnTable;
-            let displayCard: DisplayCardEntity = cardFactory(positionX, positionY, cardType, face, faceUp, entityId, ownerDeck);
+            let displayCard: CardEntity = cardFactory(positionX, positionY, cardType, face, faceUp, entityId, ownerDeck);
             draft.cards.push(displayCard);
             let subjectClientHand = extractClientHandById(draft, clientId);
             if(subjectClientHand){

@@ -251,12 +251,17 @@ landing page
 restrict movements --------LATER
 	snap back to original position
 Connection handling
+	+connect
+	+join
+	+verb
 	session handling
 	terminating room
 	handling disconnect
 	handling reconnect
-player concurrency
-stress test backend
+	lag handling
++ player concurrency
++ stress test backend
+optimize data transfer
 optimize front end
 Lobby page
 	start
@@ -274,6 +279,8 @@ obstruct interaction until state is set up
 chat
 404 page redirect
 further verbs
+	create card
+	shuffle deck
 menu
 	spawning decks
 	spawning cards
@@ -288,3 +295,12 @@ code cleanup
 	exports
 	orgaize types
 	revisit state design
+	proper build
+	linter
+
+
+
+THESIS NOTES
+
+Reson for using 3rd party npm package
+stress testing 

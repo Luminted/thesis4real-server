@@ -3,9 +3,9 @@ import produce from 'immer';
 
 import { handleDrawFaceUp } from './handleDrawFaceUp'
 import { DeckVerbTypes, DeckVerb } from '../../../.././types/verbTypes';
-import { GameState, BaseCard, CardTypes } from '../../../.././types/dataModelDefinitions';
+import { GameState, CardRepresentation, CardTypes } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
-import {initialGameState} from '../../../../__mocks__/initialGameState'
+import {initialGameState} from '../../../../mocks/initialGameState'
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 
 describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
@@ -35,7 +35,7 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
             entityType: originalDeck.entityType,
         }
         const nextGameState = handleDrawFaceUp(gameState, verb);
-        const poppedCard: BaseCard = originalDeck.cards[originalDrawIndex];
+        const poppedCard: CardRepresentation = originalDeck.cards[originalDrawIndex];
         const spawnedCard = extractCardById(nextGameState, poppedCard.entityId);
         const nextDeck = extractDeckById(nextGameState, originalDeck.entityId);
         assert.notEqual(spawnedCard, undefined);
@@ -57,7 +57,7 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
             entityType: originalDeck.entityType,
         }
         const nextGameState = handleDrawFaceUp(gameState, verb);
-        const poppedCard: BaseCard = originalDeck.cards[0];
+        const poppedCard: CardRepresentation = originalDeck.cards[0];
         const spawnedCard = extractCardById(nextGameState, poppedCard.entityId);
 
         assert.equal(spawnedCard.ownerDeck, originalDeck.entityId);

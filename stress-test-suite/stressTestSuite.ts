@@ -5,38 +5,69 @@ import {EntityTypes} from '../src/types/dataModelDefinitions';
 import {AgentConfig} from './types';
 import ora from 'ora'
 
-for(let i = 0; i < 6; i++){
+for(let i = 0; i < 1; i++){
     const agentConfig: AgentConfig = {
+        tableId: 'dev1',
         cardId: 'card-' + i,
-        duration: 10000,
-        frequency: 1000 / 60,
+        duration: 60000,
+        frequency: 1000 /60,
         host: 'http://localhost',
         port: 8080
     }
     launchAgent(agentConfig)
-    .then(promises => Promise.all(promises))
+    .then(promises => {
+        // console.log(promises)
+        console.log('resolving promises ', promises.length)
+        return Promise.all(promises);
+    })
     .then(measurements => {
+        console.log('processing results');
         const avg = measurements.map(m => m[1] - m[0]).reduce((acc, curr) => acc + curr, 0) / measurements.length;
         console.log(`AVG latency: ${avg}`);
     })
+    .catch(err => console.log(err))
 }
+// for(let i = 0; i < 6; i++){
+//     const agentConfig: AgentConfig = {
+//         tableId: 'dev2',
+//         cardId: 'card-' + i,
+//         duration: 10000,
+//         frequency: 1000 / 60,
+//         host: 'http://localhost',
+//         port: 8080
+//     }
+//     launchAgent(agentConfig)
+//     .then(promises => {
+//         // console.log(promises)
+//         console.log('resolving promises')
+//         return Promise.all(promises)
+//     })
+//     .then(measurements => {
+//         console.log('processing results');
+//         const avg = measurements.map(m => m[1] - m[0]).reduce((acc, curr) => acc + curr, 0) / measurements.length;
+//         console.log(`AVG latency: ${avg}`);
+//     })
+//     .catch(err => console.log(err))
+// }
 
 async function launchAgent(config: AgentConfig): Promise<Promise<[number,number]>[]> {
     const {
         port,
         host,
+        tableId,
         cardId,
         duration,
         frequency
     } = config;
     const socket = SocketIOClient.connect(`${host}:${port}/table`, {
         query: {
-            tableId: 'dev'
+            tableId
         }
     });
 
     return await new Promise((resolve, reject) => {
         socket.on('connect', () => {
+            console.log('agent connected')
             const grabVerb: Verb = {
                 clientId: socket.id,
                 entityId: cardId,
