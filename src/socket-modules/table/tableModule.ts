@@ -3,10 +3,11 @@ import { extractTableById } from "../../extractors/serverStateExtractors";
 import {TableModuleClientEvents, TableModuleServerEvents, JoinTablePayload} from '../../types/sockeTypes';
 import { Verb } from "../../types/verbTypes";
 import { handleVerb } from "../../handlers/verbs";
-import { Directions, ClientInfo } from "../../types/dataModelDefinitions";
+import { Directions, ClientInfo, GameState, SerializedGameState } from "../../types/dataModelDefinitions";
 import { handleJoinTable } from "./handlers/join-table/handleJoinTable";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { handleDisconnect } from "./handlers/disconnect/handleDisconnect";
+import { serializeGameState } from "./utils";
 
 export function TableModule(io: SocketIO.Server){
     const nspTable = io.of('/table');
@@ -21,17 +22,17 @@ export function TableModule(io: SocketIO.Server){
             const getGameState = gameStateGetter(tableId);
 
             //JOIN_TABLE
-            socket.on(TableModuleClientEvents.JOIN_TABLE, (acknowledgeFunction: (clientInfo: ClientInfo) => void) => {
+            socket.on(TableModuleClientEvents.JOIN_TABLE, (acknowledgeFunction: (clientInfo: ClientInfo, gameState: SerializedGameState) => void) => {
                 socket.join(tableId);
                 console.log(socket.id, ' joined table')
                 const nextGameState = handleJoinTable(getGameState(), {socketId: socket.id});
                 setGameState(nextGameState);
+                const serializedGameState = serializeGameState(nextGameState)
                 if(typeof acknowledgeFunction === 'function'){
                     const clientInfo = extractClientById(nextGameState, socket.id).clientInfo;
-                    console.log('sending client info', clientInfo);
-                    acknowledgeFunction(clientInfo);
+                    acknowledgeFunction(clientInfo, serializedGameState);
                 }
-                nspTable.to(tableId).emit(TableModuleServerEvents.SYNC, nextGameState);
+                socket.to(tableId).broadcast.emit(TableModuleServerEvents.SYNC, serializedGameState);
             });
         
             //VERB
@@ -40,7 +41,7 @@ export function TableModule(io: SocketIO.Server){
                     if(verb && tableId){
                         const nextState = handleVerb(getGameState(), verb);
                         setGameState(nextState);
-                        nspTable.to(tableId).emit(TableModuleServerEvents.SYNC, nextState);
+                        nspTable.to(tableId).emit(TableModuleServerEvents.SYNC, serializeGameState(nextState));
                     }
                     if(ack){
                         ack();

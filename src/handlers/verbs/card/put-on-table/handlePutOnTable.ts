@@ -10,11 +10,15 @@ export function handlePutOnTable(state: GameState, verb: CardVerb): GameState{
         const cardPutOnTable = extractCardFromClientHandById(state, clientId, entityId);
         if(cardPutOnTable){
             const {face, faceUp, ownerDeck, cardType} = cardPutOnTable;
+            const owner = state.decks.get(ownerDeck);
+            if(owner && owner.cards.find(card => card.entityId === entityId)){
+                return;
+            }
             let displayCard: CardEntity = cardFactory(positionX, positionY, cardType, face, faceUp, entityId, ownerDeck);
-            draft.cards.push(displayCard);
+            draft.cards.set(displayCard.entityId, displayCard);
             let subjectClientHand = extractClientHandById(draft, clientId);
             if(subjectClientHand){
-                subjectClientHand.cards = subjectClientHand.cards.filter(card => card.entityId !== entityId);
+                subjectClientHand.cards.filter(card => card.entityId !== entityId);
             }
         }
     })

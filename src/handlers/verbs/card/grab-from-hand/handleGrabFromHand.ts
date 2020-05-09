@@ -15,8 +15,8 @@ export function handleGrabFromHand(state: GameState, verb: CardVerb): GameState{
         const positionOffsetX = Math.round(baseWidth * cardScale / 2);
         const positionOffsetY = Math.round(baseHeight * cardScale / 2);
             const grabbedCard = cardFactory(positionX - positionOffsetX, positionY - positionOffsetY, cardType, face, faceUp, entityId, ownerDeck, undefined, true);
-            draft.cards.push(grabbedCard);
-            extractClientHandById(draft, clientId).cards = extractClientHandById(state, clientId).cards.filter(card => card.entityId !== entityId);
+            draft.cards.set(grabbedCard.entityId, grabbedCard);
+            extractClientHandById(draft, clientId).cards.filter(card => card.entityId !== entityId);
             extractClientById(draft, clientId).grabbedEntitiy = {
                 entityId,
                 entityType,

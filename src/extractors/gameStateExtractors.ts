@@ -1,5 +1,4 @@
 import {GameState, EntityTypes, ClientHand, Client, Directions} from '../types/dataModelDefinitions'
-import { MaybeUndefined } from '../types/genericTypes';
 import {ServerState} from '../state'
 
 export function extractClientById(state: GameState, clientId: string){
@@ -32,7 +31,7 @@ export function extractClientHandById(state: GameState, clientId: string) {
 }
 
 export function extractNumberOfClients(state: GameState) : number {
-    return state.clients.count();
+    return state.clients.size;
 }
 
 export function extractDirections(state: ServerState): Directions[] {
@@ -40,7 +39,7 @@ export function extractDirections(state: ServerState): Directions[] {
 }
 
 export function extractCardFromClientHandById(state: GameState, clientId:string, entityId: string) {
-    return state.hands.get(clientId)?.cards.get(entityId);
+    return state.hands.get(clientId)?.cards.find(card => card.entityId === entityId);
 }
 
 export function extractBoundary(state: GameState, entityType) {
@@ -57,4 +56,8 @@ export function extractBoundary(state: GameState, entityType) {
 
 export function extractEmptySeats(state: GameState) {
     return state.emptySeats;
+}
+
+export function extractCardFromDeckById(state: GameState, deckId: string, cardId: string){
+    return state.decks.get(deckId).cards.find(card => card.entityId === cardId);
 }

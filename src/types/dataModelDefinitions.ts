@@ -1,5 +1,4 @@
 import {MaybeNull} from './genericTypes'
-import Hashmap from 'hashmap'
 
 export enum CardTypes {
     FRENCH = 'FRENCH'
@@ -63,7 +62,7 @@ export interface CardEntity extends BaseEntity {
 
 export interface DeckEntity extends BaseEntity {
     entityType: EntityTypes.DECK
-    cards: Hashmap<string,CardRepresentation>,
+    cards: CardRepresentation[],
     drawIndex: number
 }
 
@@ -87,7 +86,7 @@ export type Client = {
 
 export type ClientHand = {
     clientId: string,
-    cards: Hashmap<string,CardRepresentation>,
+    cards: CardRepresentation[],
 }
 
 export type ClientInfo ={
@@ -113,10 +112,10 @@ export type Boundary = {
 }
 
 export interface GameState {
-    cards: Hashmap<string, CardEntity>,
-    decks: Hashmap<string, DeckEntity>,
-    clients: Hashmap<string, Client>,
-    hands: Hashmap<string, ClientHand>,
+    cards: Map<string, CardEntity>,
+    decks: Map<string, DeckEntity>,
+    clients: Map<string, Client>,
+    hands: Map<string, ClientHand>,
     cardScale: number,
     emptySeats: Directions[],
     cardBoundary: MaybeNull<Boundary>,
@@ -132,4 +131,12 @@ export type PlayTable = {
 export type SyncState = {
     updatedCards: CardEntitySyncObject[];
     newCards: CardEntity[];
+}
+
+export type SerializedGameState = {
+    cards: CardEntity[],
+    decks: DeckEntity[],
+    clients: Client[],
+    hands: ClientHand[],
+
 }

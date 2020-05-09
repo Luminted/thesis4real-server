@@ -3,7 +3,7 @@ import produce from 'immer';
 
 import { handleDrawFaceUp } from './handleDrawFaceUp'
 import { DeckVerbTypes, DeckVerb } from '../../../.././types/verbTypes';
-import { GameState, CardRepresentation, CardTypes } from '../../../.././types/dataModelDefinitions';
+import { GameState, CardRepresentation, CardTypes, DeckEntity } from '../../../.././types/dataModelDefinitions';
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
 import {initialGameState} from '../../../../mocks/initialGameState'
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
@@ -12,42 +12,42 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
 
     let gameState: GameState;
     let client = clientFactory('socket-1');
+    let deck: DeckEntity;
 
     beforeEach('Setting up test data...', () => {
+        deck = deckFactory(CardTypes.FRENCH, 10,12);
         gameState = produce(initialGameState, draft => {
-            draft.cards = [cardFactory(0,0, CardTypes.FRENCH), cardFactory(0,100, CardTypes.FRENCH), cardFactory(100,0, CardTypes.FRENCH)]
-            draft.decks = [deckFactory(CardTypes.FRENCH, 10,12)]
-            draft.clients.push(client);
-            draft.hands
+            draft.decks.set(deck.entityId, deck);
+            draft.clients.set(client.clientInfo.clientId, client);
         })
     })
 
     const testedVerbType = DeckVerbTypes.DRAW_FACE_UP; 
     it('should spawn a card directly on top of the deck', function() {
-        const originalDeck = gameState.decks[0];
-        const originalDrawIndex = originalDeck.drawIndex;
+        // const originalDeck = deck;
+        const originalDrawIndex = deck.drawIndex;
         const verb: DeckVerb = {
             type: testedVerbType,
             clientId: client.clientInfo.clientId,
             positionX: 0,
             positionY: 0,
-            entityId: originalDeck.entityId,
-            entityType: originalDeck.entityType,
+            entityId: deck.entityId,
+            entityType: deck.entityType,
         }
         const nextGameState = handleDrawFaceUp(gameState, verb);
-        const poppedCard: CardRepresentation = originalDeck.cards[originalDrawIndex];
-        const spawnedCard = extractCardById(nextGameState, poppedCard.entityId);
-        const nextDeck = extractDeckById(nextGameState, originalDeck.entityId);
+        const drawnCard: CardRepresentation = deck.cards[originalDrawIndex];
+        const spawnedCard = extractCardById(nextGameState, drawnCard.entityId);
+        const nextDeck = extractDeckById(nextGameState, deck.entityId);
         assert.notEqual(spawnedCard, undefined);
-        assert.equal(spawnedCard.entityId ,poppedCard.entityId);
-        assert.notEqual(poppedCard.entityId, nextDeck.cards[nextDeck.drawIndex].entityId);
-        assert.equal(spawnedCard.positionX, originalDeck.positionX);
-        assert.equal(spawnedCard.positionY, originalDeck.positionY);
+        assert.equal(spawnedCard.entityId ,drawnCard.entityId);
+        assert.notEqual(drawnCard.entityId, nextDeck.cards[nextDeck.drawIndex].entityId);
+        assert.equal(spawnedCard.positionX, deck.positionX);
+        assert.equal(spawnedCard.positionY, deck.positionY);
         assert.equal(spawnedCard.faceUp, true);
     })
 
-    it('should set correct decks entityId to spawned card', function() {
-        const originalDeck = gameState.decks[0];
+    it('should set correct decks entityId as owner of spawned card', function() {
+        const originalDeck = deck;
         const verb: DeckVerb = {
             type: testedVerbType,
             clientId: client.clientInfo.clientId,
@@ -63,20 +63,29 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         assert.equal(spawnedCard.ownerDeck, originalDeck.entityId);
     })
     it('should increase correct decks drawIndex by 1', function() {
-        const originalDeck = gameState.decks[0];
         const verb: DeckVerb = {
             type: testedVerbType,
             clientId: client.clientInfo.clientId,
             positionX: 0,
             positionY: 0,
-            entityId: originalDeck.entityId,
-            entityType: originalDeck.entityType,
+            entityId: deck.entityId,
+            entityType: deck.entityType,
         }
         const nextGameState = handleDrawFaceUp(gameState, verb);
-        const nextDeck = extractDeckById(nextGameState, originalDeck.entityId);
-
-        assert.equal(nextDeck.drawIndex, originalDeck.drawIndex + 1);
+        const nextDeck = extractDeckById(nextGameState, deck.entityId);
+        assert.notDeepEqual(gameState, nextGameState)
+        assert.equal(nextDeck.drawIndex, deck.drawIndex + 1);
     })
-
-
+    it('should not remove cards from deck', function(){
+        const verb: DeckVerb = {
+            type: testedVerbType,
+            clientId: client.clientInfo.clientId,
+            positionX: 0,
+            positionY: 0,
+            entityId: deck.entityId,
+            entityType: deck.entityType,
+        }
+        const nextGameState = handleDrawFaceUp(gameState, verb);
+        assert.equal(extractDeckById(nextGameState, deck.entityId).cards.length, deck.cards.length);
+    })
 })

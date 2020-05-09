@@ -25,8 +25,8 @@ describe(`handle ${SharedVerbTypes.RELEASE} verb`, function() {
 
     beforeEach('Setting up test data...', () => {
         gameState = produce(initialGameState, draft => {
-            draft.cards = [card]
-            draft.clients.push(client);
+            draft.cards.set(card.entityId, card);
+            draft.clients.set(client.clientInfo.clientId, client);
         })
     })
 

@@ -16,9 +16,9 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
 
     beforeEach('Setting up test data...', () => {
         gameState = produce(initialGameState, draft => {
-            draft.cards = [cardFactory(100,0, CardTypes.FRENCH), cardFactory(100,0, CardTypes.FRENCH), cardToMove]
-            draft.decks = [deckFactory(CardTypes.FRENCH, 10,10), deckFactory(CardTypes.FRENCH, 10,10), deckToMove]
-            draft.clients.push(client);
+            draft.cards.set(cardToMove.entityId ,cardToMove);
+            draft.decks.set(deckToMove.entityId, deckToMove);
+            draft.clients.set(client.clientInfo.clientId ,client);
         })
     })
 

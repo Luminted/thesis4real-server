@@ -13,18 +13,19 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
 
     let gameState: GameState;
     let client = clientFactory('socket-1');
+    const deckToRemove = deckFactory(CardTypes.FRENCH, 10,10);
+    const cardToRemove = cardFactory(100,0, CardTypes.FRENCH);
     const verbType = SharedVerbTypes.REMOVE;
 
     beforeEach('Setting up test data...', () => {
         gameState = produce(initialGameState, draft => {
-            draft.cards = [cardFactory(100,0, CardTypes.FRENCH), cardFactory(100,0, CardTypes.FRENCH)]
-            draft.decks = [deckFactory(CardTypes.FRENCH, 10,10), deckFactory(CardTypes.FRENCH, 10,10)]
-            draft.clients.push(client);
+            draft.cards.set(cardToRemove.entityId, cardToRemove); 
+            draft.decks.set(cardToRemove.entityId, deckToRemove);
+            draft.clients.set(client.clientInfo.clientId ,client);
         })
     })
 
     it('should remove correct deck from game state', function() {
-        const deckToRemove = gameState.decks[0];
         const verb: SharedVerb = {
             type: verbType,
             clientId: client.clientInfo.clientId,
@@ -35,11 +36,10 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
         }
 
         const nextGameState = handleRemove(gameState, verb);
-        assert.equal(nextGameState.decks.some(d => d.entityId === deckToRemove.entityId), false);
+        assert.equal(nextGameState.decks.has(deckToRemove.entityId), false);
     })
 
     it('should remove correct card from game state', function() {
-        const cardToRemove = gameState.cards[0];
         const verb: SharedVerb = {
             type: verbType,
             clientId: client.clientInfo.clientId,
@@ -50,7 +50,7 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
         }
 
         const nextGameState = handleRemove(gameState, verb);
-        assert.equal(nextGameState.cards.some(d => d.entityId === cardToRemove.entityId), false);
+        assert.equal(nextGameState.cards.has(cardToRemove.entityId), false);
     })
 
 })

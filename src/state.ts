@@ -1,18 +1,22 @@
-import produce from "immer";
+import produce, { enableMapSet } from "immer";
 import { GameState, Directions, PlayTable } from "./types/dataModelDefinitions";
 import { serverConfig, ServerConfig } from "./config/serverConfig";
 import { extractTableById } from "./extractors/serverStateExtractors";
+ 
+
+// Enabling Map support for ImmerJs
+enableMapSet();
 
 //TODO: serverState should have getters instead of extractors
 //TODO: think about making state gated to domains
 export type ServerState = {
     directions: Directions[],
-    tables: PlayTable[],
+    tables: Map<string, PlayTable>,
     serverConfig: ServerConfig
 }
 
-const initialServerState: ServerState = {
-    tables: [],
+export const initialServerState: ServerState = {
+    tables: new Map<string, PlayTable>(),
     directions: [],
     serverConfig: serverConfig
 }
@@ -50,7 +54,7 @@ export function addTable(table: PlayTable) {
         initServerState();
     }
     serverState = produce(serverState, draft => {
-        draft.tables.push(table);
+        draft.tables.set(table.tableId, table);
     })
 }
 
@@ -59,7 +63,7 @@ export function removeTable(tableId: string) {
         initServerState();
     }
     serverState = produce(serverState, draft => {
-        draft.tables = serverState.tables.filter(table => table.tableId !== tableId);
+        draft.tables.delete(tableId);
     })
 }
 
@@ -69,6 +73,6 @@ export function gameStateGetter(tableId: string) {
             initServerState();
         }
         //TODO: handle undefined
-        return serverState.tables.find(table => table.tableId === tableId).gameState;
+        return serverState.tables.get(tableId).gameState;
     }
 }

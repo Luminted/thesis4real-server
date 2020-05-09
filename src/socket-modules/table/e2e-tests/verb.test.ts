@@ -8,9 +8,10 @@ import { TableModule } from '../tableModule';
 import { TableModuleClientEvents, TableModuleServerEvents, JoinTablePayload } from '../../../types/sockeTypes';
 import { createTable } from '../createTable';
 import { initServerState, addTable, gameStateGetter } from '../../../state';
-import { PlayTable, EntityTypes, GameState } from '../../../types/dataModelDefinitions';
-import * as verbHandler from '../../../handlers/verbs'
+import { PlayTable, EntityTypes, GameState, SerializedGameState } from '../../../types/dataModelDefinitions';
 import { Verb, SharedVerbTypes } from '../../../types/verbTypes';
+import * as verbHandler from '../../../handlers/verbs'
+import * as utils from '../utils';
 
 describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
     const url = 'http://localhost';
@@ -19,7 +20,7 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
     const namespace = '/table';
     const tableModule = TableModule(socketServer);
     let getGameState: () => GameState;
-    let socket: SocketIOClient.Socket;
+    let clientSocket: SocketIOClient.Socket;
     let playTable: PlayTable;
     let verb: Verb;
 
@@ -28,20 +29,19 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
         playTable = createTable(1);
         getGameState = gameStateGetter(playTable.tableId);
         addTable(playTable);
-        socket = SocketIOClient(`${url}:${port}${namespace}`, {
+        clientSocket = SocketIOClient(`${url}:${port}${namespace}`, {
             query: {
                 tableId: playTable.tableId
             }
         });
-        socket.on('connect', () => {
-            console.log(`connected to ${url}${namespace}`)
+        clientSocket.on('connect', () => {
             done();
         })
     })
 
     afterEach((done) => {
-        if(socket.connected){
-            socket.disconnect();
+        if(clientSocket.connected){
+            clientSocket.disconnect();
             setTimeout(done, 500)
         }
     })
@@ -54,7 +54,7 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
 
     beforeEach(() => {
         verb = {
-            clientId: socket.id,
+            clientId: clientSocket.id,
             entityId: 'entity01',
             entityType: EntityTypes.CARD,
             positionX: 0,
@@ -65,7 +65,7 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
 
     it(`should call handleVerb with received verb`, function(done) {
         const handleVerbSpy = spy(verbHandler, 'handleVerb');
-        socket.emit(TableModuleClientEvents.VERB, verb, ()=>{
+        clientSocket.emit(TableModuleClientEvents.VERB, verb, ()=>{
             assert.equal(handleVerbSpy.called, true);
             assert.deepEqual(handleVerbSpy.getCall(0).args[1], verb);
             handleVerbSpy.restore();
@@ -76,7 +76,7 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
     it(`should call handleVerb with gamestate belonging to table`, function(done) {
         const handleVerbSpy = spy(verbHandler, 'handleVerb');
         const {gameState} = playTable;
-        socket.emit(TableModuleClientEvents.VERB, verb, ()=>{
+        clientSocket.emit(TableModuleClientEvents.VERB, verb, ()=>{
             assert.equal(handleVerbSpy.called, true);
             assert.deepEqual(handleVerbSpy.getCall(0).args[0], gameState);
             handleVerbSpy.restore();
@@ -84,9 +84,9 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
         });
     })
 
-    it(`should call handleVerb with recevied payload`, function(done) {
+    it(`should call handleVerb with recevied verb`, function(done) {
         const handleVerbSpy = spy(verbHandler, 'handleVerb');
-        socket.emit(TableModuleClientEvents.VERB, verb, ()=>{
+        clientSocket.emit(TableModuleClientEvents.VERB, verb, ()=>{
             assert.equal(handleVerbSpy.called, true);
             assert.deepEqual(handleVerbSpy.getCall(0).args[1], verb);
             handleVerbSpy.restore();
@@ -96,25 +96,29 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
 
     it('should set state with result of handleVerb', function(done) {
         const handleVerbSpy = spy(verbHandler, 'handleVerb');
-        socket.emit(TableModuleClientEvents.VERB, verb, () => {
+        clientSocket.emit(TableModuleClientEvents.VERB, verb, () => {
             assert.equal(getGameState(), handleVerbSpy.returnValues[0]);
             handleVerbSpy.restore();
             done();
         })
     })
-    it(`should emit ${TableModuleServerEvents.SYNC} with the result of handleVerb`, function(done){
+    it(`should emit ${TableModuleServerEvents.SYNC} with the result of serializeGameState called with the result of handleVerb`, function(done){
         const handleVerbSpy = spy(verbHandler, 'handleVerb');
-        socket.emit(TableModuleClientEvents.JOIN_TABLE, {socketId: socket.id});
-        socket.once(TableModuleServerEvents.SYNC, () => {
-            socket.emit(TableModuleClientEvents.VERB, verb);
-            socket.once(TableModuleServerEvents.SYNC, (gameState: GameState) => {
-                assert.deepEqual(gameState, handleVerbSpy.returnValues[0]);
-                done();
-            })
+        const serializeGameStateSpy = spy(utils, 'serializeGameState');
+        clientSocket.once(TableModuleServerEvents.SYNC, (gameState: SerializedGameState) => {
+            let handlerResult = handleVerbSpy.returnValues[0];
+            assert.equal(serializeGameStateSpy.calledWith(handlerResult), true);
+            assert.deepEqual(gameState, serializeGameStateSpy.returnValues[0]);
+            handleVerbSpy.restore();
+            serializeGameStateSpy.restore();
+            done();
         })
+        clientSocket.emit(TableModuleClientEvents.JOIN_TABLE, () => {
+            clientSocket.emit(TableModuleClientEvents.VERB, verb);
+        });
     })
     it('should call acknowledgement function if given', function(done){
-        socket.emit(TableModuleClientEvents.VERB, verb, () =>{
+        clientSocket.emit(TableModuleClientEvents.VERB, verb, () =>{
             done();
         })
     })

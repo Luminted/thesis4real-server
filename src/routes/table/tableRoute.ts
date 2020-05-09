@@ -25,6 +25,7 @@ tableRouter.post(routeBase + '/create', async function (req, res) {
         });
         return;
     }else{
+        addTable(newTable);
         res.status(201).json(newTable);
     }
 })
@@ -33,11 +34,10 @@ tableRouter.post(routeBase + '/create', async function (req, res) {
 async function createPlayTable(clientLimit: number) {
     const serverState = getServerState();
     const tableLimit = serverState.serverConfig.tableLimit;
-    const currentTableCount = serverState.tables.length;
+    const currentTableCount = serverState.tables.size;
     
     if(currentTableCount < tableLimit) {
         const newTable = createTable(clientLimit);
-        addTable(newTable);
         return newTable;
     }
     else{

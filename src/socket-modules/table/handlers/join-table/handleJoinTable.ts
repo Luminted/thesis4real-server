@@ -6,10 +6,10 @@ import { JoinTablePayload } from "../../../../types/sockeTypes";
 
 export function handleJoinTable(state: GameState, payload: JoinTablePayload){
     return produce(state, draft => {
-        const nextEmptySeat = extractEmptySeats(draft).shift();
+        const nextEmptySeat = extractEmptySeats(draft).pop();
         const newClient = clientFactory(payload.socketId, nextEmptySeat);
         const newHand = clientHandFactory(newClient.clientInfo.clientId);
-        draft.clients.push(newClient);
-        draft.hands.push(newHand);
+        draft.clients.set(newClient.clientInfo.clientId, newClient);
+        draft.hands.set(newHand.clientId, newHand);
     })
 } 

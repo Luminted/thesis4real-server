@@ -1,5 +1,4 @@
 import uuidv4 from 'uuid/v4';
-import Hashmap from 'hashmap';
 
 import {Client, CardEntity, DeckEntity, EntityTypes, CardRepresentation, ClientHand, Directions, CardTypes} from './types/dataModelDefinitions';
 import {cardConfigLookup, gameConfig} from './config';
@@ -33,7 +32,7 @@ export function cardFactory(positionX: number, positionY: number, cardType: Card
     return card;
 }
 
-export function baseCardFactory(cardType: CardTypes, face: string, entityId?: string, ownerDeck?: string, faceUp?: boolean): CardRepresentation {
+export function cardRepFactory(cardType: CardTypes, face: string, entityId?: string, ownerDeck?: string, faceUp?: boolean): CardRepresentation {
     return {
         cardType,
         entityId: entityId || uuidv4(),
@@ -44,9 +43,19 @@ export function baseCardFactory(cardType: CardTypes, face: string, entityId?: st
     }
 }
 
+export function createCardRepresentationFromCardEntity(card: CardEntity): CardRepresentation{
+    return {
+        entityId: card.entityId,
+        cardType: card.cardType,
+        entityType: card.entityType,
+        face: card.face,
+        faceUp: card.faceUp,
+        ownerDeck: card.ownerDeck
+    }
+}
+
 export function deckFactory(cardType: CardTypes, positionX: number, positionY: number, scale?: number): DeckEntity {
     const {baseHeight, baseWidth, suits, cardRange} = cardConfigLookup[cardType];
-    let a = suits.map(suite => (cardRange.map(card => baseCardFactory(cardType, `${suite} ${card}  `)))).reduce((acc, curr) => acc.concat(curr), [])
     return {
         entityId: uuidv4(),
         entityType: EntityTypes.DECK,
@@ -57,13 +66,15 @@ export function deckFactory(cardType: CardTypes, positionX: number, positionY: n
         positionY,
         grabLocked: false,
         drawIndex: 0,
-        cards: new Hashmap<string, CardRepresentation>() 
+        cards: suits.reduce<CardRepresentation[]>((cards, suite) => {
+            return cards.concat(cardRange.map(face => cardRepFactory(cardType, `${suite} ${face}`)))
+        }, [])
     }
 }
 
 export function clientHandFactory(clientId: string): ClientHand {
     return {
         clientId,
-        cards: new Hashmap<string, CardRepresentation>
+        cards: []
     }
 }

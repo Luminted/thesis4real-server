@@ -7,13 +7,10 @@ export function handleRemove(state: GameState, verb: SharedVerb): GameState {
     return produce(state, draft => {
         const {entityType, entityId} = verb;
         if(entityType === EntityTypes.CARD){
-            draft.cards = state.cards.filter(card => card.entityId !== entityId);
+            draft.cards.delete(entityId);
         }
         else if(entityType === EntityTypes.DECK){
-            let filtered =  state.decks.filter(deck =>{
-                return deck.entityId !== entityId;
-            } )
-            draft.decks =filtered
+            draft.decks.delete
         }
     })
 }

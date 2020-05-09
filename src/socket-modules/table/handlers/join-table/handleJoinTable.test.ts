@@ -6,14 +6,15 @@ import { createTable } from "../../createTable";
 import { initServerState, addTable, gameStateGetter, gameStateSetter } from "../../../../state";
 import { handleJoinTable } from "./handleJoinTable";
 import { PlayTable, GameState } from "../../../../types/dataModelDefinitions";
-import { extractEmptySeats } from '../../../../extractors/gameStateExtractors';
+import { extractEmptySeats, extractCardFromClientHandById, extractClientById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 
 
 describe(`Socket handler for: ${TableModuleClientEvents.JOIN_TABLE}`, function(){
     let table: PlayTable;
     let gameState: GameState;
+    const socketId = 'socket-1'
     const payload: JoinTablePayload = {
-        socketId: 'socket-1'
+        socketId
     }
     
     beforeEach(() => {
@@ -23,29 +24,24 @@ describe(`Socket handler for: ${TableModuleClientEvents.JOIN_TABLE}`, function()
         gameState = gameStateGetter(table.tableId)();
     })
 
-    it('should create client to proper table', function(){
+    it('should create client with sent socketId as clientId', function(){
         const nextState = handleJoinTable(gameState, payload);
-        const client = nextState.clients[0];
+        const client = extractClientById(nextState, socketId);
         assert.notEqual(client, undefined);
     })
 
     it('should create hand for client', function(){
         const nextState = handleJoinTable(gameState, payload);
-        const client = nextState.clients[0];
-        const hand = nextState.hands[0];
-        assert.equal(client.clientInfo.clientId, hand.clientId);
+        const hand = extractClientHandById(nextState, socketId);
+        assert.notEqual(hand, undefined);
     })
     it('should assign the next empty seat to client and remove it from empty seats', function(){
-        const nextSeat = extractEmptySeats(gameState)[0];
+        const emptySeats = extractEmptySeats(gameState);
+        const nextSeat = emptySeats[emptySeats.length -1];
         const nextState = handleJoinTable(gameState, payload);
-        const client = nextState.clients[0];
+        const client = extractClientById(nextState, socketId);
         const nextStateEmptySeats = extractEmptySeats(nextState);
         assert.equal(client.clientInfo.seatedAt, nextSeat);
-        assert.equal(nextStateEmptySeats.some(seat => seat === nextSeat), false);
-    })
-    it('should create client with socketId in payload', function(){
-        const nextState = handleJoinTable(gameState, payload);
-        const client = nextState.clients[0];
-        assert.equal(client.clientInfo.clientId, payload.socketId);
+        assert.equal(nextStateEmptySeats.includes(nextSeat), false);
     })
 })

@@ -6,9 +6,7 @@ import {tableRouter} from './routes/table/tableRoute';
 import { TableModule } from './socket-modules/table/tableModule';
 import {addTable, initServerState, gameStateSetter, gameStateGetter } from './state';
 import { createTable } from './socket-modules/table/createTable';
-import { deckFactory, cardFactory } from './factories';
-import { CardTypes } from './types/dataModelDefinitions';
-import produce from 'immer';
+import produce, { enableMapSet } from 'immer';
 
 const app = express();
 app.use(express.json());
@@ -16,7 +14,9 @@ app.use(cors());
 app.use(tableRouter);
 
 const server = http.createServer(app);
-const io = SocketIO(server);
+const io = SocketIO(server, {
+    serveClient: false,
+});
 TableModule(io);
 
 const node_env = process.env.NODE_ENV;
@@ -31,13 +31,13 @@ else if(node_env === 'development'){
     addTable(devTable2);
     gameStateSetter(devTable1.tableId)(produce(gameStateGetter(devTable1.tableId)(), draft => {
         for(let i=0; i < 1000; i++){
-            draft.cards.push(cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, 'card-' + i));
+            // draft.cards.set(cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, 'card-' + i));
         }
         console.log('ready for testing');
     }))
     gameStateSetter(devTable2.tableId)(produce(gameStateGetter(devTable2.tableId)(), draft => {
         for(let i=0; i < 15; i++){
-            draft.cards.push(cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, 'card-' + i));
+            // draft.cards.push(cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, 'card-' + i));
         }
         console.log('ready for testing');
     }))

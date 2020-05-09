@@ -5,6 +5,7 @@ import http from 'http';
 import { errorMapping } from './errorMapping';
 import {initServerState, getServerState} from '../../state';
 import { tableRouter } from './tableRoute';
+import { extractTableById } from '../../extractors/serverStateExtractors';
 
 describe('Testing route: /table', function(){
 
@@ -44,7 +45,19 @@ describe('Testing route: /table', function(){
             })
             .end(done);
         })
-        it('should create a new room', function(done){
+        it('should return with created tables ID', function(done){
+            request(server)
+            .post('/table/create')
+            .send({
+                validation: false
+            })
+            .expect(res => {
+                const tableId = res.body.tableId;
+                assert.equal(typeof tableId, 'string');
+            })
+            .end(done);
+        })
+        it('should create a new table', function(done){
             request(server)
             .post('/table/create')
             .send({
@@ -52,12 +65,13 @@ describe('Testing route: /table', function(){
                 clientLimit: 1,
             })
             .expect(res => {
-                const createdTable = getServerState().tables[0];
+                const tableId = res.body.tableId;
+                const createdTable = getServerState().tables.get(tableId);
                 assert.equal(res.body.tableId, createdTable.tableId);
             })
             .end(done);
         })
-        it('should respond with proper error message and status code to undefined maxRoomSize', function(done){
+        it('should respond with proper error message and status code to undefined maxtableSize', function(done){
             const payload = {
                 validation: true,
                 maxTableSize: undefined

@@ -1,10 +1,11 @@
-import { GameState, Directions } from "../types/dataModelDefinitions";
+import { GameState, Directions, CardEntity, Client, DeckEntity, ClientHand } from "../types/dataModelDefinitions";
+ 
 
 export const initialGameState: GameState = {
-    cards: [],
-    clients: [],
-    decks: [],
-    hands: [],
+    cards: new Map<string, CardEntity>(),
+    clients: new Map<string, Client>(),
+    decks: new Map<string, DeckEntity>(),
+    hands: new Map<string, ClientHand>(),
     cardScale: 1,
     cardBoundary: null,
     deckBoundary: null,

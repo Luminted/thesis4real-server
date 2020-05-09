@@ -7,9 +7,10 @@ import { TableModule } from './../tableModule';
 import { TableModuleClientEvents, TableModuleServerEvents } from '../../../types/sockeTypes';
 import { createTable } from './../createTable';
 import { initServerState, addTable, gameStateGetter } from '../../../state';
-import { PlayTable, GameState, ClientInfo } from '../../../types/dataModelDefinitions';
-import * as joinTableHandler from '../handlers/join-table/handleJoinTable'; 
+import { PlayTable, GameState, ClientInfo, SerializedGameState } from '../../../types/dataModelDefinitions';
 import { extractClientById } from '../../../extractors/gameStateExtractors';
+import * as utils from '../utils';
+import * as joinTableHandler from '../handlers/join-table/handleJoinTable'; 
 
 
 
@@ -20,7 +21,7 @@ describe(`Socket event: ${TableModuleClientEvents.JOIN_TABLE}`, function(){
     const namespace = '/table';
     const tableModule = TableModule(socketServer);
     let getGameState: () => GameState;
-    let socket: SocketIOClient.Socket;
+    let client1: SocketIOClient.Socket;
     let playTable: PlayTable;
 
     beforeEach((done)=> {
@@ -28,22 +29,21 @@ describe(`Socket event: ${TableModuleClientEvents.JOIN_TABLE}`, function(){
         playTable = createTable(1);
         getGameState = gameStateGetter(playTable.tableId);
         addTable(playTable);
-        socket = SocketIOClient(`${url}:${port}${namespace}`, {
+        client1 = SocketIOClient(`${url}:${port}${namespace}`, {
             forceNew: true,
             reconnection: false,
             query: {
                 tableId: playTable.tableId
             }
         });
-        socket.on('connect', () => {
-            console.log(`connected to ${url}${namespace}`);
+        client1.on('connect', () => {
             done();
         })
     })
 
     afterEach((done) => {
-        if(socket.connected){
-            socket.disconnect();
+        if(client1.connected){
+            client1.disconnect();
             setTimeout(done, 500)
         }
     })
@@ -53,23 +53,33 @@ describe(`Socket event: ${TableModuleClientEvents.JOIN_TABLE}`, function(){
     })
 
     it('should join client to tables room if table exists',function(done){
-        socket.emit(TableModuleClientEvents.JOIN_TABLE, () => {
+        client1.emit(TableModuleClientEvents.JOIN_TABLE, () => {
             socketServer.of('namespace').clients((err) => {
-                assert.equal(tableModule.sockets[socket.id].rooms[playTable.tableId], playTable.tableId);
+                assert.equal(tableModule.sockets[client1.id].rooms[playTable.tableId], playTable.tableId);
             })
             done();
         });
     });
-    it('should call acknowledgement function if given with clients info', function(done){
-        socket.emit(TableModuleClientEvents.JOIN_TABLE, (clientInfo: ClientInfo) =>{
-            const client = extractClientById(getGameState(), socket.id);
+    it('should call acknowledgement function with created clients info', function(done){
+        client1.emit(TableModuleClientEvents.JOIN_TABLE, (clientInfo: ClientInfo, gameState: GameState) =>{
+            const client = extractClientById(getGameState(), client1.id);
             assert.deepEqual(clientInfo, client.clientInfo);
+            done();
+        })
+    })
+    it('should call acknowledgement function with result of serializeGameState', function(done){
+        const serializeGameStateSpy = spy(utils, 'serializeGameState');
+        client1.emit(TableModuleClientEvents.JOIN_TABLE, (clientInfo: ClientInfo, gameState: GameState) =>{
+            const serializedState = serializeGameStateSpy.returnValues[0];
+            assert.equal(serializeGameStateSpy.called, true);
+            assert.deepEqual(gameState, serializedState);
+            serializeGameStateSpy.restore()
             done();
         })
     })
     it('should set the state with the result of handleJoinTable', function(done){
         const handleJoinTableSpy = spy(joinTableHandler, 'handleJoinTable');
-        socket.emit(TableModuleClientEvents.JOIN_TABLE, () => {
+        client1.emit(TableModuleClientEvents.JOIN_TABLE, () => {
             assert.deepEqual(getGameState(), handleJoinTableSpy.returnValues[0]);
             handleJoinTableSpy.restore();
             done();
@@ -78,20 +88,36 @@ describe(`Socket event: ${TableModuleClientEvents.JOIN_TABLE}`, function(){
     it('should call handleJoinTable with tables game state', function(done){
         const handleJoinTableSpy = spy(joinTableHandler, 'handleJoinTable');
         const originalGameState = getGameState();
-        socket.emit(TableModuleClientEvents.JOIN_TABLE, () => {
+        client1.emit(TableModuleClientEvents.JOIN_TABLE, () => {
             assert.equal(handleJoinTableSpy.called, true);
             assert.deepEqual(handleJoinTableSpy.args[0][0], originalGameState);
             handleJoinTableSpy.restore();
             done();
         })
     })
-    it(`should emit ${TableModuleServerEvents.SYNC} with result of handleJoinTable`, function(done){
+    it(`should broadcast ${TableModuleServerEvents.SYNC} to other clients with the result of serializeGameState called with the result of handleJoinTable`, function(done){
         const handleJoinTableSpy = spy(joinTableHandler, 'handleJoinTable');
-        socket.emit(TableModuleClientEvents.JOIN_TABLE);
-        socket.once(TableModuleServerEvents.SYNC, (gameState: GameState) => {
-            assert.deepEqual(gameState, handleJoinTableSpy.returnValues[0]);
+        const serializeGameStateSpy = spy(utils, 'serializeGameState');
+        const client2 = SocketIOClient(`${url}:${port}${namespace}`, {
+            forceNew: true,
+            reconnection: false,
+            query: {
+                tableId: playTable.tableId
+            }
+        });
+        client2.once(TableModuleServerEvents.SYNC, (gameState: SerializedGameState) => {
+            let handlerResult = handleJoinTableSpy.returnValues[0];
+            assert.equal(serializeGameStateSpy.calledWith(handlerResult), true);
+            assert.deepEqual(gameState, serializeGameStateSpy.returnValues[1]);
             handleJoinTableSpy.restore();
+            serializeGameStateSpy.restore();
             done();
         })
+        client2.once('connect', () => {
+            client2.emit(TableModuleClientEvents.JOIN_TABLE, () => {
+                client1.emit(TableModuleClientEvents.JOIN_TABLE);
+            })
+        })
+        
     })
 })

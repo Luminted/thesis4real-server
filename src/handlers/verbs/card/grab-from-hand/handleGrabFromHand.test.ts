@@ -28,7 +28,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         gameState = produce(initialGameState, draft => {
             draft.clients.set(clientId, client);
             draft.hands.set(clientId, clientHandFactory(clientId));
-            draft.hands.get(clientId).cards.set(cardToGrab.entityId, cardToGrab);
+            draft.hands.get(clientId).cards.push(cardToGrab);
         })
     })
 
@@ -63,7 +63,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     it('should remove card from correct hand', function(){
         const nextState = handleGrabFromHand(gameState, verb);
         const nextHand = extractClientHandById(nextState, verb.clientId);
-        assert.equal(nextHand.cards.values().some(card => card.entityId === verb.entityId), false);
+        assert.equal(nextHand.cards.find(card => card.entityId !== verb.entityId), undefined);
     })
     it('should set cards grab lock to true', function(){
         const {entityId} = cardToGrab;

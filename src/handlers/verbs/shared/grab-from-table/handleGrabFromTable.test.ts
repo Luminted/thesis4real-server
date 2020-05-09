@@ -24,9 +24,11 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
     beforeEach('Setting up test data...', () => {
         client = clientFactory('socket-1');
         gameState = produce(initialGameState, draft => {
-            draft.cards = [freeCard, lockedCard];
-            draft.decks = [freeDeck, lockedDeck];
-            draft.clients = [client]
+            draft.cards.set(freeCard.entityId, freeCard);
+            draft.cards.set(lockedCard.entityId, lockedCard);
+            draft.decks.set(freeDeck.entityId, freeDeck);
+            draft.decks.set(lockedDeck.entityId, lockedDeck);
+            draft.clients.set(client.clientInfo.clientId, client);
         })
     })
 

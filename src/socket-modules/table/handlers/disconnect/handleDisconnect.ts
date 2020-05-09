@@ -8,8 +8,8 @@ export function handleDisconnect(state: GameState, socketId: string){
         const client = extractClientById(state, socketId);
         if(client){
             const {seatedAt} = client.clientInfo;
-            draft.clients = state.clients.filter(client => client.clientInfo.clientId !== socketId);
-            draft.hands = state.hands.filter(hand => hand.clientId !== socketId);
+            draft.clients.delete(socketId);
+            draft.hands.delete(socketId);
             draft.emptySeats.push(seatedAt);
         }
     })

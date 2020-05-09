@@ -21,8 +21,8 @@ describe(`Event handler for: ${TableModuleClientEvents.DISCONNECT}`, function(){
             client = clientFactory(socketId, nextSeat);
             hand = clientHandFactory(socketId);
             client.clientInfo.seatedAt = nextSeat;
-            draft.clients.push(client);
-            draft.hands.push(hand);
+            draft.clients.set(client.clientInfo.clientId, client);
+            draft.hands.set(hand.clientId, hand);
         })
     })
 
@@ -34,10 +34,10 @@ describe(`Event handler for: ${TableModuleClientEvents.DISCONNECT}`, function(){
     })
     it('should remove client', function(){
         const nextState = handleDisconnect(gameState, socketId);
-        assert.equal(nextState.clients.some(c => c.clientInfo.clientId === client.clientInfo.clientId), false);
+        assert.equal(nextState.clients.has(client.clientInfo.clientId), false);
     })
     it('should remive clients hand', function(){
         const nextState = handleDisconnect(gameState, socketId);
-        assert.equal(nextState.hands.some(h => h.clientId === hand.clientId), false);
+        assert.equal(nextState.hands.has(hand.clientId), false);
     })
 })
