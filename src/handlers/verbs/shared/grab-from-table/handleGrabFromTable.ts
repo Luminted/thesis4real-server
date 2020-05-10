@@ -6,16 +6,16 @@ import { extractClientById, extractEntityByTypeAndId } from "../../../../extract
 
 export function handleGrab(state: GameState, verb: SharedVerb) {
     return produce(state, draft => {
-        const {positionX: positionX, positionY, entityId, entityType} = verb;
+        const {positionX, positionY, entityId, entityType, clientId} = verb;
         const entity = extractEntityByTypeAndId(draft, entityType, entityId);
-        if(!entity.grabLocked){
+        if(entity.grabbedBy === null){
             extractClientById(draft, verb.clientId).grabbedEntitiy = {
                 entityId,
                 entityType,
                 grabbedAtX: positionX,
                 grabbedAtY: positionY
             }
-            entity.grabLocked = true;
+            entity.grabbedBy = clientId;
         }
     })
 }

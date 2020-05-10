@@ -12,9 +12,9 @@ export function handlePutInHand(state: GameState, verb: CardVerb): GameState {
         if(deck && deck.cards.find(card => card.entityId === entityId)){
             return;
         }
-        const baseCard = cardRepFactory(cardType, face, entityId);
+        const cardRepresentation = cardRepFactory(cardType, face, entityId);
         let clientHand =extractClientHandById(draft, clientId)
-        clientHand.cards.push(baseCard);
+        clientHand.cards.push(cardRepresentation);
         extractClientById(draft, clientId).grabbedEntitiy = null;
         draft.cards.delete(entityId);
     })

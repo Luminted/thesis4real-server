@@ -7,6 +7,9 @@ import { TableModule } from './socket-modules/table/tableModule';
 import {addTable, initServerState, gameStateSetter, gameStateGetter } from './state';
 import { createTable } from './socket-modules/table/createTable';
 import produce, { enableMapSet } from 'immer';
+import { deckFactory } from './factories';
+import { CardTypes } from './types/dataModelDefinitions';
+import { initialGameState } from './mocks/initialGameState';
 
 const app = express();
 app.use(express.json());
@@ -25,22 +28,17 @@ if(node_env === 'production'){
 }
 else if(node_env === 'development'){
     initServerState();
-    const devTable1 = createTable(6, 'dev1');
-    const devTable2 = createTable(6, 'dev2');
-    addTable(devTable1);
-    addTable(devTable2);
-    gameStateSetter(devTable1.tableId)(produce(gameStateGetter(devTable1.tableId)(), draft => {
-        for(let i=0; i < 1000; i++){
-            // draft.cards.set(cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, 'card-' + i));
-        }
-        console.log('ready for testing');
-    }))
-    gameStateSetter(devTable2.tableId)(produce(gameStateGetter(devTable2.tableId)(), draft => {
-        for(let i=0; i < 15; i++){
-            // draft.cards.push(cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, 'card-' + i));
-        }
-        console.log('ready for testing');
-    }))
+    const devTable = createTable(6, 'dev');
+    devTable.gameState = produce(devTable.gameState, draft => {
+        const deck1 = deckFactory(CardTypes.FRENCH, 10,10)
+        const deck2 = deckFactory(CardTypes.FRENCH, 10,70)
+        console.log(deck1.entityId)
+        console.log(deck2.entityId)
+        draft.decks.set(deck1.entityId, deck1);
+        draft.decks.set(deck2.entityId, deck2);
+    })
+    addTable(devTable);
+    console.log(`Dev table set up. Id: ${devTable.tableId}`);
 }
 
 const port = process.env.PORT || 3001;

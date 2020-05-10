@@ -13,7 +13,7 @@ export function clientFactory(socketId: string, seatedAt?: Directions): Client {
     }
 }
 
-export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number, grabLocked?: boolean): CardEntity {
+export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number, grabbedBy?: string): CardEntity {
     let cardConfig = cardConfigLookup[cardType];
     let card: CardEntity =  {
         face,
@@ -27,7 +27,7 @@ export function cardFactory(positionX: number, positionY: number, cardType: Card
         positionY,
         faceUp: turnedUp,
         ownerDeck,
-        grabLocked: grabLocked || false,
+        grabbedBy: grabbedBy || null,
     }
     return card;
 }
@@ -64,7 +64,7 @@ export function deckFactory(cardType: CardTypes, positionX: number, positionY: n
         scale: scale || gameConfig.cardScale,
         positionX,
         positionY,
-        grabLocked: false,
+        grabbedBy: null,
         drawIndex: 0,
         cards: suits.reduce<CardRepresentation[]>((cards, suite) => {
             return cards.concat(cardRange.map(face => cardRepFactory(cardType, `${suite} ${face}`)))

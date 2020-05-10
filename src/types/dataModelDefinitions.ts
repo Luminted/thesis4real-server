@@ -31,7 +31,7 @@ export interface DeckEntitySyncObject extends EntitySyncObject {
     cards: CardRepresentation[]
 }
 
-export interface BaseEntity {
+export interface Entity {
     entityType: EntityTypes,
     entityId: string,
     height:number,
@@ -39,7 +39,7 @@ export interface BaseEntity {
     scale: number,
     positionX: number,
     positionY: number,
-    grabLocked: boolean
+    grabbedBy: MaybeNull<string>
 }
 
 export interface CardRepresentation {
@@ -51,7 +51,7 @@ export interface CardRepresentation {
     ownerDeck: MaybeNull<string>
 }
 
-export interface CardEntity extends BaseEntity {
+export interface CardEntity extends Entity {
     cardType: CardTypes,
     entityId: string,
     face: string,
@@ -60,7 +60,7 @@ export interface CardEntity extends BaseEntity {
     ownerDeck: MaybeNull<string>
 }
 
-export interface DeckEntity extends BaseEntity {
+export interface DeckEntity extends Entity {
     entityType: EntityTypes.DECK
     cards: CardRepresentation[],
     drawIndex: number
@@ -120,7 +120,9 @@ export interface GameState {
     emptySeats: Directions[],
     cardBoundary: MaybeNull<Boundary>,
     deckBoundary: MaybeNull<Boundary>
-}
+}type B = string
+let a:string = 'asd'
+let b:B = a
 
 export type PlayTable = {
     tableId: string,
@@ -138,5 +140,4 @@ export type SerializedGameState = {
     decks: DeckEntity[],
     clients: Client[],
     hands: ClientHand[],
-
 }

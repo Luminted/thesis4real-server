@@ -65,10 +65,10 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         const nextHand = extractClientHandById(nextState, verb.clientId);
         assert.equal(nextHand.cards.find(card => card.entityId !== verb.entityId), undefined);
     })
-    it('should set cards grab lock to true', function(){
+    it('should set grabbedBy to client ID', function(){
         const {entityId} = cardToGrab;
         const nextState = handleGrabFromHand(gameState, verb);
         const grabbedCard = extractCardById(nextState, entityId);
-        assert.equal(grabbedCard.grabLocked, true);
+        assert.equal(grabbedCard.grabbedBy, client.clientInfo.clientId);
     })
 })

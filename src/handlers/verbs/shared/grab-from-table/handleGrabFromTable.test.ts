@@ -1,11 +1,11 @@
 import * as assert from 'assert'
+import produce from 'immer';
 
 import { handleGrab } from "./handleGrabFromTable";
 import { SharedVerbTypes, SharedVerb } from "../../../../types/verbTypes";
 import { EntityTypes, GameState, Client, CardTypes } from "../../../../types/dataModelDefinitions";
 import { extractGrabbedEntityOfClientById, extractCardById, extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { clientFactory, cardFactory, deckFactory } from '../../../../factories';
-import produce from 'immer';
 import {initialGameState} from '../../../../mocks/initialGameState'
 
 
@@ -13,21 +13,20 @@ import {initialGameState} from '../../../../mocks/initialGameState'
 
 describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
     let gameState: GameState;
-    let client: Client;
+    let client: Client = clientFactory('socket-1');
     const freeCard = cardFactory(0,0,CardTypes.FRENCH);
-    const lockedCard = cardFactory(0,0,CardTypes.FRENCH);
+    const grabbedCard = cardFactory(0,0,CardTypes.FRENCH);
     const freeDeck = deckFactory(CardTypes.FRENCH, 0,0);
-    const lockedDeck = deckFactory(CardTypes.FRENCH, 0,0);
-    lockedCard.grabLocked = true;
-    lockedDeck.grabLocked = true;
+    const grabbedDeck = deckFactory(CardTypes.FRENCH, 0,0);
+    grabbedCard.grabbedBy = client.clientInfo.clientId;
+    grabbedDeck.grabbedBy = client.clientInfo.clientId;
 
     beforeEach('Setting up test data...', () => {
-        client = clientFactory('socket-1');
         gameState = produce(initialGameState, draft => {
             draft.cards.set(freeCard.entityId, freeCard);
-            draft.cards.set(lockedCard.entityId, lockedCard);
+            draft.cards.set(grabbedCard.entityId, grabbedCard);
             draft.decks.set(freeDeck.entityId, freeDeck);
-            draft.decks.set(lockedDeck.entityId, lockedDeck);
+            draft.decks.set(grabbedDeck.entityId, grabbedDeck);
             draft.clients.set(client.clientInfo.clientId, client);
         })
     })
@@ -53,7 +52,7 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
             assert.equal(grabbedEntity.grabbedAtY, positionY);
         });
 
-        it('should lock grabbed card', function(){
+        it('should set grabbedBy to clients ID', function(){
             const {entityId, entityType} = freeCard;
             const positionX = 1;
             const positionY = 2;
@@ -68,10 +67,10 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
 
             const nextState = handleGrab(gameState, verb);
             const nextCard = extractCardById(nextState, entityId);
-            assert.equal(nextCard.grabLocked, true);
+            assert.equal(nextCard.grabbedBy, client.clientInfo.clientId);
         })
-        it('should do nothing if card is locked', function(){
-            const {entityId, entityType} = lockedCard;
+        it('should do nothing if card is grabbed', function(){
+            const {entityId, entityType} = grabbedCard;
             const positionX = 1;
             const positionY = 2;
             const verb: SharedVerb = {
@@ -108,7 +107,7 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
             assert.equal(grabbedEntity.grabbedAtY, positionY);
         })
 
-        it('should lock grabbed deck', function(){
+        it('should set grabbedBy to clients ID', function(){
             const {entityId, entityType} = freeDeck;
             const positionX = 1;
             const positionY = 2;
@@ -123,10 +122,10 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
 
             const nextState = handleGrab(gameState, verb);
             const nextDeck = extractDeckById(nextState, entityId);
-            assert.equal(nextDeck.grabLocked, true);
+            assert.equal(nextDeck.grabbedBy, client.clientInfo.clientId);
         })
-        it('should do nothing if deck is locked', function(){
-            const {entityId, entityType} = lockedDeck;
+        it('should do nothing if deck isgrabbed', function(){
+            const {entityId, entityType} = grabbedDeck;
             const positionX = 1;
             const positionY = 2;
             const verb: SharedVerb = {

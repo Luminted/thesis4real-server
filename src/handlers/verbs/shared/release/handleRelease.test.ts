@@ -20,7 +20,7 @@ describe(`handle ${SharedVerbTypes.RELEASE} verb`, function() {
         entityId: card.entityId,
         entityType: card.entityType
     }
-    card.grabLocked = true;
+    card.grabbedBy = client.clientInfo.clientId;
     let gameState: GameState;
 
     beforeEach('Setting up test data...', () => {
@@ -36,11 +36,11 @@ describe(`handle ${SharedVerbTypes.RELEASE} verb`, function() {
             const grabbedEntity =extractGrabbedEntityOfClientById(nextState, verb.clientId);
             assert.equal(grabbedEntity, null);
         })
-        it('should set the lock false on entity', function(){
+        it('should set the grabbedBy to null on released entity', function(){
             const {entityId, entityType} = verb;
             const nextState = handleRelease(gameState,verb);
             const releasedEntity = extractEntityByTypeAndId(nextState, entityType, entityId);
-            assert.equal(releasedEntity.grabLocked, false);
+            assert.equal(releasedEntity.grabbedBy, null);
         })
     })
 })

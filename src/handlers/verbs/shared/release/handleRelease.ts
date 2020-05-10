@@ -8,6 +8,6 @@ export function handleRelease(state: GameState, verb: SharedVerb) {
     return produce(state, draft => {
         const {entityType, entityId} = verb;
         extractClientById(draft, verb.clientId).grabbedEntitiy = null;
-        extractEntityByTypeAndId(draft, entityType, entityId).grabLocked = false;
+        extractEntityByTypeAndId(draft, entityType, entityId).grabbedBy = null;
     })  
 }
