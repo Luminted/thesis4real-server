@@ -11,7 +11,7 @@ import { initServerState, addTable, gameStateGetter } from '../../../state';
 import { PlayTable, EntityTypes, GameState, SerializedGameState } from '../../../types/dataModelDefinitions';
 import { Verb, SharedVerbTypes } from '../../../types/verbTypes';
 import * as verbHandler from '../../../handlers/verbs'
-import * as utils from '../utils';
+import * as utils from '../utils/';
 
 describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
     const url = 'http://localhost';

@@ -40,6 +40,7 @@ export interface Entity {
     positionX: number,
     positionY: number,
     grabbedBy: MaybeNull<string>
+    zIndex: number
 }
 
 export interface CardRepresentation {
@@ -120,9 +121,8 @@ export interface GameState {
     emptySeats: Directions[],
     cardBoundary: MaybeNull<Boundary>,
     deckBoundary: MaybeNull<Boundary>
-}type B = string
-let a:string = 'asd'
-let b:B = a
+    topZIndex: number
+}
 
 export type PlayTable = {
     tableId: string,

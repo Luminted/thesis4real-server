@@ -17,6 +17,7 @@ export function createTable(clientLimit: number, tableId?:string, cardBoundary: 
             cardScale: 1,
             cardBoundary: null,
             deckBoundary: null,
+            topZIndex: 0,
             emptySeats: [Directions.NORTH, Directions.NORTH_EAST, Directions.NORTH_WEST, Directions.SOUTH, Directions.SOUTH_EAST, Directions.SOUTH_WEST]
         }
     }

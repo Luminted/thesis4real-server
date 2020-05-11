@@ -22,6 +22,7 @@ export function TableModule(io: SocketIO.Server){
             const getGameState = gameStateGetter(tableId);
 
             //JOIN_TABLE
+            //this can be async
             socket.on(TableModuleClientEvents.JOIN_TABLE, (acknowledgeFunction: (clientInfo: ClientInfo, gameState: SerializedGameState) => void) => {
                 socket.join(tableId);
                 console.log(socket.id, ' joined table')

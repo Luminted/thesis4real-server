@@ -13,7 +13,7 @@ export function clientFactory(socketId: string, seatedAt?: Directions): Client {
     }
 }
 
-export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number, grabbedBy?: string): CardEntity {
+export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number, grabbedBy?: string, zIndex?: number): CardEntity {
     let cardConfig = cardConfigLookup[cardType];
     let card: CardEntity =  {
         face,
@@ -28,6 +28,7 @@ export function cardFactory(positionX: number, positionY: number, cardType: Card
         faceUp: turnedUp,
         ownerDeck,
         grabbedBy: grabbedBy || null,
+        zIndex: zIndex || 0
     }
     return card;
 }
@@ -54,7 +55,7 @@ export function createCardRepresentationFromCardEntity(card: CardEntity): CardRe
     }
 }
 
-export function deckFactory(cardType: CardTypes, positionX: number, positionY: number, scale?: number): DeckEntity {
+export function deckFactory(cardType: CardTypes, positionX: number, positionY: number, scale?: number, zIndex?: number): DeckEntity {
     const {baseHeight, baseWidth, suits, cardRange} = cardConfigLookup[cardType];
     return {
         entityId: uuidv4(),
@@ -66,6 +67,7 @@ export function deckFactory(cardType: CardTypes, positionX: number, positionY: n
         positionY,
         grabbedBy: null,
         drawIndex: 0,
+        zIndex: zIndex || 0,
         cards: suits.reduce<CardRepresentation[]>((cards, suite) => {
             return cards.concat(cardRange.map(face => cardRepFactory(cardType, `${suite} ${face}`)))
         }, [])
