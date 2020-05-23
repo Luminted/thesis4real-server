@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { TableModuleClientEvents } from "../../../../types/sockeTypes";
+import { TableModuleClientEvents } from "../../../../types/socketTypes";
 import { handleDisconnect } from "./handleDisconnect";
 import { GameState, ClientHand, Client } from "../../../../types/dataModelDefinitions";
 import { extractEmptySeats } from "../../../../extractors/gameStateExtractors";
