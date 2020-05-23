@@ -1,4 +1,5 @@
 import {MaybeNull} from './genericTypes'
+import { ClientConnectionStatuses } from './socketTypes';
 
 export enum CardTypes {
     FRENCH = 'FRENCH'
@@ -16,31 +17,17 @@ export interface FrenchCardConfig extends CardTypeConfig {
 
 export type CardConfig = FrenchCardConfig;
 
-export interface EntitySyncObject {
-    entityId: string,
-    positionX: number,
-    positionY: number,
-    grabLocked: boolean
-}
-
-export interface CardEntitySyncObject extends EntitySyncObject {
-    faceUp: boolean
-}
-
-export interface DeckEntitySyncObject extends EntitySyncObject {
-    cards: CardRepresentation[]
-}
-
 export interface Entity {
-    entityType: EntityTypes,
-    entityId: string,
+    readonly entityType: EntityTypes,
+    readonly entityId: string,
     height:number,
     width: number,
     scale: number,
     positionX: number,
     positionY: number,
     grabbedBy: MaybeNull<string>
-    zIndex: number
+    zIndex: number,
+    isBound: boolean
 }
 
 export interface CardRepresentation {
@@ -82,7 +69,8 @@ export type GrabbedEntity = MaybeNull<{
 export type Client = {
     //TODO: flatten this out
     clientInfo: ClientInfo,
-    grabbedEntitiy: GrabbedEntity
+    grabbedEntitiy: GrabbedEntity,
+    status: ClientConnectionStatuses
 }
 
 export type ClientHand = {
@@ -93,10 +81,10 @@ export type ClientHand = {
 export type ClientInfo ={
     clientId: string,
     clientName?: string,
-    seatedAt: Directions
+    seatedAt: Seats
 }
 
-export enum Directions {
+export enum Seats {
     SOUTH = 'SOUTH',
     NORTH = 'NORTH',
     SOUTH_WEST = 'SOUTH_WEST',
@@ -105,34 +93,23 @@ export enum Directions {
     NORTH_EAST = 'NORTH_EAST'
 } 
 
-export type Boundary = {
-    top: number,
-    left: number,
-    bottom: number,
-    right: number
-}
-
 export interface GameState {
     cards: Map<string, CardEntity>,
     decks: Map<string, DeckEntity>,
     clients: Map<string, Client>,
     hands: Map<string, ClientHand>,
     cardScale: number,
-    emptySeats: Directions[],
-    cardBoundary: MaybeNull<Boundary>,
-    deckBoundary: MaybeNull<Boundary>
-    topZIndex: number
+    emptySeats: Seats[],
+    topZIndex: number,
 }
 
-export type PlayTable = {
-    tableId: string,
-    clientLimit: number
-    gameState: GameState,
-}
-
-export type SyncState = {
-    updatedCards: CardEntitySyncObject[];
-    newCards: CardEntity[];
+export type CardTable = {
+    readonly tableId: string,
+    socketClientIdMapping: {[key: string]: string},
+    readonly seats: Seats[],
+    readonly defaultPosition: [number, number],
+    readonly tableWidth: number,
+    readonly tableHeight: number
 }
 
 export type SerializedGameState = {
