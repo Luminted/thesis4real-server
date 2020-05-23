@@ -1,0 +1,1 @@
+export {handleLeaveTable} from './handleLeaveTable';
