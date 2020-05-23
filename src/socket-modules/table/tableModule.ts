@@ -52,6 +52,30 @@ export function TableModule(io: SocketIO.Server){
                 }
             })
 
+            socket.on(TableModuleClientEvents.REJOIN_TABLE, (clientId: string, ackFunction: Function) => {
+                const nextGameState = handleRejoinTable(getGameState(), clientId);
+
+                setGameState(nextGameState);
+                addSocketClientIdMapping(tableId, clientId, socket.id);
+
+                if(typeof ackFunction === 'function'){
+                    ackFunction();
+                }
+            })
+
+            socket.on(TableModuleClientEvents.LEAVE_TABLE, (ackFunction: Function) => {
+                const socketId = socket.id
+                const {defaultPosition} = getTableById(tableId);
+                const nextState = handleLeaveTable(getGameState(), lookupClientId(tableId, socketId), defaultPosition);
+                
+                setGameState(nextState);
+                removeSocketClientIdMapping(tableId, socketId);
+
+                if(typeof ackFunction === 'function'){
+                    ackFunction();
+                }
+            })
+
             socket.on(TableModuleClientEvents.DISCONNECT, (reason: string) => {
                 console.log('Disconnection reason: ', reason)
                 const nextState = handleDisconnect(getGameState(), socket.id);
