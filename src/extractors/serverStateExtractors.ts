@@ -1,5 +1,6 @@
-import { ServerState } from "../state";
+// import { ServerState } from "../state";
+// import { Seats } from "../types/dataModelDefinitions";
 
-export function extractTableById(state: ServerState, tableId: string) {
-    return state.tables.get(tableId);
-}
+// export function extractSeats(state: ServerState): Seats[] {
+//     return state.;
+// }

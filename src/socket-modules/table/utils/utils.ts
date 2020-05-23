@@ -1,5 +1,5 @@
 import { GameState, SerializedGameState, Entity } from "../../../types/dataModelDefinitions";
-import produce, {} from "immer";
+import { Draft } from "immer";
 
 export function serializeGameState(gameState: GameState): SerializedGameState {
     return {
@@ -10,13 +10,25 @@ export function serializeGameState(gameState: GameState): SerializedGameState {
     }
 }
 
-export function resetZIndexes(entities: Map<string,Entity>, absoluteNumberOfEntities: number, zIndexLimit: number){
-    const resetEntities = new Map<string, Entity>();
-    for(let [entityId, entity] of entities){
-        resetEntities.set(entityId, {
-            ...entity,
-            zIndex: entity.zIndex - zIndexLimit + absoluteNumberOfEntities - 1
-        })
+// WARNING: This function has side effects. Use it only with Immer draft!
+export function calcNextZIndex(gameStateDraft: GameState, zIndexLimit: number){
+    const {cards, decks} = gameStateDraft;
+    const nextZIndex = ++gameStateDraft.topZIndex;
+    const absoluteNumberOfEntities = cards.size + decks.size;
+    if(nextZIndex > zIndexLimit){
+        //resetting cards
+        for(let [entityId, entity] of gameStateDraft.cards){
+            entity.zIndex = entity.zIndex - zIndexLimit + absoluteNumberOfEntities - 1
+        }
+
+        //resetting decks
+        for(let [entityId, entity] of gameStateDraft.decks){
+            entity.zIndex = entity.zIndex - zIndexLimit + absoluteNumberOfEntities - 1
+        }
+
+        gameStateDraft.topZIndex = absoluteNumberOfEntities;
+        return absoluteNumberOfEntities;
     }
-    return resetEntities;
+
+    return nextZIndex;
 }

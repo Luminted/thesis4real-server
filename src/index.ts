@@ -28,16 +28,16 @@ if(node_env === 'production'){
 }
 else if(node_env === 'development'){
     initServerState();
-    const devTable = createTable(6, 'dev');
-    devTable.gameState = produce(devTable.gameState, draft => {
-        const deck1 = deckFactory(CardTypes.FRENCH, 10,10)
-        const deck2 = deckFactory(CardTypes.FRENCH, 10,70)
-        console.log(deck1.entityId)
-        console.log(deck2.entityId)
+    let [devTable, gameState] = createTable(4100, 2200, [0,0],'dev');
+    gameState = produce(gameState, draft => {
+        const deck1 = deckFactory(CardTypes.FRENCH, 0, 0)
+        const deck2 = deckFactory(CardTypes.FRENCH, 0,170)
+        console.log(deck1.entityId);
+        console.log(deck2.entityId);
         draft.decks.set(deck1.entityId, deck1);
         draft.decks.set(deck2.entityId, deck2);
     })
-    addTable(devTable);
+    addTable(devTable, gameState);
     console.log(`Dev table set up. Id: ${devTable.tableId}`);
 }
 

@@ -1,36 +1,56 @@
-import {getServerState, gameStateSetter, gameStateGetter } from "../../state";
-import { extractTableById } from "../../extractors/serverStateExtractors";
-import {TableModuleClientEvents, TableModuleServerEvents, JoinTablePayload} from '../../types/sockeTypes';
+import {getServerState, gameStateSetter, gameStateGetter, getTableById, setTableState, addSocketClientIdMapping, lookupClientId, removeSocketClientIdMapping} from "../../state";
+import {TableModuleClientEvents, TableModuleServerEvents, JoinTablePayload} from '../../types/socketTypes';
 import { Verb } from "../../types/verbTypes";
-import { handleVerb } from "../../handlers/verbs";
-import { Directions, ClientInfo, GameState, SerializedGameState } from "../../types/dataModelDefinitions";
+import { handleVerb } from "./handlers/verbs";
+import { Seats, ClientInfo, GameState, SerializedGameState } from "../../types/dataModelDefinitions";
 import { handleJoinTable } from "./handlers/join-table/handleJoinTable";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { handleDisconnect } from "./handlers/disconnect/handleDisconnect";
 import { serializeGameState } from "./utils";
+import short from "short-uuid";
+import { handleRejoinTable } from "./handlers/rejoin-table";
+import { handleLeaveTable } from "./handlers/leave-table/handleLeaveTable";
 
 export function TableModule(io: SocketIO.Server){
     const nspTable = io.of('/table');
-    console.log('listening for connections ', nspTable.name);
+console.log('listening for connections ', nspTable.name);
+
+    //CONNECTION
+    //TODO: input validation
     nspTable.on('connection', (socket) => {
         const tableId: string = socket.handshake.query.tableId;
         console.log('socket ' + socket.id + ' attempting connection to table: ' + tableId);
-        const table = extractTableById(getServerState(), tableId);
+        const table = getTableById(tableId);
         if(tableId && table){
             console.log('Socket ' + socket.id + ' connected to ' + tableId)
             const setGameState = gameStateSetter(tableId);
             const getGameState = gameStateGetter(tableId);
 
+
+            //GET_TABLE_INFO
+            socket.on(TableModuleClientEvents.GET_TABLE_DIMENSIONS, (ackFunction?: (tableWidth: number, tableHeight: number) => void) => {
+                if(typeof ackFunction ==='function'){
+                    ackFunction(table.tableWidth, table.tableHeight);
+                }
+            })
+
             //JOIN_TABLE
             //this can be async
-            socket.on(TableModuleClientEvents.JOIN_TABLE, (acknowledgeFunction: (clientInfo: ClientInfo, gameState: SerializedGameState) => void) => {
+            socket.on(TableModuleClientEvents.JOIN_TABLE, (acknowledgeFunction?: (clientInfo: ClientInfo, gameState: SerializedGameState) => void) => {
                 socket.join(tableId);
-                console.log(socket.id, ' joined table')
-                const nextGameState = handleJoinTable(getGameState(), {socketId: socket.id});
+                console.log(socket.id, ' joined table');
+
+                const clientId = short(short.constants.cookieBase90).new();
+                const nextGameState = handleJoinTable(getGameState(), clientId);
+                const serializedGameState = serializeGameState(nextGameState);
+                const clientInfo = extractClientById(nextGameState, clientId).clientInfo;
+                
                 setGameState(nextGameState);
-                const serializedGameState = serializeGameState(nextGameState)
+                addSocketClientIdMapping(tableId, clientId, socket.id);
+                
+                console.log(typeof acknowledgeFunction);
                 if(typeof acknowledgeFunction === 'function'){
-                    const clientInfo = extractClientById(nextGameState, socket.id).clientInfo;
+                    console.log('sending ack')
                     acknowledgeFunction(clientInfo, serializedGameState);
                 }
                 socket.to(tableId).broadcast.emit(TableModuleServerEvents.SYNC, serializedGameState);
@@ -40,8 +60,9 @@ export function TableModule(io: SocketIO.Server){
             socket.on(TableModuleClientEvents.VERB, (verb: Verb, ack: Function) => {
                 try{
                     if(verb && tableId){
-                        const nextState = handleVerb(getGameState(), verb);
+                        const nextState = handleVerb(tableId, getGameState(), verb);
                         setGameState(nextState);
+                        console.log(serializeGameState(nextState).clients[0]?.grabbedEntitiy)
                         nspTable.to(tableId).emit(TableModuleServerEvents.SYNC, serializeGameState(nextState));
                     }
                     if(ack){
@@ -77,9 +98,15 @@ export function TableModule(io: SocketIO.Server){
             })
 
             socket.on(TableModuleClientEvents.DISCONNECT, (reason: string) => {
-                console.log('Disconnection reason: ', reason)
-                const nextState = handleDisconnect(getGameState(), socket.id);
-                setGameState(nextState);
+                console.log('query ',socket.handshake.query.tableId);
+                console.log('table id ', tableId);
+                console.log('Disconnection reason: ', reason);
+                const nextGameState = handleDisconnect(getGameState(), lookupClientId(tableId, socket.id));
+                const serializedGameState = serializeGameState(nextGameState);
+                
+                setGameState(nextGameState);
+                socket.to(tableId).broadcast.emit(TableModuleServerEvents.SYNC, serializedGameState);
+
             })
 
         }

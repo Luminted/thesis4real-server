@@ -5,8 +5,6 @@ import http from 'http';
 import { errorMapping } from './errorMapping';
 import {initServerState, getServerState} from '../../state';
 import { tableRouter } from './tableRoute';
-import { extractTableById } from '../../extractors/serverStateExtractors';
-
 describe('Testing route: /table', function(){
 
     let app;
@@ -54,10 +52,11 @@ describe('Testing route: /table', function(){
             .expect(res => {
                 const tableId = res.body.tableId;
                 assert.equal(typeof tableId, 'string');
+                assert.notEqual(getServerState().tables.get(tableId), undefined);
             })
             .end(done);
         })
-        it('should create a new table', function(done){
+        it('should create and add new table and game state to server state', function(done){
             request(server)
             .post('/table/create')
             .send({
@@ -67,7 +66,9 @@ describe('Testing route: /table', function(){
             .expect(res => {
                 const tableId = res.body.tableId;
                 const createdTable = getServerState().tables.get(tableId);
-                assert.equal(res.body.tableId, createdTable.tableId);
+                const createdGameState = getServerState().gameStates.get(tableId);
+                assert.notEqual(createdTable, undefined);
+                assert.notEqual(createdGameState, undefined);
             })
             .end(done);
         })

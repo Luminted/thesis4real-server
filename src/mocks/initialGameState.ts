@@ -1,4 +1,4 @@
-import { GameState, Directions, CardEntity, Client, DeckEntity, ClientHand } from "../types/dataModelDefinitions";
+import { GameState, Seats, CardEntity, Client, DeckEntity, ClientHand } from "../types/dataModelDefinitions";
  
 
 export const initialGameState: GameState = {
@@ -7,8 +7,6 @@ export const initialGameState: GameState = {
     decks: new Map<string, DeckEntity>(),
     hands: new Map<string, ClientHand>(),
     cardScale: 1,
-    cardBoundary: null,
-    deckBoundary: null,
     topZIndex:0,
-    emptySeats: [Directions.NORTH, Directions.NORTH_EAST, Directions.NORTH_WEST, Directions.SOUTH, Directions.SOUTH_EAST, Directions.SOUTH_WEST]
+    emptySeats: [Seats.NORTH, Seats.NORTH_EAST, Seats.NORTH_WEST, Seats.SOUTH, Seats.SOUTH_EAST, Seats.SOUTH_WEST]
 }

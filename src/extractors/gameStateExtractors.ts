@@ -1,8 +1,7 @@
-import {GameState, EntityTypes, ClientHand, Client, Directions} from '../types/dataModelDefinitions'
-import {ServerState} from '../state'
+import {GameState, EntityTypes, ClientHand, Client, Seats} from '../types/dataModelDefinitions'
 
 export function extractClientById(state: GameState, clientId: string){
-    return state.clients.get(clientId);
+    return state.clients.get(clientId) || null;
 }
 
 export function extractGrabbedEntityOfClientById(state: GameState, clientId){
@@ -10,7 +9,7 @@ export function extractGrabbedEntityOfClientById(state: GameState, clientId){
 }
 
 export function extractCardById(state: GameState, entityId: string){
-    return state.cards.get(entityId);
+    return state.cards.get(entityId) || null;
 }
 
 export function extractDeckById(state: GameState, entityId: string){
@@ -34,24 +33,12 @@ export function extractNumberOfClients(state: GameState) : number {
     return state.clients.size;
 }
 
-export function extractDirections(state: ServerState): Directions[] {
-    return state.directions;
-}
-
 export function extractCardFromClientHandById(state: GameState, clientId:string, entityId: string) {
     return state.hands.get(clientId)?.cards.find(card => card.entityId === entityId);
 }
 
-export function extractBoundary(state: GameState, entityType) {
-    if(entityType === EntityTypes.CARD){
-        return state.cardBoundary;
-    }
-    else if(entityType === EntityTypes.DECK){
-        return state.deckBoundary;
-    }
-    else {
-        return null;
-    }
+export function extractClientHandCardsById(state: GameState, clientId: string){
+    return state.hands.get(clientId)?.cards || null;
 }
 
 export function extractEmptySeats(state: GameState) {
@@ -60,4 +47,8 @@ export function extractEmptySeats(state: GameState) {
 
 export function extractCardFromDeckById(state: GameState, deckId: string, cardId: string){
     return state.decks.get(deckId).cards.find(card => card.entityId === cardId);
+}
+
+export function extractClientsSeatById(state: GameState, clientId: string){
+    return state.clients.get(clientId)?.clientInfo.seatedAt || null;
 }

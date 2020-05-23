@@ -17,7 +17,9 @@ tableRouter.post(routeBase + '/create', async function (req, res) {
             return;
         }
     }
-    let newTable = await createPlayTable(req.body.clientLimit);
+    const tableWidth: number = req.body.tableWidth;
+    const tableHeight: number = req.body.tableHeight;
+    let newTable = await createPlayTable(tableWidth, tableHeight);
     if(newTable === null){
         const {code, message} = errorMapping.tableLimitReached;
         res.status(code).json({
@@ -25,19 +27,21 @@ tableRouter.post(routeBase + '/create', async function (req, res) {
         });
         return;
     }else{
-        addTable(newTable);
-        res.status(201).json(newTable);
+        addTable(...newTable);
+        res.status(201).json({
+            tableId: newTable[0].tableId
+        });
     }
 })
 
 
-async function createPlayTable(clientLimit: number) {
+async function createPlayTable(tableWidth: number, tableHeight: number) {
     const serverState = getServerState();
     const tableLimit = serverState.serverConfig.tableLimit;
     const currentTableCount = serverState.tables.size;
     
     if(currentTableCount < tableLimit) {
-        const newTable = createTable(clientLimit);
+        const newTable = createTable(tableWidth, tableHeight);
         return newTable;
     }
     else{
