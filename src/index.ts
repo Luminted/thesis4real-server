@@ -28,7 +28,7 @@ if(node_env === 'production'){
 }
 else if(node_env === 'development'){
     initServerState();
-    let [devTable, gameState] = createTable(4100, 2200, [0,0],'dev');
+    let [devTable, gameState] = createTable(4100, 2200, 2, [0,0],'dev');
     gameState = produce(gameState, draft => {
         const deck1 = deckFactory(CardTypes.FRENCH, 0, 0)
         const deck2 = deckFactory(CardTypes.FRENCH, 0,170)

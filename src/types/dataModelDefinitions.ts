@@ -22,7 +22,6 @@ export interface Entity {
     readonly entityId: string,
     height:number,
     width: number,
-    scale: number,
     positionX: number,
     positionY: number,
     grabbedBy: MaybeNull<string>
@@ -98,7 +97,7 @@ export interface GameState {
     decks: Map<string, DeckEntity>,
     clients: Map<string, Client>,
     hands: Map<string, ClientHand>,
-    cardScale: number,
+    entityScale: number,
     emptySeats: Seats[],
     topZIndex: number,
 }
@@ -117,4 +116,5 @@ export type SerializedGameState = {
     decks: DeckEntity[],
     clients: Client[],
     hands: ClientHand[],
+    entityScale: number
 }

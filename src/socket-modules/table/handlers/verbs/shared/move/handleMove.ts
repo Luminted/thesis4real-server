@@ -17,11 +17,12 @@ export function handleMove(state: GameState, verb: SharedVerb, tableWidth: numbe
                 const offsetY = positionY - grabbedEntity.grabbedAtY;
                 const newPositionX = movedEntity.positionX + offsetX;
                 const newPositionY = movedEntity.positionY + offsetY;
-                const {height, width, scale, isBound} = movedEntity;
+                const {height, width, isBound} = movedEntity;
 
                 if(isBound){
-                    const entityWidth = width * scale;
-                    const entityHeight = height * scale;
+                    const {entityScale} = state;
+                    const entityWidth = width * entityScale;
+                    const entityHeight = height * entityScale;
 
                     //X axis
                     if(newPositionX < 0 ){

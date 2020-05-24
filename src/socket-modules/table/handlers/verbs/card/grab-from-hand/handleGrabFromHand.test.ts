@@ -55,12 +55,12 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     });
 
     it('should put the card at the correct position', function(){
-        const {cardScale} = gameState;
+        const {entityScale} = gameState;
         const {baseHeight, baseWidth} = cardConfigLookup[cardToGrab.cardType];
         const nextState = handleGrabFromHand(gameState, verb);
         const grabbedCard = extractCardById(nextState, verb.entityId);
-        const expectedPositionX = verb.positionX - Math.round(baseWidth * cardScale / 2);
-        const expectedPositionY = verb.positionY - Math.round(baseHeight * cardScale / 2);
+        const expectedPositionX = verb.positionX - Math.round(baseWidth * entityScale / 2);
+        const expectedPositionY = verb.positionY - Math.round(baseHeight * entityScale / 2);
         assert.equal(grabbedCard.positionX, expectedPositionX);
         assert.equal(grabbedCard.positionY, expectedPositionY);
     })

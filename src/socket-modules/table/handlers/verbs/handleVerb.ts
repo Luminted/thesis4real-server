@@ -6,7 +6,7 @@ import {handlePutInHand, handleGrabFromHand} from './card'
 import { getTableById } from "../../../../state";
 
 
-export function handleVerb(tableId: string, gameState: GameState, verb: Verb){
+export function handleVerb(gameState: GameState, verb: Verb, tableId: string){
     switch(verb.type){
         case SharedVerbTypes.GRAB_FROM_TABLE:
             return handleGrab(gameState, verb);

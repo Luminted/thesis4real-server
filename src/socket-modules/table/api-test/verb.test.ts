@@ -74,6 +74,7 @@ describe(`Event: ${TableModuleClientEvents.VERB}`, function(){
         const handleVerbSpy = spy(verbHandler, 'handleVerb');
         clientSocket.emit(TableModuleClientEvents.VERB, verb, ()=>{
             assert.equal(handleVerbSpy.called, true);
+            debugger
             assert.deepEqual(handleVerbSpy.getCall(0).args[1], verb);
             handleVerbSpy.restore();
             done();

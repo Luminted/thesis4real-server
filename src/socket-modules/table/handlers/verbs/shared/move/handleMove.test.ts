@@ -29,6 +29,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
     });
     const tableWidth = 2000;
     const tableHeight = 1500;
+    const entityScale = 2;
 
     beforeEach('Setting up test data...', () => {
         gameState = produce(initialGameState, draft => {
@@ -37,6 +38,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             draft.decks.set(deckToMove.entityId, deckToMove);
             draft.decks.set(boundDeck.entityId, boundDeck);
             draft.clients.set(client.clientInfo.clientId, client);
+            draft.entityScale = entityScale;
         })
     })
 
@@ -222,8 +224,9 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
         })
         it('should restrict card to tables dimension if isBounded is true', function(){
             const {entityId, entityType} = boundCard;
-            const cardWidth = boundCard.width * boundCard.scale;
-            const cardHeight = boundCard.height * boundCard.scale;
+            const {entityScale} = gameState
+            const cardWidth = boundCard.width *entityScale;
+            const cardHeight = boundCard.height *entityScale;
             let verb: SharedVerb;
             let nextState: GameState;
             let movedCard: CardEntity;
@@ -292,8 +295,9 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
 
         it('should restrict deck to tables dimensions if isBound is true', function(){
             const {entityId, entityType} = boundDeck;
-            const deckWidth = boundDeck.width * boundDeck.scale;
-            const deckHeight = boundDeck.height * boundDeck.scale;
+            const {entityScale} = gameState;
+            const deckWidth = boundDeck.width * entityScale;
+            const deckHeight = boundDeck.height * entityScale;
             let verb: SharedVerb;
             let nextState: GameState;
             let movedDeck: DeckEntity;

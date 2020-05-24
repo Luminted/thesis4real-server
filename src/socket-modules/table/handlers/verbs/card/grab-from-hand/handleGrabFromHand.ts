@@ -14,10 +14,10 @@ export function handleGrabFromHand(state: GameState, verb: CardVerb): GameState{
         const cardRep = extractCardFromClientHandById(state, clientId, entityId); 
         const {cardType, face, faceUp, ownerDeck} = cardRep
         const {baseWidth, baseHeight} = cardConfigLookup[cardType];
-        const {cardScale} = state;
+        const {entityScale} = state;
         const {zIndexLimit} = gameConfig;
-        const positionOffsetX = Math.round(baseWidth * cardScale / 2);
-        const positionOffsetY = Math.round(baseHeight * cardScale / 2);
+        const positionOffsetX = Math.round(baseWidth * entityScale / 2);
+        const positionOffsetY = Math.round(baseHeight * entityScale / 2);
         // TODO: card from cardRep function
         const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
         const grabbedCard = cardFactory(positionX - positionOffsetX, positionY - positionOffsetY, cardType, face, faceUp, entityId, ownerDeck, undefined, clientId, nextTopZIndex);

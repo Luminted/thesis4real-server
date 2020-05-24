@@ -1,5 +1,4 @@
 import { GameState, SerializedGameState, Entity } from "../../../types/dataModelDefinitions";
-import { Draft } from "immer";
 
 export function serializeGameState(gameState: GameState): SerializedGameState {
     return {
@@ -7,6 +6,7 @@ export function serializeGameState(gameState: GameState): SerializedGameState {
         clients: [...gameState.clients.values()],
         hands: [...gameState.hands.values()],
         decks: [...gameState.decks.values()],
+        entityScale: gameState.entityScale
     }
 }
 

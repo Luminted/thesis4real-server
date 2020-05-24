@@ -19,7 +19,8 @@ tableRouter.post(routeBase + '/create', async function (req, res) {
     }
     const tableWidth: number = req.body.tableWidth;
     const tableHeight: number = req.body.tableHeight;
-    let newTable = await createPlayTable(tableWidth, tableHeight);
+    const entityScale: number = req.body.entityScale;
+    let newTable = await createCardTable(tableWidth, tableHeight, entityScale);
     if(newTable === null){
         const {code, message} = errorMapping.tableLimitReached;
         res.status(code).json({
@@ -35,13 +36,13 @@ tableRouter.post(routeBase + '/create', async function (req, res) {
 })
 
 
-async function createPlayTable(tableWidth: number, tableHeight: number) {
+async function createCardTable(tableWidth: number, tableHeight: number, entityScale: number) {
     const serverState = getServerState();
     const tableLimit = serverState.serverConfig.tableLimit;
     const currentTableCount = serverState.tables.size;
     
     if(currentTableCount < tableLimit) {
-        const newTable = createTable(tableWidth, tableHeight);
+        const newTable = createTable(tableWidth, tableHeight, entityScale);
         return newTable;
     }
     else{

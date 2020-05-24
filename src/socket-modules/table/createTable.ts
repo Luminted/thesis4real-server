@@ -5,7 +5,7 @@ import {CardTable, Seats, CardEntity, Client, DeckEntity, ClientHand, GameState}
 
 
 
-export function createTable(tableWidth: number, tableHeight: number ,defaultPosition?: [number, number], tableId?:string): [CardTable, GameState]  {
+export function createTable(tableWidth: number, tableHeight: number, entityScale?: number, defaultPosition?: [number, number], tableId?:string): [CardTable, GameState]  {
     return [{
         tableId: tableId || generate(),
         socketClientIdMapping: {},
@@ -19,7 +19,7 @@ export function createTable(tableWidth: number, tableHeight: number ,defaultPosi
         clients: new Map<string, Client>(),
         decks: new Map<string, DeckEntity>(),
         hands: new Map<string, ClientHand>(),
-        cardScale: 1,
+        entityScale: entityScale || 1,
         topZIndex: 0,
         emptySeats: [Seats.NORTH, Seats.SOUTH]
     }]

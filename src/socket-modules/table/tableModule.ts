@@ -50,7 +50,8 @@ console.log('listening for connections ', nspTable.name);
                 
                 console.log(typeof acknowledgeFunction);
                 if(typeof acknowledgeFunction === 'function'){
-                    console.log('sending ack')
+                    console.log('sending ack');
+                    console.log(clientInfo)
                     acknowledgeFunction(clientInfo, serializedGameState);
                 }
                 socket.to(tableId).broadcast.emit(TableModuleServerEvents.SYNC, serializedGameState);
@@ -60,7 +61,7 @@ console.log('listening for connections ', nspTable.name);
             socket.on(TableModuleClientEvents.VERB, (verb: Verb, ack: Function) => {
                 try{
                     if(verb && tableId){
-                        const nextState = handleVerb(tableId, getGameState(), verb);
+                        const nextState = handleVerb(getGameState(), verb, tableId);
                         setGameState(nextState);
                         console.log(serializeGameState(nextState).clients[0]?.grabbedEntitiy)
                         nspTable.to(tableId).emit(TableModuleServerEvents.SYNC, serializeGameState(nextState));
