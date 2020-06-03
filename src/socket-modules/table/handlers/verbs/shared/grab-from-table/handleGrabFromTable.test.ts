@@ -1,4 +1,4 @@
-import * as assert from 'assert'
+import assert from 'assert'
 import produce, { enableMapSet } from 'immer';
 import {spy} from 'sinon';
 
@@ -6,7 +6,7 @@ import { handleGrab } from "./handleGrabFromTable";
 import { SharedVerbTypes, SharedVerb } from "../../../../../../types/verbTypes";
 import { EntityTypes, GameState, Client, CardTypes } from "../../../../../../types/dataModelDefinitions";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractClientHandCardsById, extractCardById } from "../../../../../../extractors/gameStateExtractors";
-import { clientFactory, cardFactory, deckFactory } from '../../../../../../factories';
+import { createClient, createCard, createDeck } from '../../../../../../factories';
 import {initialGameState} from '../../../../../../mocks/initialGameState'
 import * as utils from '../../../../utils';
 
@@ -15,9 +15,9 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
     enableMapSet()
 
     let gameState: GameState;
-    let client: Client = clientFactory('socket-1');
-    const freeCard = cardFactory(0,0,CardTypes.FRENCH);
-    const grabbedCard = cardFactory(0,0,CardTypes.FRENCH);
+    let client: Client = createClient('socket-1');
+    const freeCard = createCard(0,0,CardTypes.FRENCH);
+    const grabbedCard = createCard(0,0,CardTypes.FRENCH);
     const verb: SharedVerb = {
         type: SharedVerbTypes.GRAB_FROM_TABLE,
         clientId: client.clientInfo.clientId,

@@ -3,7 +3,7 @@ import { ClientConnectionStatuses } from "../../../../types/socketTypes"
 import { GameState } from "../../../../types/dataModelDefinitions";
 import produce, { enableMapSet } from "immer";
 import { initialGameState } from "../../../../mocks/initialGameState";
-import { clientFactory } from "../../../../factories";
+import { createClient } from "../../../../factories";
 import { handleRejoinTable } from "./handleRejoinTable";
 import { extractClientById } from '../../../../extractors/gameStateExtractors';
 
@@ -16,7 +16,7 @@ describe('Testing handleRejoinTable', function(){
 
     beforeEach(() => {
         gameState = produce(initialGameState, draft => {
-            const client = clientFactory(clientId);
+            const client = createClient(clientId);
             client.status = ClientConnectionStatuses.DISCONNECTED;
             draft.clients.set(clientId, client);
         })

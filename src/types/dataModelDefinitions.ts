@@ -1,72 +1,8 @@
 import {MaybeNull} from './genericTypes'
 import { ClientConnectionStatuses } from './socketTypes';
-
-export enum CardTypes {
-    FRENCH = 'FRENCH'
-}
-
-export interface CardTypeConfig {
-    baseHeight: number,
-    baseWidth: number,
-}
-
-export interface FrenchCardConfig extends CardTypeConfig {
-    cardRange: any[],
-    suits: string[]
-}
-
-export type CardConfig = FrenchCardConfig;
-
-export interface Entity {
-    readonly entityType: EntityTypes,
-    readonly entityId: string,
-    height:number,
-    width: number,
-    positionX: number,
-    positionY: number,
-    grabbedBy: MaybeNull<string>
-    zIndex: number,
-    isBound: boolean
-}
-
-export interface CardRepresentation {
-    cardType: CardTypes,
-    entityId: string,
-    face: string,
-    entityType: EntityTypes.CARD,
-    faceUp: boolean,
-    ownerDeck: MaybeNull<string>
-}
-
-export interface CardEntity extends Entity {
-    cardType: CardTypes,
-    entityId: string,
-    face: string,
-    entityType: EntityTypes.CARD,
-    faceUp: boolean,
-    ownerDeck: MaybeNull<string>
-}
-
-export interface DeckEntity extends Entity {
-    entityType: EntityTypes.DECK
-    cards: CardRepresentation[],
-    drawIndex: number
-}
-
-export enum EntityTypes {
-    CARD = 'CARD',
-    DECK = 'DECK'
-}
-
-export type GrabbedEntity = MaybeNull<{
-    entityId: string,
-    entityType: EntityTypes
-    grabbedAtX: number,
-    grabbedAtY: number
-}>
+import { GrabbedEntity, CardRepresentation, DeckEntity, CardEntity } from './entityTypes';
 
 export type Client = {
-    //TODO: flatten this out
     clientInfo: ClientInfo,
     grabbedEntitiy: GrabbedEntity,
     status: ClientConnectionStatuses

@@ -2,7 +2,7 @@ import produce from 'immer';
 
 import { DeckVerb } from '../../../../../../types/verbTypes'
 import { GameState } from '../../../../../../types/dataModelDefinitions';
-import { cardRepFactory, createCardRepresentationFromCardEntity } from '../../../../../../factories';
+import { createCardRep, createCardRepresentationFromCardEntity } from '../../../../../../factories';
 import { extractDeckById } from '../../../../../../extractors/gameStateExtractors';
 
 export function handleReset(state: GameState, verb: DeckVerb): GameState {

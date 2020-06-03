@@ -1,6 +1,6 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import { CardVerbTypes, CardVerb } from '../../../../../../types/verbTypes';
-import { clientFactory, cardFactory, deckFactory, clientHandFactory } from '../../../../../../factories';
+import { createClient, createCard, createDeck, clientHandFactory } from '../../../../../../factories';
 import produce, { enableMapSet } from 'immer';
 import { handlePutInHand } from './handlePutInHand';
 import { extractClientHandById, extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById } from '../../../../../../extractors/gameStateExtractors';
@@ -11,8 +11,8 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
     //enabling Map support for Immer
     enableMapSet();
     let gameState: GameState;
-    let client = clientFactory('socket-1');
-    const cardBeingAddedToHand = cardFactory(0,0, CardTypes.FRENCH);
+    let client = createClient('socket-1');
+    const cardBeingAddedToHand = createCard(0,0, CardTypes.FRENCH);
     client.grabbedEntitiy = {
         entityId: cardBeingAddedToHand.entityId,
         entityType: cardBeingAddedToHand.entityType,
@@ -54,11 +54,12 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         const nextGameState = handlePutInHand(gameState, verb);
         assert.equal(extractCardById(nextGameState ,cardBeingAddedToHand.entityId), undefined);
     })
-    it('should do nothing if it exists in a deck also. This is for avoiding duplication on deck RESET caused by concurrency.', function(){
+    it('should do nothing if it drawIndex is 0(all cards are in deck). This is for avoiding duplication on deck RESET caused by concurrency.', function(){
         gameState = produce(gameState, draft => {
-            const deck = deckFactory(CardTypes.FRENCH, 0,0);
+            const deck = createDeck(CardTypes.FRENCH, 0,0);
             deck.cards.push(cardBeingAddedToHand);
             draft.cards.get(cardBeingAddedToHand.entityId).ownerDeck = deck.entityId;
+            deck.drawIndex = 0;
             draft.decks.set(deck.entityId, deck);
         })
         const nextGameState = handlePutInHand(gameState, verb);

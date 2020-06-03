@@ -1,9 +1,9 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import {spy} from 'sinon';
 
 import { CardVerbTypes, CardVerb } from "../../../../../../types/verbTypes";
 import { GameState, GrabbedEntity, EntityTypes, CardTypes } from "../../../../../../types/dataModelDefinitions";
-import { clientFactory, cardFactory, deckFactory, clientHandFactory, cardRepFactory } from "../../../../../../factories";
+import { createClient, createCard, createDeck, clientHandFactory, createCardRep } from "../../../../../../factories";
 import produce, { enableMapSet } from "immer";
 import { initialGameState } from "../../../../../../mocks/initialGameState";
 import { handleGrabFromHand } from "./handleGrabFromHand";
@@ -15,8 +15,8 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     enableMapSet();
 
     let gameState: GameState;
-    let client = clientFactory('socket-1');
-    const cardToGrab = cardFactory(0,0,CardTypes.FRENCH);
+    let client = createClient('socket-1');
+    const cardToGrab = createCard(0,0,CardTypes.FRENCH);
     const verb: CardVerb = {
         type: CardVerbTypes.GRAB_FROM_HAND,
         clientId: client.clientInfo.clientId,
@@ -68,7 +68,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     it('should remove card from correct hand', function(){
         const nextState = handleGrabFromHand(gameState, verb);
         const nextHand = extractClientHandById(nextState, verb.clientId);
-        assert.equal(nextHand.cards.find(card => card.entityId !== verb.entityId), undefined);
+        assert.equal(nextHand.cards.find(card => card.entityId === verb.entityId), undefined);
     })
 
     it('should set grabbedBy of grabbed card to client ID', function(){

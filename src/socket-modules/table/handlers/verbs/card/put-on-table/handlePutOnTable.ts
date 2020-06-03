@@ -1,7 +1,7 @@
 import { GameState, CardEntity } from "../../../../../../types/dataModelDefinitions";
 import { CardVerb } from "../../../../../../types/verbTypes";
 import produce from "immer";
-import { cardFactory } from "../../../../../../factories";
+import { createCard } from "../../../../../../factories";
 import { extractCardFromClientHandById, extractClientHandById } from "../../../../../../extractors/gameStateExtractors";
 
 export function handlePutOnTable(state: GameState, verb: CardVerb): GameState{
@@ -14,7 +14,7 @@ export function handlePutOnTable(state: GameState, verb: CardVerb): GameState{
             if(owner && owner.cards.find(card => card.entityId === entityId)){
                 return;
             }
-            let displayCard: CardEntity = cardFactory(positionX, positionY, cardType, face, faceUp, entityId, ownerDeck);
+            let displayCard: CardEntity = createCard(positionX, positionY, cardType, face, faceUp, entityId, ownerDeck);
             draft.cards.set(displayCard.entityId, displayCard);
             let subjectClientHand = extractClientHandById(draft, clientId);
             if(subjectClientHand){

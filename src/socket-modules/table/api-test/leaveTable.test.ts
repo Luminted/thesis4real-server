@@ -7,7 +7,7 @@ import { GameState, CardTable } from '../../../types/dataModelDefinitions';
 import { initServerState, gameStateGetter, addTable, lookupClientId, gameStateSetter, addSocketClientIdMapping } from '../../../state';
 import { createTable } from '../createTable';
 import produce from 'immer';
-import { clientFactory, clientHandFactory } from '../../../factories';
+import { createClient, clientHandFactory } from '../../../factories';
 import * as leaveTableHandler from '../handlers/leave-table'
 
 describe(`Testing ${TableModuleClientEvents.LEAVE_TABLE}`, function(){
@@ -30,7 +30,7 @@ describe(`Testing ${TableModuleClientEvents.LEAVE_TABLE}`, function(){
         addTable(playTable, gameState);
 
         gameState = produce(gameState, draft => {
-            const client = clientFactory(clientId);
+            const client = createClient(clientId);
             const hand = clientHandFactory(clientId);
             draft.clients.set(clientId, client);
             draft.hands.set(clientId, hand);

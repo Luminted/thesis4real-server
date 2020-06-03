@@ -7,7 +7,7 @@ import { TableModule } from './socket-modules/table/tableModule';
 import {addTable, initServerState, gameStateSetter, gameStateGetter } from './state';
 import { createTable } from './socket-modules/table/createTable';
 import produce, { enableMapSet } from 'immer';
-import { deckFactory } from './factories';
+import { createDeck } from './factories';
 import { CardTypes } from './types/dataModelDefinitions';
 import { initialGameState } from './mocks/initialGameState';
 
@@ -28,10 +28,10 @@ if(node_env === 'production'){
 }
 else if(node_env === 'development'){
     initServerState();
-    let [devTable, gameState] = createTable(4100, 2200, 2, [0,0],'dev');
+    let [devTable, gameState] = createTable(4100, 2200, 3, [0,0],'dev');
     gameState = produce(gameState, draft => {
-        const deck1 = deckFactory(CardTypes.FRENCH, 0, 0)
-        const deck2 = deckFactory(CardTypes.FRENCH, 0,170)
+        const deck1 = createDeck(CardTypes.FRENCH, 0, 0)
+        const deck2 = createDeck(CardTypes.FRENCH, 0,3*88)
         console.log(deck1.entityId);
         console.log(deck2.entityId);
         draft.decks.set(deck1.entityId, deck1);

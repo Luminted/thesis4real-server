@@ -20,20 +20,27 @@
         },
         {
             "type": "node",
+            "request": "attach",
+            "name": "Attach by Process ID",
+            "processId": "${command:PickProcess}",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
             "request": "launch",
             "name": "Debug Program",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/dist/i.js",
+            "program": "${workspaceFolder}/dist/index.js",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
             ],
-            "args": [
-                "-r",
-                "dotenv/config"
-            ]
+            "env": {"NODE_ENV": "development"}
         },
+        
         {
             "type": "node",
             "request": "launch",
@@ -47,7 +54,10 @@
                 "--colors",
                 "-r",
                 "ts-node/register",
-                "${workspaceFolder}/src/socket-modules/table/e2e-tests/verb.test.ts"
+                "${workspaceFolder}/src/socket-modules/table/handlers/verbs/card/grab-from-hand/handleGrabFromHand.test.ts"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
             ],
             "internalConsoleOptions": "openOnSessionStart",
             "skipFiles": [

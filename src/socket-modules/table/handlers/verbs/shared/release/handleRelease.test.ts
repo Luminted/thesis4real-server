@@ -1,17 +1,17 @@
 import produce from "immer";
-import * as assert from 'assert';
+import assert from 'assert';
 
 import { handleRelease } from './handleRelease';
 import { SharedVerbTypes, SharedVerb } from "../../../../../../types/verbTypes";
 import { GameState, EntityTypes, CardTypes } from "../../../../../../types/dataModelDefinitions";
-import { clientFactory, cardFactory, deckFactory } from "../../../../../../factories";
+import { createClient, createCard, createDeck } from "../../../../../../factories";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId } from "../../../../../../extractors/gameStateExtractors";
 import {initialGameState} from '../../../../../../mocks/initialGameState'
 
 
 describe(`handle ${SharedVerbTypes.RELEASE} verb`, function() {
-    const client = clientFactory('socket-1');
-    const card = cardFactory(0,1,CardTypes.FRENCH);
+    const client = createClient('socket-1');
+    const card = createCard(0,1,CardTypes.FRENCH);
     const verb: SharedVerb = {
         type: SharedVerbTypes.RELEASE,
         clientId: client.clientInfo.clientId,

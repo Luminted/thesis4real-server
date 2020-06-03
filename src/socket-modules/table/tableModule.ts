@@ -63,7 +63,7 @@ console.log('listening for connections ', nspTable.name);
                     if(verb && tableId){
                         const nextState = handleVerb(getGameState(), verb, tableId);
                         setGameState(nextState);
-                        console.log(serializeGameState(nextState).clients[0]?.grabbedEntitiy)
+                        // console.log(serializeGameState(nextState).clients[0]?.grabbedEntitiy)
                         nspTable.to(tableId).emit(TableModuleServerEvents.SYNC, serializeGameState(nextState));
                     }
                     if(ack){

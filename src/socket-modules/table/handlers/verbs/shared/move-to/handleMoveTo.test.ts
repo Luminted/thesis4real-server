@@ -1,17 +1,17 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import produce from 'immer';
 import { SharedVerbTypes, SharedVerb } from '../../../../../../types/verbTypes';
 import { GameState, EntityTypes, CardTypes } from '../../../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, deckFactory } from '../../../../../../factories';
+import { createClient, createCard, createDeck } from '../../../../../../factories';
 import { initialGameState } from '../../../../../../mocks/initialGameState';
 import {handleMoveTo} from './handleMoveTo';
 import { extractCardById, extractDeckById } from '../../../../../../extractors/gameStateExtractors';
 
 describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
     let gameState: GameState;
-    let client = clientFactory('socket-1');
-    const cardToMove = cardFactory(111,222, CardTypes.FRENCH);
-    const deckToMove = deckFactory(CardTypes.FRENCH, 222,111);
+    let client = createClient('socket-1');
+    const cardToMove = createCard(111,222, CardTypes.FRENCH);
+    const deckToMove = createDeck(CardTypes.FRENCH, 222,111);
 
 
     beforeEach('Setting up test data...', () => {

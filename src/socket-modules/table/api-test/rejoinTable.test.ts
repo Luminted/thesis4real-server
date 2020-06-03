@@ -9,7 +9,7 @@ import { initServerState, gameStateGetter, addTable, getServerState, lookupClien
 import { createTable } from '../createTable';
 import * as rejoinTableHandler from '../handlers/rejoin-table';
 import produce from 'immer';
-import { clientFactory } from '../../../factories';
+import { createClient } from '../../../factories';
 
 describe(`Testing ${TableModuleClientEvents.REJOIN_TABLE}`, function(){
     const url = 'http://localhost';
@@ -31,7 +31,7 @@ describe(`Testing ${TableModuleClientEvents.REJOIN_TABLE}`, function(){
         addTable(playTable, gameState);
 
         gameState = produce(gameState, draft => {
-            const client = clientFactory(clientId);
+            const client = createClient(clientId);
             client.status = ClientConnectionStatuses.DISCONNECTED;
             draft.clients.set(clientId, client);
         })

@@ -1,10 +1,10 @@
 import produce, { enableMapSet } from "immer";
-import * as assert from 'assert';
+import assert from 'assert';
 
 import { handleMove } from './handleMove';
 import { SharedVerbTypes, SharedVerb } from "../../../../../../types/verbTypes";
 import { EntityTypes, GameState, CardEntity, DeckEntity, CardTypes } from "../../../../../../types/dataModelDefinitions";
-import { clientFactory, cardFactory, deckFactory, cardFactoryFromObject, deckFactoryFromObject } from "../../../../../../factories";
+import { createClient, createCard, createDeck, createGenericCardFromObject, createDeckFromObjet } from "../../../../../../factories";
 import { extractClientById, extractCardById, extractGrabbedEntityOfClientById, extractDeckById } from "../../../../../../extractors/gameStateExtractors";
 import {initialGameState} from '../../../../../../mocks/initialGameState'
 
@@ -12,16 +12,16 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
     enableMapSet();
 
     let gameState: GameState;
-    let client = clientFactory('socket-1');
-    const cardToMove = cardFactory(50,51,CardTypes.FRENCH);
-    const deckToMove = deckFactory(CardTypes.FRENCH, 80, 81);
-    const boundCard = cardFactoryFromObject({
+    let client = createClient('socket-1');
+    const cardToMove = createCard(50,51,CardTypes.FRENCH);
+    const deckToMove = createDeck(CardTypes.FRENCH, 80, 81);
+    const boundCard = createGenericCardFromObject({
         positionX: 50,
         positionY: 51,
         cardType: CardTypes.FRENCH,
         isBound: true
     });
-    const boundDeck = deckFactoryFromObject({
+    const boundDeck = createDeckFromObjet({
         positionX: 80,
         positionY: 81,
         cardType: CardTypes.FRENCH,

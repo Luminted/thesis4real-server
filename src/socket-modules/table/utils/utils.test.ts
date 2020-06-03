@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { cardFactory, deckFactory } from "../../../factories"
+import { createCard, createDeck } from "../../../factories"
 import { CardTypes, Entity, EntityTypes, GameState } from "../../../types/dataModelDefinitions"
 import { calcNextZIndex } from "./utils"
 import produce, { enableMapSet } from 'immer';
@@ -43,7 +43,7 @@ describe('Testing utility functions', function(){
             let zIndexLimit = 50;
             produce(gameState, draft => {
                 for(let i = 0; i < numberOfEntities; i++){
-                    const card = cardFactory(0,0,CardTypes.FRENCH);
+                    const card = createCard(0,0,CardTypes.FRENCH);
                     draft.cards.set(card.entityId, card);
                 }
                 draft.topZIndex = zIndexLimit;
@@ -60,12 +60,12 @@ describe('Testing utility functions', function(){
             gameState = produce(gameState, draft => {
                 for(let i = 0; i < numberOfCards; i++){
                     const cardId = `${numberOfEntities - i - 1}`;
-                    const card = cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, cardId, undefined, undefined, undefined, zIndexLimit - i);
+                    const card = createCard(0,0,CardTypes.FRENCH, undefined, undefined, cardId, undefined, undefined, undefined, zIndexLimit - i);
                     draft.cards.set(card.entityId, card);
                 }
                 for(let i = 0; i < numberOfDecks; i++){
                     const deckId = `${numberOfEntities - numberOfCards - i - 1}`;
-                    const deck = deckFactory(CardTypes.FRENCH, 0,0, undefined, zIndexLimit - numberOfCards - i, deckId);
+                    const deck = createDeck(CardTypes.FRENCH, 0,0, undefined, zIndexLimit - numberOfCards - i, deckId);
                     draft.decks.set(deck.entityId, deck);
                 }
                 draft.topZIndex = zIndexLimit;

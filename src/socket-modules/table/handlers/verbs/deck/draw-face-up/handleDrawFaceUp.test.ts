@@ -1,21 +1,21 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import produce from 'immer';
 
 import { handleDrawFaceUp } from './handleDrawFaceUp'
 import { DeckVerbTypes, DeckVerb } from '../../../../../../types/verbTypes';
 import { GameState, CardRepresentation, CardTypes, DeckEntity } from '../../../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, deckFactory } from '../../../../../../factories';
+import { createClient, createCard, createDeck } from '../../../../../../factories';
 import {initialGameState} from '../../../../../../mocks/initialGameState'
 import { extractCardById, extractDeckById } from '../../../../../../extractors/gameStateExtractors';
 
 describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
 
     let gameState: GameState;
-    let client = clientFactory('socket-1');
+    let client = createClient('socket-1');
     let deck: DeckEntity;
 
     beforeEach('Setting up test data...', () => {
-        deck = deckFactory(CardTypes.FRENCH, 10,12);
+        deck = createDeck(CardTypes.FRENCH, 10,12);
         gameState = produce(initialGameState, draft => {
             draft.decks.set(deck.entityId, deck);
             draft.clients.set(client.clientInfo.clientId, client);

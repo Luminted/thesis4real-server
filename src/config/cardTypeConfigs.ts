@@ -1,9 +1,15 @@
-import { FrenchCardConfig, CardConfig, CardTypes } from "../types/dataModelDefinitions"
+import { FrenchCardConfig, CardConfig, CardTypes, FrenchCardFaces } from "../types/entityTypes"
 
+const frenchCardRange: string[] = [];
+for(const face in FrenchCardFaces){
+    if(!Number(face)){
+        frenchCardRange.push(face);
+    }
+}
 const frenchCardConfig: FrenchCardConfig = {
     baseHeight: 88,
     baseWidth: 64,
-    cardRange: [2,3,4,5,6,7,8,9,10,'J','Q','K','A'],
+    cardRange: frenchCardRange,
     suits: ['Heart', 'Club', 'Spade', 'Diamond']
 }
 

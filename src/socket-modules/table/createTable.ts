@@ -21,6 +21,6 @@ export function createTable(tableWidth: number, tableHeight: number, entityScale
         hands: new Map<string, ClientHand>(),
         entityScale: entityScale || 1,
         topZIndex: 0,
-        emptySeats: [Seats.NORTH, Seats.SOUTH]
+        emptySeats: [Seats.NORTH, Seats.SOUTH, Seats.NORTH_WEST, Seats.SOUTH_WEST, Seats.NORTH_EAST, Seats.SOUTH_EAST]
     }]
 }

@@ -260,21 +260,23 @@ Connection handling
 	handling reconnect
 	lag handling
 + player concurrency
-+ stress test backend
-optimize data transfer
+ stress test backend
+ optimize data transfer
+	Immer patches
 optimize front end
+	separate grabbedENtity from client
 Lobby page
 	start
 	preload assets
 	share link to room
-inverting movement for opposing side of table
-z level handling
-seating
++inverting movement for opposing side of table
++z level handling
 Visuals
 	graphics
 	animations
 	cursor tracking
 	visual indications of interactions
+	player name/avatar display
 obstruct interaction until state is set up
 chat
 404 page redirect
@@ -285,22 +287,94 @@ menu
 	spawning decks
 	spawning cards
 	removing cards
+	removing decks
 error handling
+	socket listen callback
+	remove !. accessors
 responsive design
-	position scaling
+	+resolution scaling
 	responsive css library
 revisit factories
 code cleanup
+	socket io connection options
 	dependencies
 	exports
 	orgaize types
 	revisit state design
 	proper build
 	linter
+	rename basecard to cardrepresentation
+	rename dispaly card to cardentity
+	make deck hold drawn cards and on reset use this list for optimized removal
+	remove unused imports
+	make unnecessary interfaces int o types
+	think through what needs to be async
+	scoketio with HTTP?
+	interraction concurrency
+	add chalk
+	table limit to empty seat check
+	client => player
+	think about verb handling optimization
+	test messages
+	gamestate setters removers
+	env
+	short IDs
+	shared verbs tested with entity
+	pass config to handlers, no direct access keep in pure
+	not using enzyme
+	centralize function spies
+	serialized -> serializable
+	bind getters to table scope aka dont pass tableId all over
+	position rounding
 
+session cycle
+	+connect to table
+		join as observer ???
+	+join table
+		+take an empty seat
+		+add client to socket id lookup table
+		+created client status = connected
+		reject if full
+	+rejoin table
+		+if exists refresh socket id lookup table
+	+leave table
+		+leave seat -> remove player from table
+		+put cards back on table from hand
+	kick player
+		disconnect
+		leave seat -> remove player from table
+	disconnect
+		player disconnect
+		player state is kept
+		player connection status updated
 
 
 THESIS NOTES
 
 Reson for using 3rd party npm package
 stress testing 
+sent state size
+sync/async reasons
+	node is singe threaded => everything is transactional
+testing
+	TDD
+state design for efficiency
+	differentiation between states is important
+	Immer biztosítja a transzformáció tisztaságát
+	a paklinál és kéznél fontos a sorrend
+concurrency kezelés
+	node egy szálon fut
+	handlerek külön intézik
+front end styling
+	plain objects with TS
+	needs run time values
+z indexing starts from 0
+	limit at 2^16
+actions serve as outgoing API interface
+returning nulls to avoid kétesség
+control system
+	designed to be easy to bind keys to verbs
+socketio package size overhead
+Dispatch is sync!
+	for thunk arguments
+events always bubble

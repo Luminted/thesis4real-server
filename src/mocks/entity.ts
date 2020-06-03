@@ -8,6 +8,6 @@ export const cardEntityMock: Entity = {
     width: 11,
     positionX: 0,
     positionY: 1,
-    scale: 1,
+    isBound: false,
     zIndex: 0
 }

@@ -1,8 +1,8 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import {handlePutOnTable} from './handlePutOnTable';
 import { CardVerbTypes, CardVerb } from '../../../../../../types/verbTypes';
 import { GameState, EntityTypes, CardTypes, CardRepresentation } from '../../../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, deckFactory, clientHandFactory, cardRepFactory } from '../../../../../../factories';
+import { createClient, createCard, createDeck, clientHandFactory, createCardRep } from '../../../../../../factories';
 import { initialGameState } from '../../../../../../mocks/initialGameState';
 import produce, { enableMapSet } from 'immer';
 import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById, extractCardFromClientHandById, extractCardFromDeckById } from '../../../../../../extractors/gameStateExtractors';
@@ -11,13 +11,13 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
     //Enabling Map support for Immer
     enableMapSet();
     let gameState: GameState;
-    let client = clientFactory('socket-1');
+    let client = createClient('socket-1');
     let cardToPutOnTable: CardRepresentation;
     let verb: CardVerb;
 
     beforeEach('Setting up test data...', () => {
         const {clientId} = client.clientInfo;
-        cardToPutOnTable = cardRepFactory(CardTypes.FRENCH, 'placeholder');
+        cardToPutOnTable = createCardRep(CardTypes.FRENCH, 'placeholder');
         verb = {
             clientId: client.clientInfo.clientId,
             entityId: cardToPutOnTable.entityId,
@@ -59,7 +59,7 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
     })
     it('should do nothing if it exists in a deck also. This is for avoiding duplication caused by concurrency.', function(){
         gameState = produce(gameState, draft => {
-            const deck = deckFactory(CardTypes.FRENCH, 0,0);
+            const deck = createDeck(CardTypes.FRENCH, 0,0);
             deck.cards.push(cardToPutOnTable);
             draft.decks.set(deck.entityId, deck);
             extractCardFromClientHandById(draft, client.clientInfo.clientId, cardToPutOnTable.entityId).ownerDeck = deck.entityId;

@@ -49,7 +49,6 @@ export function handleMove(state: GameState, verb: SharedVerb, tableWidth: numbe
                     }
                     else if(newPositionY > tableHeight - entityHeight){
                         movedEntity.positionY = clamp(newPositionY, 0, tableHeight - entityHeight);
-                        console.log( tableHeight - Math.round(entityHeight / 2), tableHeight, entityHeight)
                         grabbedEntity.grabbedAtY = tableHeight - Math.round(entityHeight / 2);
                     }
                     else{

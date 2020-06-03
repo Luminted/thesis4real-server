@@ -5,7 +5,7 @@ import { GameState, ClientHand, Client } from "../../../../types/dataModelDefini
 import { extractEmptySeats } from "../../../../extractors/gameStateExtractors";
 import produce from "immer";
 import { initialGameState } from "../../../../mocks/initialGameState";
-import { clientFactory, clientHandFactory } from "../../../../factories";
+import { createClient, clientHandFactory } from "../../../../factories";
 
 describe(`Event handler for: ${TableModuleClientEvents.DISCONNECT}`, function(){
     const socketId = 'client-1'
@@ -14,11 +14,11 @@ describe(`Event handler for: ${TableModuleClientEvents.DISCONNECT}`, function(){
     let hand: ClientHand;
 
     beforeEach(() => {
-        client = clientFactory(socketId);
+        client = createClient(socketId);
         hand = clientHandFactory(socketId);
         gameState = produce(initialGameState, draft => {
             const nextSeat = draft.emptySeats.shift();
-            client = clientFactory(socketId, nextSeat);
+            client = createClient(socketId, nextSeat);
             hand = clientHandFactory(socketId);
             client.clientInfo.seatedAt = nextSeat;
             draft.clients.set(client.clientInfo.clientId, client);

@@ -1,9 +1,9 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import produce from "immer";
 
 import { SharedVerbTypes, SharedVerb } from '../../../../../../types/verbTypes';
 import { GameState, EntityTypes, CardTypes } from '../../../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, deckFactory } from '../../../../../../factories';
+import { createClient, createCard, createDeck } from '../../../../../../factories';
 import { handleRemove } from './handleRemove';
 import {initialGameState} from '../../../../../../mocks/initialGameState'
 
@@ -12,9 +12,9 @@ import {initialGameState} from '../../../../../../mocks/initialGameState'
 describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
 
     let gameState: GameState;
-    let client = clientFactory('socket-1');
-    const deckToRemove = deckFactory(CardTypes.FRENCH, 10,10);
-    const cardToRemove = cardFactory(100,0, CardTypes.FRENCH);
+    let client = createClient('socket-1');
+    const deckToRemove = createDeck(CardTypes.FRENCH, 10,10);
+    const cardToRemove = createCard(100,0, CardTypes.FRENCH);
     const verbType = SharedVerbTypes.REMOVE;
 
     beforeEach('Setting up test data...', () => {

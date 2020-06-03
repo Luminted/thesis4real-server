@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { GameState, CardTypes } from "../../../../types/dataModelDefinitions";
 import {Seats} from '../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, cardRepFactory, clientHandFactory } from "../../../../factories";
+import { createClient, createCard, createCardRep, clientHandFactory } from "../../../../factories";
 import produce, { enableMapSet } from "immer";
 import { handleLeaveTable } from "./handleLeaveTable";
 import { extractClientById, extractClientHandById, extractCardById } from '../../../../extractors/gameStateExtractors';
@@ -12,9 +12,9 @@ describe('Testing handleLeaveTable', function(){
     enableMapSet();
 
     const clientId = 'client-1'
-    const client = clientFactory(clientId, Seats.NORTH);
-    const cardInClientsHand1 = cardRepFactory(CardTypes.FRENCH, 'dummy');
-    const cardInClientsHand2 = cardRepFactory(CardTypes.FRENCH, 'dummy');
+    const client = createClient(clientId, Seats.NORTH);
+    const cardInClientsHand1 = createCardRep(CardTypes.FRENCH, 'dummy');
+    const cardInClientsHand2 = createCardRep(CardTypes.FRENCH, 'dummy');
     const defaultPosition: [number, number] = [15,25];
     let gameState: GameState;
 
@@ -48,7 +48,7 @@ describe('Testing handleLeaveTable', function(){
     });
 
     it('should put cards from hand on top of cards on table', function(){
-        const entityOnTable = cardFactory(0,0,CardTypes.FRENCH);
+        const entityOnTable = createCard(0,0,CardTypes.FRENCH);
         gameState = produce(gameState, draft => {
             entityOnTable.zIndex = gameState.topZIndex;
             draft.cards.set(entityOnTable.entityId, entityOnTable);

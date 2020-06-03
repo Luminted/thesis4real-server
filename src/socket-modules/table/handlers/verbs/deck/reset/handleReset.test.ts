@@ -1,9 +1,9 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import {produce, enableMapSet} from 'immer';
 
 import { DeckVerbTypes, DeckVerb } from '../../../../../../types/verbTypes';
 import { GameState, EntityTypes, CardRepresentation, CardTypes } from '../../../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, deckFactory, clientHandFactory } from '../../../../../../factories';
+import { createClient, createCard, createDeck, clientHandFactory } from '../../../../../../factories';
 import {handleReset} from './handleReset'
 import {initialGameState} from '../../../../../../mocks/initialGameState'
 import { extractCardFromClientHandById, extractCardById, extractDeckById, extractClientHandById } from '../../../../../../extractors/gameStateExtractors';
@@ -13,14 +13,14 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     //Enables Map support for Immer
     enableMapSet();
     let gameState: GameState;
-    const client1 = clientFactory('socket-1');
-    const client2 = clientFactory('socket-2');
-    const deckToReset = deckFactory(CardTypes.FRENCH,100,100);
+    const client1 = createClient('socket-1');
+    const client2 = createClient('socket-2');
+    const deckToReset = createDeck(CardTypes.FRENCH,100,100);
     deckToReset.drawIndex = 5;
-    const client1Card = cardFactory(0,0,CardTypes.FRENCH,undefined,undefined,undefined,deckToReset.entityId);
-    const client2Card = cardFactory(0,0,CardTypes.FRENCH,undefined,undefined,undefined,deckToReset.entityId);
+    const client1Card = createCard(0,0,CardTypes.FRENCH,undefined,undefined,undefined,deckToReset.entityId);
+    const client2Card = createCard(0,0,CardTypes.FRENCH,undefined,undefined,undefined,deckToReset.entityId);
     const verbType = DeckVerbTypes.RESET;
-    const cardsBelongingToDeck = [cardFactory(0,0,CardTypes.FRENCH,undefined, undefined, undefined, deckToReset.entityId), cardFactory(0,100, CardTypes.FRENCH, undefined, undefined, undefined, deckToReset.entityId)]
+    const cardsBelongingToDeck = [createCard(0,0,CardTypes.FRENCH,undefined, undefined, undefined, deckToReset.entityId), createCard(0,100, CardTypes.FRENCH, undefined, undefined, undefined, deckToReset.entityId)]
     const verb: DeckVerb = {
         type: verbType,
         clientId: client1.clientInfo.clientId,
@@ -56,7 +56,7 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     })
 
     it('should remove grabbed cards belonging to the reset deck', function(){
-        const grabbedCard = cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, undefined, deckToReset.entityId)
+        const grabbedCard = createCard(0,0,CardTypes.FRENCH, undefined, undefined, undefined, deckToReset.entityId)
         gameState = produce(gameState, draft => {
             const {entityId, entityType} = grabbedCard; 
             draft.clients.get(client1.clientInfo.clientId).grabbedEntitiy = {

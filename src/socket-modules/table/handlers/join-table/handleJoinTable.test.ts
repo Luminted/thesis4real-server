@@ -5,9 +5,9 @@ import { createTable } from "../../createTable";
 //TODO: dont use state here
 import { initServerState, addTable, gameStateSetter } from "../../../../state";
 import { handleJoinTable } from "./handleJoinTable";
-import { CardTable, GameState, Seats, EntityTypes } from "../../../../types/dataModelDefinitions";
+import { CardTable, GameState, Seats } from "../../../../types/dataModelDefinitions";
 import { extractEmptySeats, extractCardFromClientHandById, extractClientById, extractClientHandById, extractClientsSeatById, extractClientHandCardsById } from '../../../../extractors/gameStateExtractors';
-import { clientFactory, clientHandFactory } from '../../../../factories';
+import { createClient, clientHandFactory } from '../../../../factories';
 import produce from 'immer';
 
 
