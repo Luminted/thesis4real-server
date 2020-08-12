@@ -14,6 +14,8 @@
 * refactor handlers for singleton
 * check/place return types on functions
 * rethink if width/height is needed to be stored on server side for entity objects
+* connect routes to a RootRoute and export that
+* move gamestate reducers and accessors logically together
 
 ## Design Documents
 
@@ -304,3 +306,9 @@ THESIS NOTES
 
 Reson for using 3rd party npm package
 stress testing 
+
+
+Rebound steps
+	Investigate hands
+	implement french cards
+	stress test
