@@ -1,4 +1,4 @@
-export enum TableModuleClientEvents {
+export enum TableClientEvents {
     //built in events
     CONNECT = 'connect',
     DISCONNECT = 'disconnect',
@@ -14,7 +14,7 @@ export enum TableModuleClientEvents {
     GET_TABLE_DIMENSIONS = 'GET_TABLE_DIMENSIONS'
 }
 
-export enum TableModuleServerEvents {
+export enum TableServerEvents {
     SYNC = 'SYNC',
 }
 

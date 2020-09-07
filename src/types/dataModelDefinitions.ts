@@ -1,5 +1,6 @@
 import {MaybeNull} from './genericTypes'
 import { ClientConnectionStatuses } from './socketTypes';
+import { GameStateStore } from '../Store/GameStateStore';
 
 export enum CardTypes {
     FRENCH = 'FRENCH'
@@ -103,8 +104,7 @@ export interface GameState {
 }
 
 export type CardTable = {
-    readonly tableId: string,
-    socketClientIdMapping: {[key: string]: string},
+    readonly gameStateStore: GameStateStore,
     readonly seats: Seats[],
     readonly defaultPosition: [number, number],
     readonly tableWidth: number,
