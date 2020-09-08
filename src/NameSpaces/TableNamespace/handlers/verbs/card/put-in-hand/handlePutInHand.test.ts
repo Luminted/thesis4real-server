@@ -1,17 +1,15 @@
 import * as assert from 'assert';
 import { CardVerbTypes, CardVerb } from '../../../../../../types/verbTypes';
-import { clientFactory, cardFactory, deckFactory, clientHandFactory } from '../../../../../../factories';
-import produce, { enableMapSet } from 'immer';
+import { cardFactory, deckFactory, clientHandFactory } from '../../../../../../factories';
 import { handlePutInHand } from './handlePutInHand';
-import { extractClientHandById, extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById } from '../../../../../../extractors/gameStateExtractors';
-import { initialGameState } from '../../../../../../mocks/initialGameState';
-import { GameState, CardTypes } from '../../../../../../types/dataModelDefinitions';
+import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById } from '../../../../../../extractors/gameStateExtractors';
+import { CardTypes } from '../../../../../../types/dataModelDefinitions';
+import { GameStateStore } from '../../../../../../Store/GameStateStore';
+import { client1 } from '../../../../../../mocks/client';
 
 describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
-    //enabling Map support for Immer
-    enableMapSet();
-    let gameState: GameState;
-    let client = clientFactory('socket-1');
+    let gameStateStateStore = new GameStateStore();
+    let client = client1;
     const cardBeingAddedToHand = cardFactory(0,0, CardTypes.FRENCH);
     client.grabbedEntitiy = {
         entityId: cardBeingAddedToHand.entityId,
@@ -31,7 +29,8 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
 
     beforeEach('Setting up test data...', () => {
         const {clientId} = client.clientInfo;
-        gameState = produce(initialGameState, draft => {
+        gameStateStateStore.resetState();
+        gameStateStateStore.changeState(draft => {
             draft.cards.set(cardBeingAddedToHand.entityId, cardBeingAddedToHand);
             draft.clients.set(clientId, client);
             draft.hands.set(clientId, clientHandFactory(clientId))
@@ -40,28 +39,31 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
 
     it('should add the grabbed card to the correct hand', function(){
         const {clientId} = client.clientInfo;
-        const nextGameState = handlePutInHand(gameState, verb);
-        const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId,cardBeingAddedToHand.entityId);
+       gameStateStateStore.changeState(draft => handlePutInHand(draft, verb));
+        const cardPutInHand = extractCardFromClientHandById(gameStateStateStore.state, clientId,cardBeingAddedToHand.entityId);
         assert.notEqual(cardPutInHand, undefined);
     })
 
     it('should set clients grabbed card to null', function() {  
-        const nextGameState = handlePutInHand(gameState, verb);
-        const grabbedEntitiy = extractGrabbedEntityOfClientById(nextGameState, client.clientInfo.clientId);
+       gameStateStateStore.changeState(draft => handlePutInHand(draft, verb));
+        const grabbedEntitiy = extractGrabbedEntityOfClientById(gameStateStateStore.state, client.clientInfo.clientId);
         assert.equal(grabbedEntitiy, null);
     })
     it('should take out correct card from cards array', function() {
-        const nextGameState = handlePutInHand(gameState, verb);
-        assert.equal(extractCardById(nextGameState ,cardBeingAddedToHand.entityId), undefined);
+       gameStateStateStore.changeState(draft => handlePutInHand(draft, verb));
+        assert.equal(extractCardById(gameStateStateStore.state ,cardBeingAddedToHand.entityId), undefined);
     })
     it('should do nothing if it exists in a deck also. This is for avoiding duplication on deck RESET caused by concurrency.', function(){
-        gameState = produce(gameState, draft => {
+        gameStateStateStore.changeState(draft => {
             const deck = deckFactory(CardTypes.FRENCH, 0,0);
             deck.cards.push(cardBeingAddedToHand);
             draft.cards.get(cardBeingAddedToHand.entityId).ownerDeck = deck.entityId;
             draft.decks.set(deck.entityId, deck);
         })
-        const nextGameState = handlePutInHand(gameState, verb);
-        assert.deepEqual(nextGameState, gameState);
+
+        const originalState = {...gameStateStateStore.state}
+
+       gameStateStateStore.changeState(draft => handlePutInHand(draft, verb));
+        assert.deepEqual(gameStateStateStore.state, originalState);
     })
 })

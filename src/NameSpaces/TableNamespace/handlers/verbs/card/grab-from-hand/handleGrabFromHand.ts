@@ -1,5 +1,3 @@
-import produce from "immer";
-
 import { GameState } from "../../../../../../types/dataModelDefinitions";
 import { CardVerb } from "../../../../../../types/verbTypes";
 import { cardFactory } from "../../../../../../factories";
@@ -17,10 +15,11 @@ export function handleGrabFromHand(draft: GameState, verb: CardVerb) {
     const {zIndexLimit} = gameConfig;
     const positionOffsetX = Math.round(baseWidth * entityScale / 2);
     const positionOffsetY = Math.round(baseHeight * entityScale / 2);
+    
     // TODO: card from cardRep function
     const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-    const grabbedCard = cardFactory(positionX - positionOffsetX, positionY - positionOffsetY, cardType, face, faceUp, entityId, ownerDeck, undefined, clientId, nextTopZIndex);
-    draft.cards.set(grabbedCard.entityId, grabbedCard);
+    const grabbedCardEntity = cardFactory(positionX - positionOffsetX, positionY - positionOffsetY, cardType, face, faceUp, entityId, ownerDeck, undefined, clientId, nextTopZIndex);
+    draft.cards.set(grabbedCardEntity.entityId, grabbedCardEntity);
     extractClientById(draft, clientId).grabbedEntitiy = {
         entityId,
         entityType,

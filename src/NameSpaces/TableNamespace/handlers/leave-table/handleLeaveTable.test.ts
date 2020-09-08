@@ -1,25 +1,24 @@
 import assert from 'assert';
-import { GameState, CardTypes } from "../../../../types/dataModelDefinitions";
+import { CardTypes } from "../../../../types/dataModelDefinitions";
 import {Seats} from '../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, cardRepFactory, clientHandFactory } from "../../../../factories";
-import produce, { enableMapSet } from "immer";
+import { cardFactory, cardRepFactory, clientHandFactory } from "../../../../factories";
 import { handleLeaveTable } from "./handleLeaveTable";
 import { extractClientById, extractClientHandById, extractCardById } from '../../../../extractors/gameStateExtractors';
-import { initialGameState } from '../../../../mocks/initialGameState';
+import { createClient } from '../../../../mocks/client';
+import { GameStateStore } from '../../../../Store/GameStateStore';
 
 describe('Testing handleLeaveTable', function(){
-    // Enabling Map support for Immer
-    enableMapSet();
 
-    const clientId = 'client-1'
-    const client = clientFactory(clientId, Seats.NORTH);
+    const clientId = 'client-1';
+    const client = createClient(clientId, Seats.NORTH);
     const cardInClientsHand1 = cardRepFactory(CardTypes.FRENCH, 'dummy');
     const cardInClientsHand2 = cardRepFactory(CardTypes.FRENCH, 'dummy');
     const defaultPosition: [number, number] = [15,25];
-    let gameState: GameState;
+    let gameStateStore = new GameStateStore();
 
     beforeEach(() => {
-        gameState = produce(initialGameState, draft => {
+        gameStateStore.resetState();
+        gameStateStore.changeState(draft => {
             const clientHand = clientHandFactory(clientId);
             clientHand.cards.push(cardInClientsHand1, cardInClientsHand2);
             draft.clients.set(clientId, client);
@@ -28,19 +27,19 @@ describe('Testing handleLeaveTable', function(){
     })
 
     it('should remove client from clients', function(){
-        const nextGameState = handleLeaveTable(gameState, clientId, defaultPosition);
-        const removedClient = extractClientById(nextGameState, clientId);
+        gameStateStore.changeState(draft => handleLeaveTable(draft, clientId, defaultPosition));
+        const removedClient = extractClientById(gameStateStore.state, clientId);
         assert.equal(removedClient, null);
     });
     it('should remove clients hand', function(){
-        const nextGameState = handleLeaveTable(gameState, clientId, defaultPosition);
-        const removedHand = extractClientHandById(nextGameState, clientId);
+        gameStateStore.changeState(draft => handleLeaveTable(draft, clientId, defaultPosition));
+        const removedHand = extractClientHandById(gameStateStore.state, clientId);
         assert.equal(removedHand, null);
     })
     it('should put cards in clients hand on table at default point', function(){
-        const nextGameState = handleLeaveTable(gameState, clientId, defaultPosition);
-        const cardPutBackOnTable1 = extractCardById(nextGameState, cardInClientsHand1.entityId);
-        const cardPutBackOnTable2 = extractCardById(nextGameState, cardInClientsHand2.entityId);
+        gameStateStore.changeState(draft => handleLeaveTable(draft, clientId, defaultPosition));
+        const cardPutBackOnTable1 = extractCardById(gameStateStore.state, cardInClientsHand1.entityId);
+        const cardPutBackOnTable2 = extractCardById(gameStateStore.state, cardInClientsHand2.entityId);
         assert.equal(cardPutBackOnTable1.positionX, defaultPosition[0]);
         assert.equal(cardPutBackOnTable1.positionY, defaultPosition[1]);
         assert.equal(cardPutBackOnTable2.positionX, defaultPosition[0]);
@@ -49,24 +48,24 @@ describe('Testing handleLeaveTable', function(){
 
     it('should put cards from hand on top of cards on table', function(){
         const entityOnTable = cardFactory(0,0,CardTypes.FRENCH);
-        gameState = produce(gameState, draft => {
-            entityOnTable.zIndex = gameState.topZIndex;
+        gameStateStore.changeState(draft => {
+            entityOnTable.zIndex = draft.topZIndex;
             draft.cards.set(entityOnTable.entityId, entityOnTable);
         })
-        const nextGameState = handleLeaveTable(gameState, clientId, defaultPosition);
-        const nextEntityOnTable = extractCardById(nextGameState, entityOnTable.entityId);
-        const cardPutBackOnTable1 = extractCardById(nextGameState, cardInClientsHand1.entityId);
-        const cardPutBackOnTable2 = extractCardById(nextGameState, cardInClientsHand2.entityId);
+        gameStateStore.changeState(draft => handleLeaveTable(draft, clientId, defaultPosition));
+        const nextEntityOnTable = extractCardById(gameStateStore.state, entityOnTable.entityId);
+        const cardPutBackOnTable1 = extractCardById(gameStateStore.state, cardInClientsHand1.entityId);
+        const cardPutBackOnTable2 = extractCardById(gameStateStore.state, cardInClientsHand2.entityId);
         assert.equal(cardPutBackOnTable1.zIndex > nextEntityOnTable.zIndex, true);
         assert.equal(cardPutBackOnTable2.zIndex > nextEntityOnTable.zIndex, true);
     })
    
     it('should put clients seat back to empty seats', function(){
         const clientsSeat = client.clientInfo.seatedAt;
-        gameState = produce(gameState, draft => {
+       gameStateStore.changeState(draft => {
             draft.emptySeats = [];
         })
-        const nextGameState = handleLeaveTable(gameState, clientId, defaultPosition);
-        assert.equal(nextGameState.emptySeats.includes(clientsSeat), true);
+        gameStateStore.changeState(draft => handleLeaveTable(draft, clientId, defaultPosition));
+        assert.equal(gameStateStore.state.emptySeats.includes(clientsSeat), true);
     })
 })

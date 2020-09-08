@@ -1,17 +1,15 @@
 import * as assert from 'assert';
 import {handlePutOnTable} from './handlePutOnTable';
 import { CardVerbTypes, CardVerb } from '../../../../../../types/verbTypes';
-import { GameState, EntityTypes, CardTypes, CardRepresentation } from '../../../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, deckFactory, clientHandFactory, cardRepFactory } from '../../../../../../factories';
-import { initialGameState } from '../../../../../../mocks/initialGameState';
-import produce, { enableMapSet } from 'immer';
+import { EntityTypes, CardTypes, CardRepresentation } from '../../../../../../types/dataModelDefinitions';
+import { deckFactory, clientHandFactory, cardRepFactory } from '../../../../../../factories';
 import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById, extractCardFromClientHandById, extractCardFromDeckById } from '../../../../../../extractors/gameStateExtractors';
+import { client1 } from '../../../../../../mocks/client';
+import { GameStateStore } from '../../../../../../Store/GameStateStore';
 
 describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
-    //Enabling Map support for Immer
-    enableMapSet();
-    let gameState: GameState;
-    let client = clientFactory('socket-1');
+    let gameStateStore = new GameStateStore();
+    let client = client1;
     let cardToPutOnTable: CardRepresentation;
     let verb: CardVerb;
 
@@ -26,7 +24,8 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
             positionY: 66,
             type: CardVerbTypes.PUT_ON_TABLE
         };
-        gameState = produce(initialGameState, draft => {
+        gameStateStore.resetState();
+        gameStateStore.changeState(draft => {
             draft.clients.set(clientId, client);
             draft.hands.set(clientId, clientHandFactory(client.clientInfo.clientId));
             draft.hands.get(clientId).cards.push(cardToPutOnTable);
@@ -34,38 +33,41 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
     })
 
     it('should add card to cards array', function(){
-        let nextGameState = handlePutOnTable(gameState, verb);
-        let cardOnTable = extractCardById(nextGameState, cardToPutOnTable.entityId);
+        gameStateStore.changeState(draft => handlePutOnTable(draft, verb));
+        let cardOnTable = extractCardById(gameStateStore.state, cardToPutOnTable.entityId);
         assert.notEqual(cardOnTable, undefined);
     });
 
     it('should put it on the given position', function(){
-        let nextGameState = handlePutOnTable(gameState, verb);
-        let cardOnTable = extractCardById(nextGameState, cardToPutOnTable.entityId);
+        gameStateStore.changeState(draft => handlePutOnTable(draft, verb));
+        let cardOnTable = extractCardById(gameStateStore.state, cardToPutOnTable.entityId);
         assert.equal(cardOnTable.positionX, verb.positionX);
         assert.equal(cardOnTable.positionY, verb.positionY);
     })
 
     it('should remove card from hand of correct client', function() {
-        let nextGameState = handlePutOnTable(gameState, verb);
-        let nextHand = extractClientHandById(nextGameState, client.clientInfo.clientId);
+        gameStateStore.changeState(draft => handlePutOnTable(draft, verb));
+        let nextHand = extractClientHandById(gameStateStore.state, client.clientInfo.clientId);
         assert.notEqual(nextHand.cards.find(card => card.entityId === cardToPutOnTable.entityId), undefined);
     })
 
     it('should set grabbed entity to null', function(){
-        let nextGameState = handlePutOnTable(gameState, verb);
-        let grabbedEntity = extractGrabbedEntityOfClientById(nextGameState, client.clientInfo.clientId);
+        gameStateStore.changeState(draft => handlePutOnTable(draft, verb));
+        let grabbedEntity = extractGrabbedEntityOfClientById(gameStateStore.state, client.clientInfo.clientId);
         assert.equal(grabbedEntity, null);
     })
     it('should do nothing if it exists in a deck also. This is for avoiding duplication caused by concurrency.', function(){
-        gameState = produce(gameState, draft => {
+       gameStateStore.changeState(draft => {
             const deck = deckFactory(CardTypes.FRENCH, 0,0);
             deck.cards.push(cardToPutOnTable);
             draft.decks.set(deck.entityId, deck);
             extractCardFromClientHandById(draft, client.clientInfo.clientId, cardToPutOnTable.entityId).ownerDeck = deck.entityId;
         })
-        const nextGameState = handlePutOnTable(gameState, verb);
-        assert.deepEqual(nextGameState, gameState);
+
+        const originalState = {...gameStateStore.state};
+
+        gameStateStore.changeState(draft => handlePutOnTable(draft, verb));
+        assert.deepEqual(gameStateStore.state, originalState);
     })
     
 })

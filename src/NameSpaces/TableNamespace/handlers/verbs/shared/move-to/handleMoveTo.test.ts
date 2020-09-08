@@ -1,21 +1,22 @@
 import * as assert from 'assert';
-import produce from 'immer';
 import { SharedVerbTypes, SharedVerb } from '../../../../../../types/verbTypes';
-import { GameState, EntityTypes, CardTypes } from '../../../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, deckFactory } from '../../../../../../factories';
-import { initialGameState } from '../../../../../../mocks/initialGameState';
+import { EntityTypes, CardTypes } from '../../../../../../types/dataModelDefinitions';
+import { cardFactory, deckFactory } from '../../../../../../factories';
 import {handleMoveTo} from './handleMoveTo';
 import { extractCardById, extractDeckById } from '../../../../../../extractors/gameStateExtractors';
+import { GameStateStore } from '../../../../../../Store/GameStateStore';
+import { client1 } from '../../../../../../mocks/client';
 
 describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
-    let gameState: GameState;
-    let client = clientFactory('socket-1');
+    let gameStateStore = new GameStateStore();
+    let client = client1;
     const cardToMove = cardFactory(111,222, CardTypes.FRENCH);
     const deckToMove = deckFactory(CardTypes.FRENCH, 222,111);
 
 
     beforeEach('Setting up test data...', () => {
-        gameState = produce(initialGameState, draft => {
+        gameStateStore.resetState();
+        gameStateStore.changeState( draft => {
             draft.cards.set(cardToMove.entityId ,cardToMove);
             draft.decks.set(deckToMove.entityId, deckToMove);
             draft.clients.set(client.clientInfo.clientId ,client);
@@ -32,8 +33,8 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
             positionY: 777,
         }
 
-        let nextGameState = handleMoveTo(gameState, verb);
-        let movedCard = extractCardById(nextGameState, cardToMove.entityId);
+        gameStateStore.changeState(draft => handleMoveTo(draft, verb));
+        let movedCard = extractCardById(gameStateStore.state, cardToMove.entityId);
         assert.equal(movedCard.positionX, verb.positionX);
         assert.equal(movedCard.positionY, verb.positionY);
     })
@@ -48,8 +49,8 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
             positionY: 999,
         }
 
-        let nextGameState = handleMoveTo(gameState, verb);
-        let movedDeck = extractDeckById(nextGameState, deckToMove.entityId);
+        gameStateStore.changeState(draft => handleMoveTo(draft, verb));
+        let movedDeck = extractDeckById(gameStateStore.state, deckToMove.entityId);
         assert.equal(movedDeck.positionX, verb.positionX);
         assert.equal(movedDeck.positionY, verb.positionY);
     })

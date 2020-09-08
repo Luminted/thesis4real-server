@@ -1,23 +1,27 @@
 import { SocketNamespace } from "../";
-import { Singleton, Inject } from "typescript-ioc";
+import { Singleton, Inject, Container } from "typescript-ioc";
 import { handleGrab, handleRelease, handleRemove, handleMoveTo, handleMove } from './handlers/verbs/shared'
 import { Verb, SharedVerbTypes, DeckVerbTypes, CardVerbTypes } from "../../types/verbTypes";
 import { handleDrawFaceUp, handleReset } from "./handlers/verbs/deck";
 import { handlePutInHand, handleGrabFromHand } from "./handlers/verbs/card";
 import { TableStateStore } from "../../Store/TableStateStore/TableStateStore";
-import { TableClientEvents, TableServerEvents } from "../../types/socketTypes";
+import { TableClientEvents, TableServerEvents, ClientConnectionStatuses } from "../../types/socketTypes";
 import { serializeGameState } from "./utils";
-import { GameState, ClientInfo, SerializedGameState } from "../../types/dataModelDefinitions";
+import { GameState, ClientInfo, SerializedGameState, Seats, Client } from "../../types/dataModelDefinitions";
 import { handleDisconnect } from "./handlers/disconnect/handleDisconnect";
 import { handleJoinTable } from "./handlers/join-table/handleJoinTable";
 import { extractClientById } from "../../extractors/gameStateExtractors";
  
 @Singleton
 export class TableNamespace extends SocketNamespace {
-    constructor(@Inject tableStateStore: TableStateStore){
+
+    @Inject
+    tableStateStore: TableStateStore;
+
+    constructor(){
         super();
 
-        const {gameStateStore, tableWidth, tableHeight} = tableStateStore.state;
+        const {gameStateStore, tableWidth, tableHeight} = this.tableStateStore.state;
 
         this.addEventListener(TableClientEvents.VERB, (verb: Verb) => {
             gameStateStore.changeState(draft => {
@@ -79,7 +83,27 @@ export class TableNamespace extends SocketNamespace {
         });
     }
 
+    addClient(id: string, seatedAt: Seats, name?: string) {
+        const {gameStateStore} = this.tableStateStore;
+        const newClient: Client = {
+            clientInfo: {
+                clientId: id,
+                seatedAt,
+                clientName: name,
+            },
+            grabbedEntitiy: null,
+            status: ClientConnectionStatuses.CONNECTED
+        }
+        gameStateStore.changeState(draft => {
+            draft.clients.set(id, newClient);
+        })
+
+        return newClient;
+    }
+
     private syncGameState(gameState: GameState){
         this.emit(TableServerEvents.SYNC, serializeGameState(gameState));
     }
 }
+
+Container.bind(TableNamespace);

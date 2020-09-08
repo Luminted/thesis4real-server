@@ -1,19 +1,7 @@
 import uuidv4 from 'uuid/v4';
 
-import {Client, CardEntity, DeckEntity, EntityTypes, CardRepresentation, ClientHand, Seats, CardTypes} from './types/dataModelDefinitions';
-import {cardConfigLookup, gameConfig} from './config';
-import { ClientConnectionStatuses } from './types/socketTypes';
-
-export function clientFactory(clientId?: string, seatedAt?: Seats): Client {
-    return {
-        clientInfo:{
-            clientId: clientId || uuidv4(),
-            seatedAt: seatedAt || null
-        },
-        status: ClientConnectionStatuses.CONNECTED,
-        grabbedEntitiy: null
-    }
-}
+import { CardEntity, DeckEntity, EntityTypes, CardRepresentation, ClientHand, CardTypes} from './types/dataModelDefinitions';
+import {cardConfigLookup} from './config';
 
 export function cardFactoryFromObject(constructorObject: {positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp?: boolean, entityId?: string, ownerDeck?: string, scale?: number, grabbedBy?: string, zIndex?: number, isBound?: boolean}): CardEntity {
     const {cardType, ownerDeck, positionX, positionY, turnedUp, entityId, face, grabbedBy, scale, zIndex, isBound} = constructorObject;

@@ -1,5 +1,3 @@
-import produce from "immer";
-
 import { GameState } from "../../../../../../types/dataModelDefinitions";
 import { SharedVerb } from "../../../../../../types/verbTypes";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId } from "../../../../../../extractors/gameStateExtractors";
@@ -9,7 +7,7 @@ export function handleMove(draft: GameState, verb: SharedVerb, tableWidth: numbe
     const grabbedEntity = extractGrabbedEntityOfClientById(draft, verb.clientId);
     if(grabbedEntity){
         const {entityId, entityType} = grabbedEntity
-        const {positionX: positionX, positionY} = verb;
+        const {positionX, positionY} = verb;
         const movedEntity = extractEntityByTypeAndId(draft, entityType, entityId);
         if(movedEntity){
             const offsetX = positionX - grabbedEntity.grabbedAtX;
@@ -23,7 +21,7 @@ export function handleMove(draft: GameState, verb: SharedVerb, tableWidth: numbe
                 const entityWidth = width * entityScale;
                 const entityHeight = height * entityScale;
 
-                //X axis
+                //X axis boundary check
                 if(newPositionX < 0 ){
                     movedEntity.positionX = clamp(newPositionX, 0, tableWidth - entityWidth);
                     //If entity outside boundary, set grabbedAt position to the middle of entity.
@@ -39,7 +37,7 @@ export function handleMove(draft: GameState, verb: SharedVerb, tableWidth: numbe
                 grabbedEntity.grabbedAtX = positionX;
                 }
 
-                //Y axis
+                //Y axis boundary check
                 if(newPositionY < 0){
                     movedEntity.positionY = clamp(newPositionY, 0, tableHeight - entityHeight);
                     //If entity outside boundary, set grabbedAt position to the middle of entity.

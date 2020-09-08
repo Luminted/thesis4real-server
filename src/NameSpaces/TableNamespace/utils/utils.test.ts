@@ -1,31 +1,21 @@
 import assert from 'assert';
 import { cardFactory, deckFactory } from "../../../factories"
-import { CardTypes, Entity, EntityTypes, GameState } from "../../../types/dataModelDefinitions"
+import { CardTypes } from "../../../types/dataModelDefinitions"
 import { calcNextZIndex } from "./utils"
-import produce, { enableMapSet } from 'immer';
-import { initialGameState } from '../../../mocks/initialGameState';
-import { CardVerbTypes } from '../../../types/verbTypes';
+import { GameStateStore } from '../../../Store/GameStateStore';
 
 describe('Testing utility functions', function(){
-    //Enable Map support for Immer
-    enableMapSet();
-
     describe('calcNextZIndex', function(){
-        let gameState: GameState;
+        let gameStateStore = new GameStateStore();
         
-
         this.beforeEach(() => {
-            gameState = produce({}, draft => {
-                return {
-                    ...initialGameState,
-                };
-            })
+            gameStateStore.resetState();
         })
 
         it('should return topZIndex + 1', function(){
             const topZIndex = 2;
             const zIndexLimit = 10;
-            produce(gameState, draft => {
+            gameStateStore.changeState(draft => {
                 draft.topZIndex = topZIndex;
                 const nextZIndex = calcNextZIndex(draft, zIndexLimit);
                 assert.equal(nextZIndex, topZIndex + 1)
@@ -33,15 +23,16 @@ describe('Testing utility functions', function(){
         })
         it('should increment topZIndex by one', function(){
             const zIndexLimit = 10;
-            produce(gameState, draft => {
+            const originalState = {...gameStateStore.state};
+            gameStateStore.changeState(draft => {
                 calcNextZIndex(draft, zIndexLimit);
-                assert.equal(draft.topZIndex, gameState.topZIndex + 1);
+                assert.equal(draft.topZIndex, originalState.topZIndex + 1);
             });
         })
         it('should set topZIndex to the number of entities and return with it if z-index limit is reached', function(){
             let numberOfEntities = 15;
             let zIndexLimit = 50;
-            produce(gameState, draft => {
+            gameStateStore.changeState(draft => {
                 for(let i = 0; i < numberOfEntities; i++){
                     const card = cardFactory(0,0,CardTypes.FRENCH);
                     draft.cards.set(card.entityId, card);
@@ -57,7 +48,7 @@ describe('Testing utility functions', function(){
             const numberOfCards = 6;
             const numberOfDecks = 4;
             const numberOfEntities = numberOfCards + numberOfDecks;
-            gameState = produce(gameState, draft => {
+           gameStateStore.changeState(draft => {
                 for(let i = 0; i < numberOfCards; i++){
                     const cardId = `${numberOfEntities - i - 1}`;
                     const card = cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, cardId, undefined, undefined, undefined, zIndexLimit - i);

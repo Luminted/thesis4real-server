@@ -1,20 +1,15 @@
 import * as assert from 'assert';
-import {produce, enableMapSet} from 'immer';
-
+import {client1, client2} from '../../../../../../mocks/client';
 import { DeckVerbTypes, DeckVerb } from '../../../../../../types/verbTypes';
-import { GameState, EntityTypes, CardRepresentation, CardTypes } from '../../../../../../types/dataModelDefinitions';
-import { clientFactory, cardFactory, deckFactory, clientHandFactory } from '../../../../../../factories';
+import { EntityTypes, CardTypes } from '../../../../../../types/dataModelDefinitions';
+import { cardFactory, deckFactory, clientHandFactory } from '../../../../../../factories';
 import {handleReset} from './handleReset'
-import {initialGameState} from '../../../../../../mocks/initialGameState'
-import { extractCardFromClientHandById, extractCardById, extractDeckById, extractClientHandById } from '../../../../../../extractors/gameStateExtractors';
+import { extractDeckById, extractClientHandById } from '../../../../../../extractors/gameStateExtractors';
+import { GameStateStore } from '../../../../../../Store/GameStateStore';
 
 
 describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
-    //Enables Map support for Immer
-    enableMapSet();
-    let gameState: GameState;
-    const client1 = clientFactory('socket-1');
-    const client2 = clientFactory('socket-2');
+    let gameStateStore = new GameStateStore();
     const deckToReset = deckFactory(CardTypes.FRENCH,100,100);
     deckToReset.drawIndex = 5;
     const client1Card = cardFactory(0,0,CardTypes.FRENCH,undefined,undefined,undefined,deckToReset.entityId);
@@ -34,7 +29,8 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
         const client1Id = client1.clientInfo.clientId;
         const client2Id = client2.clientInfo.clientId;
         
-        gameState = produce(initialGameState, draft => {
+        gameStateStore.resetState();
+        gameStateStore.changeState(draft => {
             cardsBelongingToDeck.forEach((card => {
                 draft.cards.set(card.entityId, card);
             }))
@@ -49,15 +45,15 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     })
 
     it('should remove all cards off the table belonging to the reset deck', function() {
-        const nextState = handleReset(gameState, verb);
+        gameStateStore.changeState(draft => handleReset(draft, verb));
         for(const card of cardsBelongingToDeck){
-            assert.equal(nextState.cards.has(card.entityId), false);
+            assert.equal(gameStateStore.state.cards.has(card.entityId), false);
         }
     })
 
     it('should remove grabbed cards belonging to the reset deck', function(){
         const grabbedCard = cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, undefined, deckToReset.entityId)
-        gameState = produce(gameState, draft => {
+       gameStateStore.changeState(draft => {
             const {entityId, entityType} = grabbedCard; 
             draft.clients.get(client1.clientInfo.clientId).grabbedEntitiy = {
                 entityType,
@@ -66,9 +62,9 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
                 grabbedAtY: 0
             };
         })
-        const nextState = handleReset(gameState, verb);
+        gameStateStore.changeState(draft => handleReset(draft, verb));
         let isRemoved = true;
-        nextState.clients.forEach(client => {
+        gameStateStore.state.clients.forEach(client => {
             const {grabbedEntitiy} = client;
             if(grabbedEntitiy){
                 isRemoved = isRemoved && grabbedEntitiy.entityId !== deckToReset.entityId
@@ -78,13 +74,13 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     })
 
     it('should remove all card out of player hands belonging to the reset deck', function(){
-        const nextState = handleReset(gameState, verb);
-        assert.equal(extractClientHandById(nextState, client1.clientInfo.clientId).cards.some(card => card.entityId === client1Card.entityId), false);
-        assert.equal(extractClientHandById(nextState, client2.clientInfo.clientId).cards.some(card => card.entityId === client2Card.entityId), false);
+        gameStateStore.changeState(draft => handleReset(draft, verb));
+        assert.equal(extractClientHandById(gameStateStore.state, client1.clientInfo.clientId).cards.some(card => card.entityId === client1Card.entityId), false);
+        assert.equal(extractClientHandById(gameStateStore.state, client2.clientInfo.clientId).cards.some(card => card.entityId === client2Card.entityId), false);
     })
     it('should drawIndex to 0', function(){
-        const nextState = handleReset(gameState, verb);
-        const resetDeck = extractDeckById(nextState, deckToReset.entityId);
+        gameStateStore.changeState(draft => handleReset(draft, verb));
+        const resetDeck = extractDeckById(gameStateStore.state, deckToReset.entityId);
         assert.equal(resetDeck.drawIndex, 0);
     })
 

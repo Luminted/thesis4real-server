@@ -1,6 +1,4 @@
-import produce from "immer";
-
-import { GameState, CardEntity, DeckEntity } from "../../../../../../types/dataModelDefinitions";
+import { GameState } from "../../../../../../types/dataModelDefinitions";
 import { SharedVerb } from "../../../../../../types/verbTypes";
 import { extractClientById, extractEntityByTypeAndId } from "../../../../../../extractors/gameStateExtractors";
 import { gameConfig } from "../../../../../../config";
