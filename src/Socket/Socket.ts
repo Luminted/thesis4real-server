@@ -1,7 +1,7 @@
 import SocketIO from 'socket.io';
 import {Server} from 'http';
 import {Singleton, Inject, InjectValue} from 'typescript-ioc';
-import { TableNamespace } from '../NameSpaces';
+import { TableNamespace } from '../namespaces';
 
 // @Singleton
 export class Socket {

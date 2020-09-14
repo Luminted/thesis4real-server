@@ -1,12 +1,12 @@
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import {tableRouter} from './Routes/table/tableRoute';
+import {tableRouter} from './routes/table/tableRoute';
 import { deckFactory } from './factories';
 import { CardTypes } from './types/dataModelDefinitions';
 import { Container } from 'typescript-ioc';
-import { Socket } from './Socket';
-import { TableStateStore } from './Store/TableStateStore/TableStateStore';
+import { Socket } from './socket';
+import { TableStateStore } from './stores/TableStateStore/TableStateStore';
 
 const app = express();
 app.use(express.json());

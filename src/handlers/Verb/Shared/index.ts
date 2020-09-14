@@ -1,0 +1,1 @@
+export {SharedVerbHandler} from './SharedVerbHandler';

@@ -1,4 +1,4 @@
-import {GameState, EntityTypes, ClientHand, Client, Seats} from '../types/dataModelDefinitions'
+import {GameState, EntityTypes, ClientHand, Client, Seats, CardTable} from '../types/dataModelDefinitions'
 
 export function extractClientById(state: GameState, clientId: string){
     return state.clients.get(clientId) || null;
@@ -41,8 +41,8 @@ export function extractClientHandCardsById(state: GameState, clientId: string){
     return state.hands.get(clientId)?.cards || null;
 }
 
-export function extractEmptySeats(state: GameState) {
-    return state.emptySeats;
+export function extractEmptySeats(state: CardTable) {
+    return state.seats;
 }
 
 export function extractCardFromDeckById(state: GameState, deckId: string, cardId: string){

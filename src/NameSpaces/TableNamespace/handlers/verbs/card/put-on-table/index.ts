@@ -1,1 +1,0 @@
-export {handlePutOnTable} from './handlePutOnTable'

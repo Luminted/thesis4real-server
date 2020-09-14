@@ -1,0 +1,1 @@
+export {CardVerbHandler} from './CardVerbHandler';

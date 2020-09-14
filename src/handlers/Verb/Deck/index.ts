@@ -1,0 +1,1 @@
+export {DeckVerbHandler} from './DeckVerbHandler';

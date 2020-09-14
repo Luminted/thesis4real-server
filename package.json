@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -8,8 +8,8 @@
     "start:debug": "NODE_ENV=development npm run start -- --inspect=9229 ",
     "start:dev": "NODE_ENV=development nodemon",
     "build": "tsc",
-    "test": "mocha src/**/*.test.* -r ts-node/register",
-    "test:debug": "mocha ./src/routes/table/tableRoute.test.ts --inspect=5859 -r ts-node/register"
+    "test": "mocha './src/**/*.test.ts' -r ts-node/register",
+    "test:debug": "mocha ./src/handlers/Table/tests/handleLeaveTable.test.ts --inspect=5859 -r ts-node/register"
   },
   "author": "",
   "license": "ISC",

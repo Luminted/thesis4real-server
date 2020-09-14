@@ -1,4 +1,4 @@
-import { Socket } from '../Socket'
+import { Socket } from '../socket'
 import { SocketListenerUsingSocket, PlainSocketListener, SocketEventHandler, SocketEventUsingSocket } from './typings';
 import { Namespace } from 'socket.io';
 

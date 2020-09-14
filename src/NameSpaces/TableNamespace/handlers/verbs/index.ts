@@ -1,1 +1,0 @@
-export {handleVerb} from './handleVerb'

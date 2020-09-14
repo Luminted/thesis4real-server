@@ -1,1 +1,0 @@
-export {handleRejoinTable} from './handleRejoinTable';
