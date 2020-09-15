@@ -27,6 +27,8 @@ export class VerbHandler {
                 return this.sharedVerbHandler.release(verb);
             case SharedVerbTypes.MOVE_TO:
                 return this.sharedVerbHandler.moveTo(verb);
+            case SharedVerbTypes.ROTATE:
+                return this.sharedVerbHandler.remove(verb);
             case DeckVerbTypes.DRAW_FACE_UP:
                 return this.deckVerbHandler.drawFaceUp(verb);
             case DeckVerbTypes.RESET:

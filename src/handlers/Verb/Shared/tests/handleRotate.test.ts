@@ -1,0 +1,41 @@
+import assert from "assert";
+import { Container } from "typescript-ioc";
+import { extractCardById } from "../../../../extractors/gameStateExtractors";
+import { client1 } from "../../../../mocks/client";
+import { cardEntityMock } from "../../../../mocks/entity";
+import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
+import { RotateVerb, SharedVerbTypes } from "../../../../types/verbTypes";
+import { SharedVerbHandler } from "../SharedVerbHandler";
+
+
+describe(`handle ${SharedVerbTypes.ROTATE}`, () => {
+    const sharedVerbHandler = new SharedVerbHandler();
+    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const {entityId, entityType} = cardEntityMock;
+    const {clientInfo: {clientId}} = client1;
+    const verb: RotateVerb = {
+        type: SharedVerbTypes.ROTATE,
+        angle: 12,
+        clientId: clientId,
+        entityId: entityId,
+        entityType: entityType,
+        positionX: 0,
+        positionY: 0,
+    }
+
+    beforeEach((() => {
+        gameStateStore.resetState();
+        gameStateStore.changeState(draft => {
+            draft.clients.set(clientId, client1);
+            draft.cards.set(entityId, cardEntityMock);
+        });
+    }));
+
+    it('should should add angle from verb to entities rotation', () => {
+        const nextGameState = sharedVerbHandler.rotate(verb);
+
+        const card = extractCardById(nextGameState ,entityId);
+
+        assert.equal(card.rotation, cardEntityMock.rotation + verb.angle);
+    })
+})

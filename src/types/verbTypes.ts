@@ -7,7 +7,8 @@ export enum SharedVerbTypes {
     RELEASE = 'RELEASE',
     REMOVE = 'REMOVE',
     ADD = 'ADD',
-    MOVE_TO = 'MOVE_TO'
+    MOVE_TO = 'MOVE_TO',
+    ROTATE = 'ROTATE',
 }
 
 export enum CardVerbTypes {
@@ -26,7 +27,7 @@ export enum DeckVerbTypes {
 
 export type VerbTypes = SharedVerbTypes | CardVerbTypes | DeckVerbTypes;
 
-interface VerbCommonalities {
+interface BaseVerb {
     type: VerbTypes 
     entityId:MaybeNull<string>,
     entityType: MaybeNull<EntityTypes>,
@@ -35,18 +36,22 @@ interface VerbCommonalities {
     positionY: number,
 }
 
-export interface CardVerb extends VerbCommonalities {
+export interface CardVerb extends BaseVerb {
     type: CardVerbTypes,
     entityType: MaybeNull<EntityTypes.CARD>
 }
 
-export interface DeckVerb extends VerbCommonalities{
+export interface DeckVerb extends BaseVerb{
     type: DeckVerbTypes,
     entityType: MaybeNull<EntityTypes.DECK>,
 }
 
-export interface SharedVerb extends VerbCommonalities {
+export interface SharedVerb extends BaseVerb {
     type: SharedVerbTypes,
 }
 
-export type Verb = CardVerb | DeckVerb | SharedVerb;
+export interface RotateVerb extends SharedVerb {
+    angle: number,
+}
+
+export type Verb = CardVerb | DeckVerb | SharedVerb | RotateVerb;

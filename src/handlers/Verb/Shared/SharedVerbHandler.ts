@@ -5,7 +5,7 @@ import { calcNextZIndex } from "../../../utils";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { EntityTypes } from "../../../types/dataModelDefinitions";
-import { SharedVerb, Verb } from "../../../types/verbTypes";
+import { RotateVerb, SharedVerb, Verb } from "../../../types/verbTypes";
 import { clamp } from "../../../utils/utils";
 
 @Singleton
@@ -136,6 +136,16 @@ export class SharedVerbHandler {
                 draft.decks.delete(entityId);
             }
         })
+
+        return this.gameStateStore.state;
+    }
+
+    rotate(verb: RotateVerb){
+        this.gameStateStore.changeState(draft => {
+            const {entityId,entityType, angle} = verb;
+            const entity = extractEntityByTypeAndId(draft, entityType, entityId);
+            entity.rotation += angle;
+        });
 
         return this.gameStateStore.state;
     }

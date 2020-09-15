@@ -9,6 +9,7 @@ export function cardFactoryFromObject(constructorObject: {positionX: number, pos
     let card: CardEntity =  {
         face,
         cardType,
+        rotation: 0,
         entityId: entityId || uuidv4(),
         entityType: EntityTypes.CARD,
         width: cardConfig.baseWidth,
@@ -24,22 +25,23 @@ export function cardFactoryFromObject(constructorObject: {positionX: number, pos
     return card;
 }
 
-export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number, grabbedBy?: string, zIndex?: number, isBound?:boolean): CardEntity {
+export function cardFactory(positionX: number, positionY: number, cardType: CardTypes, face?: string, turnedUp: boolean = true, entityId?: string, ownerDeck: string = null, scale?: number, grabbedBy?: string, zIndex?: number, isBound?:boolean, rotation:number = 0): CardEntity {
     let cardConfig = cardConfigLookup[cardType];
     let card: CardEntity =  {
         face,
         cardType,
+        positionX,
+        positionY,
+        ownerDeck,
+        rotation,
         entityId: entityId || uuidv4(),
         entityType: EntityTypes.CARD,
         width: cardConfig.baseWidth,
         height: cardConfig.baseHeight,
-        positionX,
-        positionY,
         faceUp: turnedUp,
-        ownerDeck,
         grabbedBy: grabbedBy || null,
         zIndex: zIndex || 0,
-        isBound: isBound || false
+        isBound: isBound || false,
     }
     return card;
 }
@@ -47,9 +49,9 @@ export function cardFactory(positionX: number, positionY: number, cardType: Card
 export function cardRepFactory(cardType: CardTypes, face: string, entityId?: string, ownerDeck?: string, faceUp?: boolean): CardRepresentation {
     return {
         cardType,
+        face,
         entityId: entityId || uuidv4(),
         entityType: EntityTypes.CARD,
-        face,
         ownerDeck: ownerDeck || null,
         faceUp: faceUp || true
     }
@@ -67,15 +69,16 @@ export function createCardRepresentationFromCardEntity(card: CardEntity): CardRe
 }
 
 export function deckFactoryFromObject(constructorObject: {cardType: CardTypes, positionX: number, positionY: number, scale?: number, zIndex?: number, entityId?: string, isBound?: boolean}): DeckEntity {
-    const {cardType, isBound, zIndex, scale, entityId, positionY, positionX, } = constructorObject;
+    const {cardType, isBound, zIndex, scale, entityId, positionY, positionX} = constructorObject;
     const {baseHeight, baseWidth, suits, cardRange} = cardConfigLookup[cardType];
     return {
+        positionX,
+        positionY,
+        rotation: 0,
         entityId: entityId || uuidv4(),
         entityType: EntityTypes.DECK,
         width: baseWidth,
         height: baseHeight,
-        positionX,
-        positionY,
         grabbedBy: null,
         drawIndex: 0,
         zIndex: zIndex || 0,
@@ -86,15 +89,16 @@ export function deckFactoryFromObject(constructorObject: {cardType: CardTypes, p
     }
 }
 
-export function deckFactory(cardType: CardTypes, positionX: number, positionY: number, scale?: number, zIndex?: number, entityId?: string, isBound?: boolean): DeckEntity {
+export function deckFactory(cardType: CardTypes, positionX: number, positionY: number, scale?: number, zIndex?: number, entityId?: string, isBound?: boolean, rotation: number = 0): DeckEntity {
     const {baseHeight, baseWidth, suits, cardRange} = cardConfigLookup[cardType];
     return {
+        positionX,
+        positionY,
+        rotation,
         entityId: entityId || uuidv4(),
         entityType: EntityTypes.DECK,
         width: baseWidth,
         height: baseHeight,
-        positionX,
-        positionY,
         grabbedBy: null,
         drawIndex: 0,
         zIndex: zIndex || 0,

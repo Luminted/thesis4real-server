@@ -27,7 +27,8 @@ export interface Entity {
     positionY: number,
     grabbedBy: MaybeNull<string>
     zIndex: number,
-    isBound: boolean
+    isBound: boolean,
+    rotation: number,
 }
 
 export interface CardRepresentation {

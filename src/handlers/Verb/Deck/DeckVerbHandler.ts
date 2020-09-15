@@ -20,8 +20,9 @@ export class DeckVerbHandler {
         this.gameStateStore.changeState(draft => {
             const {entityId} = verb;
             const deck = extractDeckById(draft, entityId);
-            const drawnCard = deck.cards[deck.drawIndex];
-            const spawnedCard = cardFactory(deck.positionX, deck.positionY, drawnCard.cardType, drawnCard.face, true, drawnCard.entityId, deck.entityId);
+            const {rotation, cards, positionX, positionY, drawIndex} = deck;
+            const drawnCard = cards[drawIndex];
+            const spawnedCard = cardFactory(positionX, positionY, drawnCard.cardType, drawnCard.face, true, drawnCard.entityId, deck.entityId, undefined, undefined, undefined, undefined, rotation);
             deck.drawIndex++;
             draft.cards.set(spawnedCard.entityId, spawnedCard);
         })

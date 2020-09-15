@@ -1,39 +1,39 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import { DeckVerbTypes, DeckVerb } from '../../../../types/verbTypes';
-import { CardRepresentation, CardTypes, DeckEntity } from '../../../../types/dataModelDefinitions';
-import { deckFactory } from '../../../../factories';
+import { CardRepresentation } from '../../../../types/dataModelDefinitions';
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { client1 } from '../../../../mocks/client';
 import { DeckVerbHandler } from '../DeckVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { Container } from 'typescript-ioc';
+import { deckEntityMock } from '../../../../mocks/entity';
 
 describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
-    let client = client1;
-    let deck: DeckEntity;
+    const {clientInfo: {clientId}} = client1;
+    const {entityId, entityType} = deckEntityMock;
+    const rotation = 12;
+    const deck = {...deckEntityMock, positionX: 10, positionY: 12, rotation};
+    const verb: DeckVerb = {
+        type: DeckVerbTypes.DRAW_FACE_UP,
+        clientId: clientId,
+        positionX: 0,
+        positionY: 0,
+        entityId: entityId,
+        entityType: entityType,
+    }
 
     beforeEach('Setting up test data...', () => {
-        deck = deckFactory(CardTypes.FRENCH, 10,12);
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
             draft.decks.set(deck.entityId, deck);
-            draft.clients.set(client.clientInfo.clientId, client);
+            draft.clients.set(clientId, client1);
         })
     })
 
-    const testedVerbType = DeckVerbTypes.DRAW_FACE_UP; 
     it('should spawn a card directly on top of the deck', function() {
         const originalDrawIndex = deck.drawIndex;
-        const verb: DeckVerb = {
-            type: testedVerbType,
-            clientId: client.clientInfo.clientId,
-            positionX: 0,
-            positionY: 0,
-            entityId: deck.entityId,
-            entityType: deck.entityType,
-        }
         
         const nextGameState = deckVerbHandler.drawFaceUp(verb);
 
@@ -48,11 +48,11 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         assert.equal(spawnedCard.faceUp, true);
     })
 
-    it('should set correct decks entityId as owner of spawned card', function() {
+    it('should the decks entityId as owner of spawned card', function() {
         const originalDeck = deck;
         const verb: DeckVerb = {
-            type: testedVerbType,
-            clientId: client.clientInfo.clientId,
+            type: DeckVerbTypes.DRAW_FACE_UP,
+            clientId: clientId,
             positionX: 0,
             positionY: 0,
             entityId: originalDeck.entityId,
@@ -66,16 +66,8 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
 
         assert.equal(spawnedCard.ownerDeck, originalDeck.entityId);
     })
-    it('should increase correct decks drawIndex by 1', function() {
+    it('should increase the decks drawIndex by 1', function() {
         const originalState = {...gameStateStore.state};
-        const verb: DeckVerb = {
-            type: testedVerbType,
-            clientId: client.clientInfo.clientId,
-            positionX: 0,
-            positionY: 0,
-            entityId: deck.entityId,
-            entityType: deck.entityType,
-        }
         
         const nextGameState = deckVerbHandler.drawFaceUp(verb);
 
@@ -83,18 +75,14 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         assert.notDeepEqual(originalState, nextGameState)
         assert.equal(nextDeck.drawIndex, deck.drawIndex + 1);
     })
-    it('should not remove cards from deck', function(){
-        const verb: DeckVerb = {
-            type: testedVerbType,
-            clientId: client.clientInfo.clientId,
-            positionX: 0,
-            positionY: 0,
-            entityId: deck.entityId,
-            entityType: deck.entityType,
-        }
-        
+    it('should spawn card with same rotation as deck', ()=>{
         const nextGameState = deckVerbHandler.drawFaceUp(verb);
+        
+        const {drawIndex, cards} = extractDeckById(nextGameState, entityId); 
+        const {entityId: drawnCardId} = cards[drawIndex - 1];
+        const card = extractCardById(nextGameState, drawnCardId);
 
-        assert.equal(extractDeckById(nextGameState, deck.entityId).cards.length, deck.cards.length);
+        assert.equal(card.rotation, rotation);
     })
+
 })
