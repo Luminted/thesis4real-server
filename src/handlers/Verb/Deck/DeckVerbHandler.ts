@@ -1,9 +1,11 @@
 import { Inject, Singleton } from "typescript-ioc";
+import {shuffle} from "@pacote/shuffle";
 import { extractDeckById } from "../../../extractors/gameStateExtractors";
 import { cardFactory } from "../../../factories";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { DeckVerb } from "../../../types/verbTypes";
+import { original } from "immer";
 
 @Singleton
 export class DeckVerbHandler {
@@ -59,6 +61,18 @@ export class DeckVerbHandler {
             })
         })
         
+        return this.gameStateStore.state;
+    }
+
+    shuffle(verb: DeckVerb) {
+        const {entityId} = verb;
+        this.gameStateStore.changeState(draft => {
+            const {cards, drawIndex} = extractDeckById(original(draft), entityId);
+            const draftDeck = extractDeckById(draft, entityId);
+            const shuffledCards = shuffle(cards.slice(drawIndex));
+            draftDeck.cards = [...cards.slice(0, drawIndex), ...shuffledCards];
+        })
+
         return this.gameStateStore.state;
     }
 }

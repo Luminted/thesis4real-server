@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node -r ts-node/register -r dotenv/config ./src/index.ts",
     "start:debug": "NODE_ENV=development npm run start -- --inspect=9229 ",
-    "start:dev": "NODE_ENV=development nodemon",
+    "dev": "NODE_ENV=development nodemon",
     "build": "tsc",
     "test": "mocha './src/**/*.test.ts' -r ts-node/register",
     "test:debug": "mocha ./src/handlers/Table/tests/handleLeaveTable.test.ts --inspect=5859 -r ts-node/register"
@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pacote/shuffle": "^1.0.6",
     "@typed/hashmap": "^1.0.1",
     "@types/socket.io": "^2.1.4",
     "@types/uuid": "^3.4.7",
