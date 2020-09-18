@@ -2,10 +2,11 @@ import { Singleton, Inject } from "typescript-ioc";
 import { CardVerb } from "../../../types/verbTypes";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { GameStateStore } from "../../../stores/GameStateStore";
-import { extractCardFromClientHandById, extractClientById, extractCardById, extractDeckById, extractClientHandById } from "../../../extractors/gameStateExtractors";
+import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
 import { cardConfigLookup, gameConfig } from "../../../config";
 import { calcNextZIndex } from "../../../utils";
 import { cardFactory, cardRepFactory } from "../../../factories";
+import { original } from "immer";
 
 @Singleton
 export class CardVerbHandler {
@@ -85,6 +86,24 @@ export class CardVerbHandler {
                 extractClientById(draft, clientId).grabbedEntitiy = null;
             }
         })
+        return this.gameStateStore.state;
+    }
+
+    flip(verb: CardVerb) {
+        const { entityId, clientId } = verb;
+        const entity = extractCardById(this.gameStateStore.state, entityId);
+
+        if(entity){
+            this.gameStateStore.changeState(draft => {
+                extractCardById(draft, entityId).faceUp = !entity.faceUp;
+            })
+        }else{
+            this.gameStateStore.changeState(draft => {
+                const cardRepresentation = extractCardFromClientHandById(original(draft), clientId, entityId);
+                extractCardFromClientHandById(draft, clientId, entityId).faceUp = !cardRepresentation.faceUp;
+            })
+        }
+
         return this.gameStateStore.state;
     }
 
