@@ -1,21 +1,21 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import { CardVerbTypes, CardVerb } from '../../../../types/verbTypes';
-import { cardFactory, deckFactory, clientHandFactory } from '../../../../factories';
+import { createClientHand } from '../../../../factories';
 import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById } from '../../../../extractors/gameStateExtractors';
-import { CardTypes } from '../../../../types/dataModelDefinitions';
-import { client1 } from '../../../../mocks/client';
+import { mockClient1 } from '../../../../mocks/clientMocks';
 import { Container } from 'typescript-ioc';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
+import { cardEntityMock1 } from '../../../../mocks/entityMocks';
 
 describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
     const cardVerbHandler = new CardVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
-    const client = client1;
-    const cardBeingAddedToHand = cardFactory(0,0, CardTypes.FRENCH);
+    const client = {...mockClient1};
+    const {entityId, entityType} = cardEntityMock1;
     client.grabbedEntitiy = {
-        entityId: cardBeingAddedToHand.entityId,
-        entityType: cardBeingAddedToHand.entityType,
+        entityId: entityId,
+        entityType: entityType,
         grabbedAtX: 15,
         grabbedAtY: 20
     }
@@ -24,8 +24,8 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         clientId: client.clientInfo.clientId,
         positionX: 0,
         positionY: 0,
-        entityId: cardBeingAddedToHand.entityId,
-        entityType: cardBeingAddedToHand.entityType,
+        entityId: entityId,
+        entityType: entityType,
         
     } 
 
@@ -33,16 +33,16 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         const {clientId} = client.clientInfo;
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
-            draft.cards.set(cardBeingAddedToHand.entityId, cardBeingAddedToHand);
+            draft.cards.set(entityId, {...cardEntityMock1});
             draft.clients.set(clientId, client);
-            draft.hands.set(clientId, clientHandFactory(clientId))
+            draft.hands.set(clientId, createClientHand(clientId))
         })
     })
 
     it('should add the grabbed card to the correct hand', function(){
         const {clientId} = client.clientInfo;
         const nextGameState = cardVerbHandler.putInHand(verb);
-        const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId,cardBeingAddedToHand.entityId);
+        const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId, entityId);
         assert.notEqual(cardPutInHand, undefined);
     })
 
@@ -53,6 +53,6 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
     })
     it('should take out correct card from cards array', function() {
         const nextGameState = cardVerbHandler.putInHand(verb);
-        assert.equal(extractCardById(nextGameState ,cardBeingAddedToHand.entityId), undefined);
+        assert.equal(extractCardById(nextGameState ,entityId), undefined);
     })
 })

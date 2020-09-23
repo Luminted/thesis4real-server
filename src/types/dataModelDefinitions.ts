@@ -2,22 +2,6 @@ import {MaybeNull} from './genericTypes'
 import { ClientConnectionStatuses } from './socketTypes';
 import { GameStateStore } from '../stores/GameStateStore';
 
-export enum CardTypes {
-    FRENCH = 'FRENCH'
-}
-
-export interface CardTypeConfig {
-    baseHeight: number,
-    baseWidth: number,
-}
-
-export interface FrenchCardConfig extends CardTypeConfig {
-    cardRange: any[],
-    suits: string[]
-}
-
-export type CardConfig = FrenchCardConfig;
-
 export interface Entity {
     readonly entityType: EntityTypes,
     readonly entityId: string,
@@ -31,27 +15,27 @@ export interface Entity {
     rotation: number,
 }
 
-export interface CardRepresentation {
-    cardType: CardTypes,
-    entityId: string,
-    face: string,
-    entityType: EntityTypes.CARD,
-    faceUp: boolean,
-    ownerDeck: MaybeNull<string>
+export interface DeckCard extends Pick<CardEntity, "entityId" | "faceUp" | "metadata"> {
+    revealed: boolean,
+    isBound: boolean
 }
 
+export interface HandCard extends DeckCard {
+    width: number,
+    height: number,
+    ownerDeck: string,
+}
 export interface CardEntity extends Entity {
-    cardType: CardTypes,
     entityId: string,
-    face: string,
     entityType: EntityTypes.CARD,
     faceUp: boolean,
-    ownerDeck: MaybeNull<string>
+    ownerDeck: MaybeNull<string>,
+    metadata?: object
 }
 
 export interface DeckEntity extends Entity {
     entityType: EntityTypes.DECK
-    cards: CardRepresentation[],
+    cards: DeckCard[],
     drawIndex: number
 }
 
@@ -68,7 +52,6 @@ export type GrabbedEntity = MaybeNull<{
 }>
 
 export type Client = {
-    //TODO: flatten this out
     clientInfo: ClientInfo,
     grabbedEntitiy: GrabbedEntity,
     status: ClientConnectionStatuses
@@ -76,10 +59,10 @@ export type Client = {
 
 export type ClientHand = {
     clientId: string,
-    cards: CardRepresentation[],
+    cards: HandCard[],
 }
 
-export type ClientInfo ={
+export type ClientInfo = {
     clientId: string,
     clientName?: string,
     seatedAt: Seats
@@ -92,7 +75,7 @@ export enum Seats {
     SOUTH_EAST = 'SOUTH_EAST',
     NORTH_WEST = 'NORTH_WEST',
     NORTH_EAST = 'NORTH_EAST'
-} 
+}
 
 export interface GameState {
     cards: Map<string, CardEntity>,

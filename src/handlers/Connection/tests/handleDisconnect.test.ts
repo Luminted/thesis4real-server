@@ -1,10 +1,8 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
 import { ClientConnectionStatuses, TableClientEvents } from "../../../types/socketTypes";
-import { ClientHand, Client } from "../../../types/dataModelDefinitions";
-import { extractClientById, extractEmptySeats } from "../../../extractors/gameStateExtractors";
-import { clientHandFactory } from "../../../factories";
-import { client1, createClient } from '../../../mocks/client';
+import { extractClientById } from "../../../extractors/gameStateExtractors";
+import { mockClient1 } from '../../../mocks/clientMocks';
 import { ConnectionHandler } from '../ConnectionHandler';
 import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
 
@@ -12,8 +10,8 @@ describe(`Event handler for: ${TableClientEvents.DISCONNECT}`, function(){
     const connectionHandler = new ConnectionHandler();
     const tableStateStore = Container.get(TableStateStore);
     const gameStateStore = tableStateStore.state.gameStateStore;
-    const client = client1;
-    const {clientId} = client1.clientInfo;
+    const client = mockClient1;
+    const {clientId} = mockClient1.clientInfo;
 
     beforeEach(() => {
         gameStateStore.resetState();

@@ -1,7 +1,7 @@
 import { Inject } from "typescript-ioc";
 import { gameConfig } from "../../config";
 import { extractClientHandCardsById, extractClientsSeatById, extractEmptySeats } from "../../extractors/gameStateExtractors";
-import { cardFactory } from "../../factories";
+import { createCardEntity } from "../../factories";
 import { calcNextZIndex } from "../../utils";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
@@ -45,10 +45,10 @@ export class TableHandler {
         this.gameStateStore.changeState(draft => {
             const [positionX, positionY] = defaultPosition;
             const {zIndexLimit} = gameConfig;
-            extractClientHandCardsById(draft, clientId).forEach(cardRep => {
-                const {cardType, entityId, face, ownerDeck} = cardRep;
+            extractClientHandCardsById(draft, clientId).forEach(handCard => {
+                const { entityId, ownerDeck, width, height, revealed, isBound, metadata} = handCard;
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-                const cardEntity = cardFactory(positionX, positionY, cardType, face, true, entityId, ownerDeck, 1, undefined, nextTopZIndex);
+                const cardEntity = createCardEntity(positionX, positionY, width, height, revealed, entityId, ownerDeck, nextTopZIndex, isBound, 0, null, metadata);
                 draft.cards.set(cardEntity.entityId, cardEntity);
             });
         

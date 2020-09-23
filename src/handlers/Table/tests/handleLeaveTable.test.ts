@@ -1,30 +1,29 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { CardTypes } from "../../../types/dataModelDefinitions";
-import { cardFactory, cardRepFactory, clientHandFactory } from "../../../factories";
+import { createClientHand } from "../../../factories";
 import { extractClientById, extractClientHandById, extractCardById } from '../../../extractors/gameStateExtractors';
-import { client1 } from '../../../mocks/client';
+import { mockClient1 } from '../../../mocks/clientMocks';
 import { TableHandler } from '../TableHandler';
 import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
 import { TableClientEvents } from '../../../types/socketTypes';
+import { cardEntityMock1, handCardMock1, handCardMock2 } from '../../../mocks/entityMocks';
 
 describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore)
     const gameStateStore = tableStateStore.state.gameStateStore;
-    const client = client1;
-    const {clientId} = client1.clientInfo;
-    const cardInClientsHand1 = cardRepFactory(CardTypes.FRENCH, 'dummy');
-    const cardInClientsHand2 = cardRepFactory(CardTypes.FRENCH, 'dummy');
+    const {clientInfo: { clientId }} = mockClient1;
+    const cardInClientsHand1 = {...handCardMock1}
+    const cardInClientsHand2 = {...handCardMock2};
     const defaultPosition: [number, number] = [15,25];
 
     beforeEach(() => {
         gameStateStore.resetState();
         tableStateStore.resetState();
         gameStateStore.changeState(draft => {
-            const clientHand = clientHandFactory(clientId);
+            const clientHand = createClientHand(clientId);
             clientHand.cards.push(cardInClientsHand1, cardInClientsHand2);
-            draft.clients.set(clientId, client);
+            draft.clients.set(clientId, {...mockClient1});
             draft.hands.set(clientId, clientHand);
         });
         tableStateStore.changeState(draft => {
@@ -56,7 +55,7 @@ describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
     });
 
     it('should put cards from hand on top of cards on table', function(){
-        const entityOnTable = cardFactory(0,0,CardTypes.FRENCH);
+        const entityOnTable = {...cardEntityMock1}
         gameStateStore.changeState(draft => {
             entityOnTable.zIndex = draft.topZIndex;
             draft.cards.set(entityOnTable.entityId, entityOnTable);
@@ -71,7 +70,7 @@ describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
     })
    
     it('should put clients seat back to empty seats', function(){
-        const clientsSeat = client.clientInfo.seatedAt;
+        const clientsSeat = mockClient1.clientInfo.seatedAt;
        tableStateStore.changeState(draft => {
             draft.emptySeats = [];
         }),

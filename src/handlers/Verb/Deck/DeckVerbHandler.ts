@@ -1,11 +1,13 @@
 import { Inject, Singleton } from "typescript-ioc";
 import {shuffle} from "@pacote/shuffle";
 import { extractDeckById } from "../../../extractors/gameStateExtractors";
-import { cardFactory } from "../../../factories";
+import { createCardEntity } from "../../../factories";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { DeckVerb } from "../../../types/verbTypes";
 import { original } from "immer";
+import { calcNextZIndex } from "../../../utils";
+import { gameConfig } from "../../../config";
 
 @Singleton
 export class DeckVerbHandler {
@@ -18,13 +20,15 @@ export class DeckVerbHandler {
         this.gameStateStore = this.tableStateStore.state.gameStateStore;
     }
 
-    drawFaceUp(verb: DeckVerb) {
+    drawCard(verb: DeckVerb, faceUp: boolean) {
         this.gameStateStore.changeState(draft => {
+            const {zIndexLimit} = gameConfig;
             const {entityId} = verb;
             const deck = extractDeckById(draft, entityId);
-            const {rotation, cards, positionX, positionY, drawIndex} = deck;
-            const drawnCard = cards[drawIndex];
-            const spawnedCard = cardFactory(positionX, positionY, drawnCard.cardType, drawnCard.face, true, drawnCard.entityId, deck.entityId, undefined, undefined, undefined, undefined, rotation);
+            const drawnCard = deck.cards[deck.drawIndex];
+            const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
+            const spawnedCard = createCardEntity(deck.positionX, deck.positionY, deck.width, deck.height, faceUp, drawnCard.entityId, deck.entityId, nextTopZIndex, drawnCard.isBound, deck.rotation, null, drawnCard.metadata);
+            
             deck.drawIndex++;
             draft.cards.set(spawnedCard.entityId, spawnedCard);
         })
@@ -37,7 +41,6 @@ export class DeckVerbHandler {
             const {entityId } = verb;
             const deck = extractDeckById(draft, entityId);
 
-            // TODO: nested interation needs to be optimized
             //removing cards from table
             deck.drawIndex = 0;
             draft.cards.forEach(card => {

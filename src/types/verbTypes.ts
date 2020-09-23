@@ -15,7 +15,7 @@ export enum CardVerbTypes {
     FLIP = 'FLIP',
     PUT_IN_HAND = 'PUT_IN_HAND',
     PUT_ON_TABLE = 'PUT_ON_TABLE',
-    GRAB_FROM_HAND = 'GRAB_FROM_HAND'
+    GRAB_FROM_HAND = 'GRAB_FROM_HAND',
 }
 
 export enum DeckVerbTypes {

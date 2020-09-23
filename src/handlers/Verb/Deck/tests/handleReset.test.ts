@@ -1,8 +1,9 @@
-import * as assert from 'assert';
-import {client1, client2} from '../../../../mocks/client';
+import assert from 'assert';
+import {mockClient1, mockClient2} from '../../../../mocks/clientMocks';
+import {deckEntityMock1, cardEntityMock1, cardEntityMock2, handCardMock1, handCardMock2} from '../../../../mocks/entityMocks';
 import { DeckVerbTypes, DeckVerb } from '../../../../types/verbTypes';
-import { EntityTypes, CardTypes } from '../../../../types/dataModelDefinitions';
-import { cardFactory, deckFactory, clientHandFactory } from '../../../../factories';
+import { EntityTypes, HandCard } from '../../../../types/dataModelDefinitions';
+import { createClientHand } from '../../../../factories';
 import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { Container } from 'typescript-ioc';
 import { DeckVerbHandler } from '../DeckVerbHandler';
@@ -12,15 +13,14 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
-    const deckToReset = deckFactory(CardTypes.FRENCH,100,100);
-    deckToReset.drawIndex = 5;
-    const client1Card = cardFactory(0,0,CardTypes.FRENCH,undefined,undefined,undefined,deckToReset.entityId);
-    const client2Card = cardFactory(0,0,CardTypes.FRENCH,undefined,undefined,undefined,deckToReset.entityId);
+    const deckToReset = {...deckEntityMock1};
+    const client1Card: HandCard = {...handCardMock1, ownerDeck: deckToReset.entityId}
+    const client2Card: HandCard = {...handCardMock2, ownerDeck: deckToReset.entityId}
     const verbType = DeckVerbTypes.RESET;
-    const cardsBelongingToDeck = [cardFactory(0,0,CardTypes.FRENCH,undefined, undefined, undefined, deckToReset.entityId), cardFactory(0,100, CardTypes.FRENCH, undefined, undefined, undefined, deckToReset.entityId)]
+    const cardsBelongingToDeck = [{...cardEntityMock1, ownerDeck: deckToReset.entityId}, {...cardEntityMock2, ownerDeck: deckToReset.entityId}];
     const verb: DeckVerb = {
         type: verbType,
-        clientId: client1.clientInfo.clientId,
+        clientId: mockClient1.clientInfo.clientId,
         positionX: 0,
         positionY: 0,
         entityId: deckToReset.entityId,
@@ -28,8 +28,8 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     }
 
     beforeEach('Setting up test data...', () => {
-        const client1Id = client1.clientInfo.clientId;
-        const client2Id = client2.clientInfo.clientId;
+        const client1Id = mockClient1.clientInfo.clientId;
+        const client2Id = mockClient2.clientInfo.clientId;
         
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
@@ -37,12 +37,12 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
                 draft.cards.set(card.entityId, card);
             }))
             draft.decks.set(deckToReset.entityId, deckToReset);
-            draft.clients.set(client1Id, client1);
-            draft.clients.set(client2Id, client2);
-            draft.hands.set(client1Id, clientHandFactory(client1Id));
-            draft.hands.set(client2Id, clientHandFactory(client2Id));
-            draft.hands.get(client1Id).cards.push(client1Card);
-            draft.hands.get(client2Id).cards.push(client2Card);
+            draft.clients.set(client1Id, {...mockClient1});
+            draft.clients.set(client2Id, {...mockClient2});
+            draft.hands.set(client1Id, createClientHand(client1Id));
+            draft.hands.set(client2Id, createClientHand(client2Id));
+            draft.hands.get(client1Id).cards.push({...client1Card});
+            draft.hands.get(client2Id).cards.push({...client2Card});
         })
     })
 
@@ -54,10 +54,10 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     })
 
     it('should remove grabbed cards belonging to the reset deck', function(){
-        const grabbedCard = cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, undefined, deckToReset.entityId)
+        const grabbedCard = {...cardEntityMock1, entityId: "grabbedCard-id"}
        gameStateStore.changeState(draft => {
             const {entityId, entityType} = grabbedCard; 
-            draft.clients.get(client1.clientInfo.clientId).grabbedEntitiy = {
+            draft.clients.get(mockClient1.clientInfo.clientId).grabbedEntitiy = {
                 entityType,
                 entityId,
                 grabbedAtX: 0,
@@ -75,12 +75,12 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
         assert.equal(isRemoved, true);
     })
 
-    it('should remove all card out of player hands belonging to the reset deck', function(){
+    it('should remove all cards out of player hands belonging to the reset deck', function(){
         const nextGameState = deckVerbHandler.reset(verb);
-        assert.equal(extractClientHandById(nextGameState, client1.clientInfo.clientId).cards.some(card => card.entityId === client1Card.entityId), false);
-        assert.equal(extractClientHandById(nextGameState, client2.clientInfo.clientId).cards.some(card => card.entityId === client2Card.entityId), false);
+        assert.equal(extractClientHandById(nextGameState, mockClient1.clientInfo.clientId).cards.some(card => card.entityId === client1Card.entityId), false);
+        assert.equal(extractClientHandById(nextGameState, mockClient2.clientInfo.clientId).cards.some(card => card.entityId === client2Card.entityId), false);
     })
-    it('should drawIndex to 0', function(){
+    it('should set drawIndex to 0', function(){
         const nextGameState = deckVerbHandler.reset(verb);
         const resetDeck = extractDeckById(nextGameState, deckToReset.entityId);
         assert.equal(resetDeck.drawIndex, 0);

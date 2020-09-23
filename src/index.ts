@@ -2,7 +2,7 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import {tableRouter} from './routes/table/tableRoute';
-import { deckFactory } from './factories';
+import { createDeckEntity } from './factories';
 import { CardTypes } from './types/dataModelDefinitions';
 import { Container } from 'typescript-ioc';
 import { Socket } from './socket';
@@ -26,8 +26,8 @@ else if(node_env === 'development'){
     const tableStore = Container.get(TableStateStore);
     const {gameStateStore} = tableStore
     gameStateStore.changeState(draft => {
-        const deck1 = deckFactory(CardTypes.FRENCH, 0, 0)
-        const deck2 = deckFactory(CardTypes.FRENCH, 0,170)
+        const deck1 = createDeckEntity(CardTypes.FRENCH, 0, 0)
+        const deck2 = createDeckEntity(CardTypes.FRENCH, 0,170)
         console.log(deck1.entityId);
         console.log(deck2.entityId);
         draft.decks.set(deck1.entityId, deck1);

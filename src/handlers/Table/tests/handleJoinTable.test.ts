@@ -8,7 +8,7 @@ import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore
 
 describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, function(){
     const tableHandler = new TableHandler();
-    const tableStateStore = Container.get(TableStateStore)
+    const tableStateStore = Container.get(TableStateStore);
     const gameStateStore = tableStateStore.state.gameStateStore;
     const clientId = 'client-1';
     

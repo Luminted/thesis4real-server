@@ -1,37 +1,36 @@
-import * as assert from 'assert'
+import assert from 'assert'
 import {spy} from 'sinon';
 import { SharedVerbTypes, SharedVerb } from "../../../../types/verbTypes";
-import { Client, CardTypes } from "../../../../types/dataModelDefinitions";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors/gameStateExtractors";
-import { cardFactory } from '../../../../factories';
 import * as utils from '../../../../utils';
-import { client1 } from '../../../../mocks/client';
+import { mockClient1 } from '../../../../mocks/clientMocks';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
+import { cardEntityMock1, cardEntityMock2 } from '../../../../mocks/entityMocks';
 
 describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
-    const client: Client = client1;
-    const freeCard = cardFactory(0,0,CardTypes.FRENCH);
-    const grabbedCard = cardFactory(0,0,CardTypes.FRENCH);
+    const {clientInfo: {clientId}} = mockClient1;
+    const freeCard = {...cardEntityMock1};
+    const grabbedCard = {...cardEntityMock2};
     const verb: SharedVerb = {
+        clientId,
         type: SharedVerbTypes.GRAB_FROM_TABLE,
-        clientId: client.clientInfo.clientId,
         positionX: 0,
         positionY: 1,
         entityId: freeCard.entityId,
         entityType: freeCard.entityType
     }
-    grabbedCard.grabbedBy = client.clientInfo.clientId;
+    grabbedCard.grabbedBy = clientId;
 
     beforeEach('Setting up test data...', () => {
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
             draft.cards.set(freeCard.entityId, freeCard);
             draft.cards.set(grabbedCard.entityId, grabbedCard);
-            draft.clients.set(client.clientInfo.clientId, client);
+            draft.clients.set(clientId, {...mockClient1});
         });
     })
 
@@ -53,7 +52,7 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
         const nextGameState = sharedVerbHandler.grabFromTable(verb);
 
         const nextCard = extractEntityByTypeAndId(nextGameState ,entityType, entityId);
-        assert.equal(nextCard.grabbedBy, client.clientInfo.clientId);
+        assert.equal(nextCard.grabbedBy, clientId);
     })
     it('should do nothing if card is already grabbed', function(){
         const originalState = {...gameStateStore.state}
@@ -62,7 +61,7 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
         const positionY = 2;
         const verb: SharedVerb = {
             type: SharedVerbTypes.GRAB_FROM_TABLE,
-            clientId: client.clientInfo.clientId,
+            clientId: clientId,
             positionX: positionX,
             positionY,
             entityId,

@@ -30,7 +30,7 @@ export class VerbHandler {
             case SharedVerbTypes.ROTATE:
                 return this.sharedVerbHandler.remove(verb);
             case DeckVerbTypes.DRAW_FACE_UP:
-                return this.deckVerbHandler.drawFaceUp(verb);
+                return this.deckVerbHandler.drawCard(verb, true);
             case DeckVerbTypes.RESET:
                 return this.deckVerbHandler.reset(verb);
             case CardVerbTypes.PUT_IN_HAND:

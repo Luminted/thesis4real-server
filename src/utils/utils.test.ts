@@ -1,8 +1,9 @@
 import assert from 'assert';
-import { cardFactory, deckFactory } from "../factories"
-import { CardTypes } from "../types/dataModelDefinitions"
+import { createDeckEntity } from "../factories"
 import { calcNextZIndex } from "./utils"
 import { GameStateStore } from '../stores/GameStateStore';
+import { cardEntityMock1, deckEntityMock1 } from '../mocks/entityMocks';
+import { CardEntity, DeckEntity } from '../types/dataModelDefinitions';
 
 describe('Testing utility functions', function(){
     describe('calcNextZIndex', function(){
@@ -30,14 +31,15 @@ describe('Testing utility functions', function(){
             });
         })
         it('should set topZIndex to the number of entities and return with it if z-index limit is reached', function(){
-            let numberOfEntities = 15;
-            let zIndexLimit = 50;
+            const numberOfEntities = 15;
+            const zIndexLimit = 50;
             gameStateStore.changeState(draft => {
                 for(let i = 0; i < numberOfEntities; i++){
-                    const card = cardFactory(0,0,CardTypes.FRENCH);
-                    draft.cards.set(card.entityId, card);
+                    const cardId = `card-id${i}`
+                    draft.cards.set(cardId, {...cardEntityMock1, entityId: cardId});
                 }
                 draft.topZIndex = zIndexLimit;
+
                 const nextZIndex = calcNextZIndex(draft, zIndexLimit);
                 assert.equal(draft.topZIndex, numberOfEntities);
                 assert.equal(nextZIndex, numberOfEntities);
@@ -51,12 +53,12 @@ describe('Testing utility functions', function(){
            gameStateStore.changeState(draft => {
                 for(let i = 0; i < numberOfCards; i++){
                     const cardId = `${numberOfEntities - i - 1}`;
-                    const card = cardFactory(0,0,CardTypes.FRENCH, undefined, undefined, cardId, undefined, undefined, undefined, zIndexLimit - i);
+                    const card: CardEntity = {...cardEntityMock1, entityId: cardId, zIndex: zIndexLimit - i};
                     draft.cards.set(card.entityId, card);
                 }
                 for(let i = 0; i < numberOfDecks; i++){
                     const deckId = `${numberOfEntities - numberOfCards - i - 1}`;
-                    const deck = deckFactory(CardTypes.FRENCH, 0,0, undefined, zIndexLimit - numberOfCards - i, deckId);
+                    const deck: DeckEntity = {...deckEntityMock1, entityId: deckId, zIndex: zIndexLimit - numberOfCards - i};
                     draft.decks.set(deck.entityId, deck);
                 }
                 draft.topZIndex = zIndexLimit;
