@@ -23,22 +23,31 @@ export class CardVerbHandler {
         this.gameStateStore.changeState(draft => {
             const gameState = original(draft);
             const {clientId, entityId, entityType, positionX,positionY} = verb;
+            const clientHand = extractClientHandById(draft, clientId);
             const {width, height, ownerDeck, faceUp, metadata} = extractCardFromClientHandById(gameState, clientId, entityId); 
             const {entityScale} = gameState;
             const {zIndexLimit} = gameConfig;
             const positionOffsetX = Math.round(width * entityScale / 2);
             const positionOffsetY = Math.round(height * entityScale / 2);
-            
             const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
+
+            // create entity from hand card
             //TODO: isBound, rotation should be dynamic
             const grabbedCardEntity = createCardEntity(positionX - positionOffsetX, positionY - positionOffsetY, width, height, faceUp, entityId, ownerDeck, nextTopZIndex, true, 0, clientId, metadata);
+
+            // add to card entities
             draft.cards.set(grabbedCardEntity.entityId, grabbedCardEntity);
+
+            // set grabbed info
             extractClientById(draft, clientId).grabbedEntitiy = {
                 entityId,
                 entityType,
                 grabbedAtX: positionX,
                 grabbedAtY: positionY
             }
+
+            // remove card from hand
+            clientHand.cards = clientHand.cards.filter(card => card.entityId !== entityId);
         })
 
         return this.gameStateStore.state;

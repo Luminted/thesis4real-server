@@ -69,7 +69,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const nextHand = extractClientHandById(nextGameState, verb.clientId);
 
-        assert.equal(nextHand.cards.find(card => card.entityId !== verb.entityId), undefined);
+        assert.equal(nextHand.cards.some(card => card.entityId === verb.entityId), false);
     })
 
     it('should set grabbedBy of grabbed card to client ID', function(){
