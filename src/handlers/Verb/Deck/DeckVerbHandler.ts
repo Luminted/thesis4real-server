@@ -1,11 +1,12 @@
 import { Inject, Singleton } from "typescript-ioc";
 import {shuffle} from "@pacote/shuffle";
+import { original } from "immer";
+import {uuid} from "short-uuid";
 import { extractDeckById } from "../../../extractors/gameStateExtractors";
-import { createCardEntity } from "../../../factories";
+import { createCardEntity, createDeckEntity } from "../../../factories";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
-import { DeckVerb } from "../../../types/verbTypes";
-import { original } from "immer";
+import { AddDeckVerb, DeckVerb } from "../../../types/verbTypes";
 import { calcNextZIndex } from "../../../utils";
 import { gameConfig } from "../../../config";
 
@@ -74,6 +75,20 @@ export class DeckVerbHandler {
             const draftDeck = extractDeckById(draft, entityId);
             const shuffledCards = shuffle(cards.slice(drawIndex));
             draftDeck.cards = [...cards.slice(0, drawIndex), ...shuffledCards];
+        })
+
+        return this.gameStateStore.state;
+    }
+
+    addDeck(verb: AddDeckVerb) {
+        const {width, height, positionX, positionY, rotation, isBound, metadata, cardsMetadata} = verb;
+        const {zIndexLimit} = gameConfig;
+
+        this.gameStateStore.changeState(draft => {
+            const nextZIndex = calcNextZIndex(draft, zIndexLimit);
+            const newDeck = createDeckEntity(positionX, positionY, width, height, nextZIndex, uuid(), isBound, rotation, null, metadata, cardsMetadata);
+
+            draft.decks.set(newDeck.entityId, newDeck);
         })
 
         return this.gameStateStore.state;
