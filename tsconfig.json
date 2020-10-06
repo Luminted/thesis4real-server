@@ -4,9 +4,10 @@
         "emitDecoratorMetadata": true,
         "target": "es6",
         "module": "commonjs",
-        "outDir": "dist",
         "sourceMap": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "outDir": "./build",
+        "moduleResolution": "node"
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", ".vscode"]
