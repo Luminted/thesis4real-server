@@ -13,6 +13,7 @@ export interface Entity {
     zIndex: number,
     isBound: boolean,
     rotation: number,
+    metadata?: object 
 }
 
 export interface DeckCard extends Pick<CardEntity, "entityId" | "faceUp" | "metadata"> {
@@ -30,7 +31,6 @@ export interface CardEntity extends Entity {
     entityType: EntityTypes.CARD,
     faceUp: boolean,
     ownerDeck: MaybeNull<string>,
-    metadata?: object
 }
 
 export interface DeckEntity extends Entity {

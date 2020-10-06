@@ -41,7 +41,7 @@ export const createHandCardFromEntity = (cardEntity: CardEntity): HandCard => ({
     metadata: cardEntity.metadata
 })
 
-export const createDeckEntity = (positionX: number, positionY: number, width: number, height:number, zIndex: number, entityId: string, isBound: boolean, rotation: number, grabbedBy: string, metadataArray: object[]): DeckEntity => ({
+export const createDeckEntity = (positionX: number, positionY: number, width: number, height:number, zIndex: number, entityId: string, isBound: boolean, rotation: number, grabbedBy: string, metadata: object, cardsMetadata: object[] = []): DeckEntity => ({
     positionX,
     positionY,
     rotation,
@@ -51,10 +51,11 @@ export const createDeckEntity = (positionX: number, positionY: number, width: nu
     grabbedBy,
     zIndex,
     isBound,
+    metadata,
     entityType: EntityTypes.DECK,
     drawIndex: 0,
     //TODO: make isBound dynamic
-    cards: metadataArray.map(metadata => ({metadata, faceUp: false, isBound: false, revealed: false, entityId: uuidv4()}))
+    cards: cardsMetadata.map(metadata => ({metadata, faceUp: false, isBound: false, revealed: false, entityId: uuidv4()}))
 })
 
 export const createClientHand = (clientId: string): ClientHand => ({

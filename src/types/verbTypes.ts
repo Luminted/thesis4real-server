@@ -1,4 +1,4 @@
-import { EntityTypes } from "./dataModelDefinitions";
+import { CardEntity, DeckEntity, Entity, EntityTypes } from "./dataModelDefinitions";
 import { MaybeNull } from "./genericTypes";
 
 export enum SharedVerbTypes {
@@ -6,12 +6,12 @@ export enum SharedVerbTypes {
     MOVE = 'MOVE',
     RELEASE = 'RELEASE',
     REMOVE = 'REMOVE',
-    ADD = 'ADD',
     MOVE_TO = 'MOVE_TO',
     ROTATE = 'ROTATE',
 }
 
 export enum CardVerbTypes {
+    ADD_CARD = 'ADD_CARD',
     FLIP = 'FLIP',
     PUT_IN_HAND = 'PUT_IN_HAND',
     PUT_ON_TABLE = 'PUT_ON_TABLE',
@@ -19,6 +19,7 @@ export enum CardVerbTypes {
 }
 
 export enum DeckVerbTypes {
+    ADD_DECK = 'ADD_DECK',
     DRAW_FACE_UP = 'DRAW_FACE_UP',
     DRAW_FACE_DOWN = 'DRAW_FACE_DOWN',
     RESET = 'RESET',
@@ -51,6 +52,15 @@ export interface SharedVerb extends BaseVerb {
     type: SharedVerbTypes,
 }
 
+export interface AddCardVerb extends Omit<CardVerb, "entityId">, Pick<CardEntity, "width" | "height" | "isBound" | "rotation" | "faceUp" | "metadata"> {
+    type: CardVerbTypes.ADD_CARD
+}
+
+export interface AddDeckVerb extends Omit<DeckVerb, "entityId">, Pick<DeckEntity, "width" | "height" | "isBound" | "rotation"> {
+    type: DeckVerbTypes.ADD_DECK,
+    metadata?: object,
+    cardsMetadata?: object[]
+}
 export interface RotateVerb extends SharedVerb {
     angle: number,
 }
