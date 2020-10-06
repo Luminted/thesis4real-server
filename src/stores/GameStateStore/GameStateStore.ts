@@ -1,5 +1,5 @@
 import { Store } from "../Store";
-import { GameState, Seats, CardEntity, Client, DeckEntity, ClientHand } from "../../types/dataModelDefinitions";
+import { GameState, CardEntity, Client, DeckEntity, ClientHand } from "../../types/dataModelDefinitions";
 
 const initialState: GameState = {
     cards: new Map<string, CardEntity>(),
