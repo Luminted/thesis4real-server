@@ -6,7 +6,6 @@ import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { EntityTypes } from "../../../types/dataModelDefinitions";
 import { RotateVerb, SharedVerb, Verb } from "../../../types/verbTypes";
-import { clamp } from "../../../utils/utils";
 
 @Singleton
 export class SharedVerbHandler {
@@ -40,7 +39,6 @@ export class SharedVerbHandler {
     }
 
     move(verb: SharedVerb) {
-        const {tableHeight, tableWidth} = this.tableStateStore.state;
         this.gameStateStore.changeState(draft => {
             const grabbedEntity = extractGrabbedEntityOfClientById(draft, verb.clientId);
             if(grabbedEntity){
@@ -52,53 +50,11 @@ export class SharedVerbHandler {
                     const offsetY = positionY - grabbedEntity.grabbedAtY;
                     const newPositionX = movedEntity.positionX + offsetX;
                     const newPositionY = movedEntity.positionY + offsetY;
-                    const {height, width, isBound} = movedEntity;
     
-                    if(isBound){
-                        const {entityScale} = draft;
-                        const entityWidth = width * entityScale;
-                        const entityHeight = height * entityScale;
-    
-                        //X axis boundary check
-                        if(newPositionX < 0 ){
-                            movedEntity.positionX = clamp(newPositionX, 0, tableWidth - entityWidth);
-                            //If entity outside boundary, set grabbedAt position to the middle of entity.
-                            //This compensates quick mouse movement.
-                            grabbedEntity.grabbedAtX = 0 + Math.round(entityWidth / 2);
-                        }
-                        else if(newPositionX > tableWidth - entityWidth){
-                            movedEntity.positionX = clamp(newPositionX, 0, tableWidth - entityWidth);
-                            grabbedEntity.grabbedAtX = tableWidth - Math.round(entityWidth / 2);
-                        }
-                        else{
-                        movedEntity.positionX = newPositionX;
-                        grabbedEntity.grabbedAtX = positionX;
-                        }
-    
-                        //Y axis boundary check
-                        if(newPositionY < 0){
-                            movedEntity.positionY = clamp(newPositionY, 0, tableHeight - entityHeight);
-                            //If entity outside boundary, set grabbedAt position to the middle of entity.
-                            //This compensates quick mouse movement.
-                            grabbedEntity.grabbedAtY = 0 + Math.round(entityHeight / 2);
-                        }
-                        else if(newPositionY > tableHeight - entityHeight){
-                            movedEntity.positionY = clamp(newPositionY, 0, tableHeight - entityHeight);
-                            console.log( tableHeight - Math.round(entityHeight / 2), tableHeight, entityHeight)
-                            grabbedEntity.grabbedAtY = tableHeight - Math.round(entityHeight / 2);
-                        }
-                        else{
-                        movedEntity.positionY = newPositionY;
-                        grabbedEntity.grabbedAtY = positionY;
-                        }
-                    }
-                    else{
-                        movedEntity.positionX = newPositionX;
-                        movedEntity.positionY = newPositionY;
-                        grabbedEntity.grabbedAtX = positionX;
-                        grabbedEntity.grabbedAtY = positionY;
-                    }
-    
+                    movedEntity.positionX = newPositionX;
+                    movedEntity.positionY = newPositionY;
+                    grabbedEntity.grabbedAtX = positionX;
+                    grabbedEntity.grabbedAtY = positionY;
                 }
             }
         })

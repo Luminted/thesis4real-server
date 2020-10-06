@@ -25,16 +25,13 @@ export class CardVerbHandler {
             const gameState = original(draft);
             const {clientId, entityId, entityType, positionX,positionY} = verb;
             const clientHand = extractClientHandById(draft, clientId);
-            const {width, height, ownerDeck, faceUp, metadata} = extractCardFromClientHandById(gameState, clientId, entityId); 
-            const {entityScale} = gameState;
+            const { ownerDeck, faceUp, metadata} = extractCardFromClientHandById(gameState, clientId, entityId); 
             const {zIndexLimit} = gameConfig;
-            const positionOffsetX = Math.round(width * entityScale / 2);
-            const positionOffsetY = Math.round(height * entityScale / 2);
             const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
 
             // create entity from hand card
-            //TODO: isBound, rotation should be dynamic
-            const grabbedCardEntity = createCardEntity(positionX - positionOffsetX, positionY - positionOffsetY, width, height, faceUp, entityId, ownerDeck, nextTopZIndex, true, 0, clientId, metadata);
+            //TODO: rotation should be dynamic
+            const grabbedCardEntity = createCardEntity(positionX, positionY, faceUp, entityId, ownerDeck, nextTopZIndex, 0, clientId, metadata);
 
             // add to card entities
             draft.cards.set(grabbedCardEntity.entityId, grabbedCardEntity);
@@ -76,12 +73,12 @@ export class CardVerbHandler {
             const gameState = original(draft);
             const handCard = extractCardFromClientHandById(gameState, clientId, entityId);
             if(handCard){
-                const { faceUp, ownerDeck, width, height, entityId, isBound, metadata} = handCard;
+                const { faceUp, ownerDeck, entityId, metadata} = handCard;
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
 
                 //creating entity
                 //TODO: rotation should be dynamic
-                let cardEntity = createCardEntity(positionX, positionY, width, height, faceUp, entityId, ownerDeck, nextTopZIndex, isBound, 0, null, metadata );
+                let cardEntity = createCardEntity(positionX, positionY, faceUp, entityId, ownerDeck, nextTopZIndex, 0, null, metadata );
                 draft.cards.set(cardEntity.entityId, cardEntity);
                 
                 //removing from hand
@@ -116,12 +113,12 @@ export class CardVerbHandler {
     }
 
     addCard(verb: AddCardVerb) {
-        const {faceUp, width, height, positionX, positionY, isBound, rotation, metadata} = verb;
+        const {faceUp, positionX, positionY, rotation, metadata} = verb;
         const {zIndexLimit} = gameConfig;
 
         this.gameStateStore.changeState(draft => {
             const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-            const newCard = createCardEntity(positionX, positionY, width, height, faceUp, uuid(), null, nextZIndex, isBound, rotation, null, metadata);
+            const newCard = createCardEntity(positionX, positionY, faceUp, uuid(), null, nextZIndex, rotation, null, metadata);
 
             draft.cards.set(newCard.entityId, newCard);
         })

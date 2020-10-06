@@ -52,11 +52,11 @@ export interface SharedVerb extends BaseVerb {
     type: SharedVerbTypes,
 }
 
-export interface AddCardVerb extends Omit<CardVerb, "entityId">, Pick<CardEntity, "width" | "height" | "isBound" | "rotation" | "faceUp" | "metadata"> {
+export interface AddCardVerb extends Omit<CardVerb, "entityId">, Pick<CardEntity, "rotation" | "faceUp" | "metadata"> {
     type: CardVerbTypes.ADD_CARD
 }
 
-export interface AddDeckVerb extends Omit<DeckVerb, "entityId">, Pick<DeckEntity, "width" | "height" | "isBound" | "rotation"> {
+export interface AddDeckVerb extends Omit<DeckVerb, "entityId">, Pick<DeckEntity, "rotation"> {
     type: DeckVerbTypes.ADD_DECK,
     metadata?: object,
     cardsMetadata?: object[]

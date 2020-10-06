@@ -28,7 +28,7 @@ export class DeckVerbHandler {
             const deck = extractDeckById(draft, entityId);
             const drawnCard = deck.cards[deck.drawIndex];
             const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-            const spawnedCard = createCardEntity(deck.positionX, deck.positionY, deck.width, deck.height, faceUp, drawnCard.entityId, deck.entityId, nextTopZIndex, drawnCard.isBound, deck.rotation, null, drawnCard.metadata);
+            const spawnedCard = createCardEntity(deck.positionX, deck.positionY, faceUp, drawnCard.entityId, deck.entityId, nextTopZIndex, deck.rotation, null, drawnCard.metadata);
             
             deck.drawIndex++;
             draft.cards.set(spawnedCard.entityId, spawnedCard);
@@ -81,12 +81,12 @@ export class DeckVerbHandler {
     }
 
     addDeck(verb: AddDeckVerb) {
-        const {width, height, positionX, positionY, rotation, isBound, metadata, cardsMetadata} = verb;
+        const {positionX, positionY, rotation, metadata, cardsMetadata} = verb;
         const {zIndexLimit} = gameConfig;
 
         this.gameStateStore.changeState(draft => {
             const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-            const newDeck = createDeckEntity(positionX, positionY, width, height, nextZIndex, uuid(), isBound, rotation, null, metadata, cardsMetadata);
+            const newDeck = createDeckEntity(positionX, positionY, nextZIndex, uuid(), rotation, null, metadata, cardsMetadata);
 
             draft.decks.set(newDeck.entityId, newDeck);
         })

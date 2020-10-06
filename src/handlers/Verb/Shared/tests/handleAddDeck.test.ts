@@ -25,9 +25,6 @@ describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
             entityType: EntityTypes.DECK,
             positionX: 14,
             positionY: 77,
-            width: 17,
-            height: 99,
-            isBound: false,
             rotation: 34,
             metadata: {
                 data: "info"
@@ -40,10 +37,7 @@ describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
         const addedEntity = value as DeckEntity;
         assert.equal(addedEntity.positionX, verb.positionX);
         assert.equal(addedEntity.positionY, verb.positionY);
-        assert.equal(addedEntity.width, verb.width);
-        assert.equal(addedEntity.height, verb.height);
         assert.equal(addedEntity.entityType, verb.entityType);
-        assert.equal(addedEntity.isBound, verb.isBound);
         assert.equal(addedEntity.rotation, verb.rotation);
         assert.deepEqual(addedEntity.metadata, verb.metadata);
     })

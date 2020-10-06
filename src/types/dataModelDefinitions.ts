@@ -5,25 +5,19 @@ import { GameStateStore } from '../stores/GameStateStore';
 export interface Entity {
     readonly entityType: EntityTypes,
     readonly entityId: string,
-    height:number,
-    width: number,
     positionX: number,
     positionY: number,
     grabbedBy: MaybeNull<string>
     zIndex: number,
-    isBound: boolean,
     rotation: number,
     metadata?: object 
 }
 
 export interface DeckCard extends Pick<CardEntity, "entityId" | "faceUp" | "metadata"> {
     revealed: boolean,
-    isBound: boolean
 }
 
 export interface HandCard extends DeckCard {
-    width: number,
-    height: number,
     ownerDeck: string,
 }
 export interface CardEntity extends Entity {
@@ -89,8 +83,6 @@ export interface GameState {
 export type CardTable = {
     readonly gameStateStore: GameStateStore,
     readonly seats: Seats[],
-    readonly tableWidth: number,
-    readonly tableHeight: number,
     defaultPosition: [number, number],
     emptySeats: Seats[],
 }

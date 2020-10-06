@@ -29,13 +29,6 @@ export class TableNamespace extends SocketNamespace {
             }
         });
 
-        this.addEventListener(TableClientEvents.GET_TABLE_DIMENSIONS, (ackFunction?: (tableWidth: number, tableHeight: number) => void) => {
-            if(typeof ackFunction === 'function'){
-                const [tableWidth, tableHeight] = this.tableHandler.getTableDimensions();
-                ackFunction(tableWidth, tableHeight);
-            }
-        })
-
         this.addEventListenerWithSocket(TableClientEvents.JOIN_TABLE, (socket: SocketIO.Socket) => (acknowledgeFunction?: (clientInfo: ClientInfo, gameState: SerializedGameState) => void) => {
             const { id } = socket;
             console.log(id, ' joined table');

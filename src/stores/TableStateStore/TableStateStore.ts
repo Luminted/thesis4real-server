@@ -8,8 +8,6 @@ const initialState: CardTable = {
     defaultPosition: [0,0],
     seats: [Seats.NORTH, Seats.NORTH_EAST, Seats.NORTH_WEST, Seats.SOUTH, Seats.SOUTH_EAST, Seats.NORTH_WEST],
     emptySeats: [],
-    tableWidth: 4100,
-    tableHeight: 2200,
 };
 
 @Singleton

@@ -17,11 +17,6 @@ export class TableHandler {
         this.gameStateStore = this.tableStateStore.state.gameStateStore;
     }
 
-    getTableDimensions(){
-        const {tableHeight, tableWidth} = this.tableStateStore.state;
-        return [tableWidth, tableHeight];
-    }
-
     joinTable(clientId: string){
         this.gameStateStore.changeState(draft => {
             const newClient = this.createClient(clientId);
@@ -46,9 +41,9 @@ export class TableHandler {
             const [positionX, positionY] = defaultPosition;
             const {zIndexLimit} = gameConfig;
             extractClientHandCardsById(draft, clientId).forEach(handCard => {
-                const { entityId, ownerDeck, width, height, revealed, isBound, metadata} = handCard;
+                const { entityId, ownerDeck, revealed, metadata} = handCard;
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-                const cardEntity = createCardEntity(positionX, positionY, width, height, revealed, entityId, ownerDeck, nextTopZIndex, isBound, 0, null, metadata);
+                const cardEntity = createCardEntity(positionX, positionY, revealed, entityId, ownerDeck, nextTopZIndex, 0, null, metadata);
                 draft.cards.set(cardEntity.entityId, cardEntity);
             });
         
