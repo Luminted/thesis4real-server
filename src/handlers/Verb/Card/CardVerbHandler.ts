@@ -1,6 +1,7 @@
 import { original } from "immer";
+import { uuid } from "short-uuid";
 import { Singleton, Inject } from "typescript-ioc";
-import { CardVerb } from "../../../types/verbTypes";
+import { AddCardVerb, CardVerb } from "../../../types/verbTypes";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
@@ -113,5 +114,20 @@ export class CardVerbHandler {
 
         return this.gameStateStore.state;
     }
+
+    addCard(verb: AddCardVerb) {
+        const {faceUp, width, height, positionX, positionY, isBound, rotation, metadata} = verb;
+        const {zIndexLimit} = gameConfig;
+
+        this.gameStateStore.changeState(draft => {
+            const nextZIndex = calcNextZIndex(draft, zIndexLimit);
+            const newCard = createCardEntity(positionX, positionY, width, height, faceUp, uuid(), null, nextZIndex, isBound, rotation, null, metadata);
+
+            draft.cards.set(newCard.entityId, newCard);
+        })
+
+        return this.gameStateStore.state;
+    }
+    
 
 }
