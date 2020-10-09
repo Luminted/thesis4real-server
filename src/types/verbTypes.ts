@@ -2,7 +2,7 @@ import { CardEntity, DeckEntity, Entity, EntityTypes } from "./dataModelDefiniti
 import { MaybeNull } from "./genericTypes";
 
 export enum SharedVerbTypes {
-    GRAB_FROM_TABLE = 'GRAB_FROM_TABLE',
+    GRAB = 'GRAB',
     MOVE = 'MOVE',
     RELEASE = 'RELEASE',
     REMOVE = 'REMOVE',
