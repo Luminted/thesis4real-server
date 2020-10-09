@@ -1,3 +1,4 @@
+import { table } from "console";
 import { Inject, Singleton } from "typescript-ioc";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { GameStateStore } from "../../stores/GameStateStore";
@@ -15,10 +16,18 @@ export class ConnectionHandler {
     }
 
    disconnect(clientId: string){
+
        this.gameStateStore.changeState(draft => {
            const client = extractClientById(draft, clientId);
            if(client){
-               client.status = ClientConnectionStatuses.DISCONNECTED;
+               //temporary code until proper connection handling is implemented
+            this.tableStateStore.changeState(draft => {
+                draft.emptySeats.push(client.clientInfo.seatedAt);
+            })
+               draft.clients.delete(client.clientInfo.clientId);
+
+            // original code
+            //client.status = ClientConnectionStatuses.DISCONNECTED;
            }
         })
         

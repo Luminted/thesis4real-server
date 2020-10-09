@@ -5,8 +5,7 @@ import { TableClientEvents, TableServerEvents } from "../../types/socketTypes";
 import { serializeGameState } from "../../utils";
 import { GameState, ClientInfo, SerializedGameState } from "../../types/dataModelDefinitions";
 import { extractClientById } from "../../extractors/gameStateExtractors";
-import { TableHandler, VerbHandler } from "../../handlers";
-import { ConnectionHandler } from "../../handlers/Connection/ConnectionHandler";
+import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";
  
 @Singleton
 export class TableNamespace extends SocketNamespace {

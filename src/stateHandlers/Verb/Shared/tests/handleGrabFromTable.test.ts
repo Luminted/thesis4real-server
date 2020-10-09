@@ -9,7 +9,7 @@ import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, cardEntityMock2 } from '../../../../mocks/entityMocks';
 
-describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
+describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
@@ -17,7 +17,7 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
     const grabbedCard = {...cardEntityMock2};
     const verb: SharedVerb = {
         clientId,
-        type: SharedVerbTypes.GRAB_FROM_TABLE,
+        type: SharedVerbTypes.GRAB,
         positionX: 0,
         positionY: 1,
         entityId: freeCard.entityId,
@@ -60,7 +60,7 @@ describe(`handle ${SharedVerbTypes.GRAB_FROM_TABLE} verb`, function() {
         const positionX = 1;
         const positionY = 2;
         const verb: SharedVerb = {
-            type: SharedVerbTypes.GRAB_FROM_TABLE,
+            type: SharedVerbTypes.GRAB,
             clientId: clientId,
             positionX: positionX,
             positionY,

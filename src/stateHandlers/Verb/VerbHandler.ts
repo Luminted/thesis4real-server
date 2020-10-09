@@ -17,7 +17,7 @@ export class VerbHandler {
 
     handleVerb(verb: Verb){
         switch(verb.type){
-            case SharedVerbTypes.GRAB_FROM_TABLE:
+            case SharedVerbTypes.GRAB:
                 return this.sharedVerbHandler.grabFromTable(verb);
             case SharedVerbTypes.RELEASE:
                 return this.sharedVerbHandler.release(verb);
