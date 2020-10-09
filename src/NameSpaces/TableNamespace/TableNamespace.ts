@@ -1,10 +1,11 @@
 import { SocketNamespace } from "..";
-import { Singleton, Inject, Container } from "typescript-ioc";
+import { Singleton, Inject } from "typescript-ioc";
 import { Verb } from "../../types/verbTypes";
 import { TableClientEvents, TableServerEvents } from "../../types/socketTypes";
 import { serializeGameState } from "../../utils";
 import { GameState, ClientInfo, SerializedGameState } from "../../types/dataModelDefinitions";
 import { extractClientById } from "../../extractors/gameStateExtractors";
+import { TableHandler, VerbHandler } from "../../stateHandlers";
 import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";
  
 @Singleton
