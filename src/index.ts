@@ -3,10 +3,10 @@ import http from 'http';
 import cors from 'cors';
 import {tableRouter} from './routes/table/tableRoute';
 import { createDeckEntity } from './factories';
-import { CardTypes } from './types/dataModelDefinitions';
 import { Container } from 'typescript-ioc';
 import { Socket } from './socket';
 import { TableStateStore } from './stores/TableStateStore/TableStateStore';
+import { uuid } from 'short-uuid';
 
 const app = express();
 app.use(express.json());
@@ -26,12 +26,9 @@ else if(node_env === 'development'){
     const tableStore = Container.get(TableStateStore);
     const {gameStateStore} = tableStore
     gameStateStore.changeState(draft => {
-        const deck1 = createDeckEntity(CardTypes.FRENCH, 0, 0)
-        const deck2 = createDeckEntity(CardTypes.FRENCH, 0,170)
+        const deck1 = createDeckEntity(0, 0, 0, uuid(), 0, null, {}, [{id: 1}, {id: 2}])
         console.log(deck1.entityId);
-        console.log(deck2.entityId);
         draft.decks.set(deck1.entityId, deck1);
-        draft.decks.set(deck2.entityId, deck2);
     })
     console.log(`Dev table set up. Id: whatever`);
 }
