@@ -1,5 +1,5 @@
 import { Inject, Singleton } from "typescript-ioc";
-import { CardVerbTypes, DeckVerbTypes, SharedVerbTypes, Verb } from "../../types/verbTypes";
+import { CardVerbTypes, DeckVerbTypes, IrregularVerbTypes, SharedVerbTypes, Verb } from "../../types/verbTypes";
 import { CardVerbHandler } from "./Card/CardVerbHandler";
 import { SharedVerbHandler } from "./Shared/SharedVerbHandler";
 import { DeckVerbHandler } from "./Deck/DeckVerbHandler";
@@ -39,6 +39,8 @@ export class VerbHandler {
                 return this.cardVerbHandler.grabFromHand(verb);
             case CardVerbTypes.PUT_ON_TABLE:
                 return this.cardVerbHandler.putOnTable(verb);
+            case IrregularVerbTypes.ROTATE:
+                return this.sharedVerbHandler.rotate(verb);
             default:
                 return;
         }
