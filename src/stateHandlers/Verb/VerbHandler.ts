@@ -39,6 +39,9 @@ export class VerbHandler {
                 return this.cardVerbHandler.grabFromHand(verb);
             case CardVerbTypes.PUT_ON_TABLE:
                 return this.cardVerbHandler.putOnTable(verb);
+            case CardVerbTypes.FLIP:
+                return this.cardVerbHandler.flip(verb);
+
             case IrregularVerbTypes.ROTATE:
                 return this.sharedVerbHandler.rotate(verb);
             default:
