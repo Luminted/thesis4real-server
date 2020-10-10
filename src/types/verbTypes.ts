@@ -7,7 +7,6 @@ export enum SharedVerbTypes {
     RELEASE = 'RELEASE',
     REMOVE = 'REMOVE',
     MOVE_TO = 'MOVE_TO',
-    ROTATE = 'ROTATE',
 }
 
 export enum CardVerbTypes {
@@ -24,10 +23,13 @@ export enum DeckVerbTypes {
     DRAW_FACE_DOWN = 'DRAW_FACE_DOWN',
     RESET = 'RESET',
     SHUFFLE = 'SHUFFLE',
-
 }
 
-export type VerbTypes = SharedVerbTypes | CardVerbTypes | DeckVerbTypes;
+export enum IrregularVerbTypes {
+    ROTATE = "ROTATE"
+}
+
+export type VerbTypes = SharedVerbTypes | CardVerbTypes | DeckVerbTypes | IrregularVerbTypes;
 
 interface BaseVerb {
     type: VerbTypes 
@@ -61,8 +63,9 @@ export interface AddDeckVerb extends Omit<DeckVerb, "entityId">, Pick<DeckEntity
     metadata?: object,
     cardsMetadata?: object[]
 }
-export interface RotateVerb extends SharedVerb {
-    angle: number,
+export interface RotateVerb extends BaseVerb {
+    type: IrregularVerbTypes.ROTATE
+    angle: number
 }
 
 export type Verb = CardVerb | DeckVerb | SharedVerb | RotateVerb;
