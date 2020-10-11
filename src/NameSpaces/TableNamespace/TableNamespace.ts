@@ -1,6 +1,6 @@
 import { SocketNamespace } from "..";
 import { Singleton, Inject } from "typescript-ioc";
-import { Verb } from "../../types/verbTypes";
+import { Verb } from "../../types/verb";
 import { TableClientEvents, TableServerEvents } from "../../types/socketTypes";
 import { serializeGameState } from "../../utils";
 import { GameState, ClientInfo, SerializedGameState } from "../../types/dataModelDefinitions";

@@ -6,19 +6,15 @@ import { mockClient1 } from "../../../../mocks/clientMocks";
 import { cardEntityMock1, handCardMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
 import { EntityTypes } from "../../../../types/dataModelDefinitions";
-import { CardVerb, CardVerbTypes } from "../../../../types/verbTypes";
+import { CardVerbTypes, IFlipVerb } from "../../../../types/verb";
 import { CardVerbHandler } from "../CardVerbHandler";
 
 describe(`handling ${CardVerbTypes.FLIP}`, () => {
     const cardVerbHandler = new CardVerbHandler();
     const {gameStateStore} = Container.get(TableStateStore).state;
     const {clientInfo: {clientId}} = mockClient1;
-    const verbBase: Omit<CardVerb, "entityId"> = {
-        clientId,
+    const verbBase: Omit<IFlipVerb, "entityId"> = {
         type: CardVerbTypes.FLIP,
-        entityType: EntityTypes.CARD,
-        positionX: 0,
-        positionY: 0,
     }
 
     beforeEach(() => {
@@ -28,7 +24,7 @@ describe(`handling ${CardVerbTypes.FLIP}`, () => {
 
     it("should negate faceUp field of card", () => {
         const {entityId} = cardEntityMock1;
-        const verb: CardVerb = {
+        const verb: IFlipVerb = {
             ...verbBase,
             entityId
         }
@@ -42,7 +38,7 @@ describe(`handling ${CardVerbTypes.FLIP}`, () => {
 
     it("should work with cards held in hand too", () => {
         const {entityId} = handCardMock1;
-        const verb: CardVerb = {
+        const verb: IFlipVerb = {
             ...verbBase,
             entityId
         }

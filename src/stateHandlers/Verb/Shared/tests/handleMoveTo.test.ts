@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { SharedVerbTypes, SharedVerb } from '../../../../types/verbTypes';
+import { IMoveToVerb, IMoveVerb, SharedVerbTypes } from '../../../../types/verb';
 import { EntityTypes } from '../../../../types/dataModelDefinitions';
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
@@ -25,9 +25,8 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
     })
 
     it('should move the correct card to given position', function(){
-        const verb: SharedVerb = {
+        const verb: IMoveToVerb = {
             type: SharedVerbTypes.MOVE_TO,
-            clientId: clientId,
             entityId: cardEntityId,
             entityType: EntityTypes.CARD,
             positionX: 666,
@@ -42,9 +41,8 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, function(){
     })
 
     it('should move the correct deck to given position', function(){
-        const verb: SharedVerb = {
+        const verb: IMoveToVerb = {
             type: SharedVerbTypes.MOVE_TO,
-            clientId: clientId,
             entityId: deckEntityId,
             entityType: EntityTypes.DECK,
             positionX: 888,

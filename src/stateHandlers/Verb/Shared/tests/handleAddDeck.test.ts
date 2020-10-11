@@ -3,7 +3,7 @@ import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore";
 import { DeckEntity, EntityTypes } from "../../../../types/dataModelDefinitions";
-import { AddDeckVerb, DeckVerbTypes } from "../../../../types/verbTypes";
+import { DeckVerbTypes, IAddDeckVerb } from "../../../../types/verb";
 import { DeckVerbHandler } from "../../Deck";
 
 describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
@@ -19,16 +19,15 @@ describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
     })
 
     it("should add a deck entity with verb parameters", () => {
-        const verb: AddDeckVerb = {
-            clientId,
+        const verb: IAddDeckVerb = {
             type: DeckVerbTypes.ADD_DECK,
-            entityType: EntityTypes.DECK,
             positionX: 14,
             positionY: 77,
             rotation: 34,
             metadata: {
                 data: "info"
-            }
+            },
+            containedCardsMetadata: [{data: "card_info"}]
         }
 
         const nextGameState = deckVerbHandler.addDeck(verb);
@@ -37,8 +36,8 @@ describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
         const addedEntity = value as DeckEntity;
         assert.equal(addedEntity.positionX, verb.positionX);
         assert.equal(addedEntity.positionY, verb.positionY);
-        assert.equal(addedEntity.entityType, verb.entityType);
         assert.equal(addedEntity.rotation, verb.rotation);
         assert.deepEqual(addedEntity.metadata, verb.metadata);
+        assert.deepEqual(addedEntity.cards, verb.containedCardsMetadata);
     })
 })

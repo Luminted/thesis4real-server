@@ -1,7 +1,7 @@
 import assert from 'assert';
 import {mockClient1, mockClient2} from '../../../../mocks/clientMocks';
 import {deckEntityMock1, cardEntityMock1, cardEntityMock2, handCardMock1, handCardMock2} from '../../../../mocks/entityMocks';
-import { DeckVerbTypes, DeckVerb } from '../../../../types/verbTypes';
+import { DeckVerbTypes, IResetVerb } from '../../../../types/verb';
 import { EntityTypes, HandCard } from '../../../../types/dataModelDefinitions';
 import { createClientHand } from '../../../../factories';
 import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
@@ -18,13 +18,9 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     const client2Card: HandCard = {...handCardMock2, ownerDeck: deckToReset.entityId}
     const verbType = DeckVerbTypes.RESET;
     const cardsBelongingToDeck = [{...cardEntityMock1, ownerDeck: deckToReset.entityId}, {...cardEntityMock2, ownerDeck: deckToReset.entityId}];
-    const verb: DeckVerb = {
+    const verb: IResetVerb = {
         type: verbType,
-        clientId: mockClient1.clientInfo.clientId,
-        positionX: 0,
-        positionY: 0,
         entityId: deckToReset.entityId,
-        entityType: EntityTypes.DECK
     }
 
     beforeEach('Setting up test data...', () => {

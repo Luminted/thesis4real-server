@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, CardVerb } from '../../../../types/verbTypes';
+import { CardVerbTypes, IPutInHandVerb } from '../../../../types/verb';
 import { createClientHand } from '../../../../factories';
 import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
@@ -19,14 +19,10 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         grabbedAtX: 15,
         grabbedAtY: 20
     }
-    const verb: CardVerb = {
+    const verb: IPutInHandVerb = {
         type: CardVerbTypes.PUT_IN_HAND,
         clientId: client.clientInfo.clientId,
-        positionX: 0,
-        positionY: 0,
         entityId: entityId,
-        entityType: entityType,
-        
     } 
 
     beforeEach('Setting up test data...', () => {

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { DeckVerbTypes, DeckVerb } from '../../../../types/verbTypes';
+import { DeckVerbTypes, IDrawFaceUpVerb } from '../../../../types/verb';
 import { DeckCard } from '../../../../types/dataModelDefinitions';
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
@@ -15,13 +15,9 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
     const {entityId, entityType} = deckEntityMock1;
     const rotation = 12;
     const deck = {...deckEntityMock1, positionX: 10, positionY: 12, rotation};
-    const verb: DeckVerb = {
+    const verb: IDrawFaceUpVerb = {
         type: DeckVerbTypes.DRAW_FACE_UP,
-        clientId: clientId,
-        positionX: 0,
-        positionY: 0,
         entityId: entityId,
-        entityType: entityType,
     }
 
     beforeEach('Setting up test data...', () => {
@@ -52,14 +48,6 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
 
     it('should spawn a card entity with the decks ID as ownerDeck', function() {
         const originalDeck = deck;
-        const verb: DeckVerb = {
-            type: DeckVerbTypes.DRAW_FACE_UP,
-            clientId: clientId,
-            positionX: 0,
-            positionY: 0,
-            entityId: originalDeck.entityId,
-            entityType: originalDeck.entityType,
-        }
         
         const nextGameState = deckVerbHandler.drawCard(verb, true);
 

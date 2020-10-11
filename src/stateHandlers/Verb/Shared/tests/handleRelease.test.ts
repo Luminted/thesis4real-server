@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { SharedVerbTypes, SharedVerb } from "../../../../types/verbTypes";
+import { IReleaseVerb, SharedVerbTypes } from "../../../../types/verb";
 import { EntityTypes } from "../../../../types/dataModelDefinitions";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
@@ -13,11 +13,9 @@ describe(`handle ${SharedVerbTypes.RELEASE} verb`, function() {
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
     const card = {...cardEntityMock1, grabbedBy: clientId};
-    const verb: SharedVerb = {
+    const verb: IReleaseVerb = {
         type: SharedVerbTypes.RELEASE,
         clientId:clientId,
-        positionY: card.positionY,
-        positionX: card.positionX,
         entityId: card.entityId,
         entityType: card.entityType
     }

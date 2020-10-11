@@ -6,7 +6,7 @@ import { extractDeckById } from "../../../extractors/gameStateExtractors";
 import { createCardEntity, createDeckEntity } from "../../../factories";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
-import { AddDeckVerb, DeckVerb } from "../../../types/verbTypes";
+import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb } from "../../../types/verb";
 import { calcNextZIndex } from "../../../utils";
 import { gameConfig } from "../../../config";
 
@@ -21,7 +21,7 @@ export class DeckVerbHandler {
         this.gameStateStore = this.tableStateStore.state.gameStateStore;
     }
 
-    drawCard(verb: DeckVerb, faceUp: boolean) {
+    drawCard(verb: IDrawFaceUpVerb, faceUp: boolean = true) {
         this.gameStateStore.changeState(draft => {
             const {zIndexLimit} = gameConfig;
             const {entityId} = verb;
@@ -37,7 +37,7 @@ export class DeckVerbHandler {
         return this.gameStateStore.state;
     }
 
-    reset(verb: DeckVerb) {
+    reset(verb: IResetVerb) {
         this.gameStateStore.changeState(draft => {
             const {entityId } = verb;
             const deck = extractDeckById(draft, entityId);
@@ -68,7 +68,7 @@ export class DeckVerbHandler {
         return this.gameStateStore.state;
     }
 
-    shuffle(verb: DeckVerb) {
+    shuffle(verb: IShuffleVerb) {
         const {entityId} = verb;
         this.gameStateStore.changeState(draft => {
             const {cards, drawIndex} = extractDeckById(original(draft), entityId);
@@ -80,13 +80,13 @@ export class DeckVerbHandler {
         return this.gameStateStore.state;
     }
 
-    addDeck(verb: AddDeckVerb) {
-        const {positionX, positionY, rotation, metadata, cardsMetadata} = verb;
+    addDeck(verb: IAddDeckVerb) {
+        const {positionX, positionY, rotation, metadata, containedCardsMetadata: containedCards} = verb;
         const {zIndexLimit} = gameConfig;
 
         this.gameStateStore.changeState(draft => {
             const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-            const newDeck = createDeckEntity(positionX, positionY, nextZIndex, uuid(), rotation, null, metadata, cardsMetadata);
+            const newDeck = createDeckEntity(positionX, positionY, nextZIndex, uuid(), rotation, null, metadata, containedCards);
 
             draft.decks.set(newDeck.entityId, newDeck);
         })

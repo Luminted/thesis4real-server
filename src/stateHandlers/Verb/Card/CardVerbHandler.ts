@@ -1,13 +1,14 @@
 import { original } from "immer";
 import { uuid } from "short-uuid";
 import { Singleton, Inject } from "typescript-ioc";
-import { AddCardVerb, CardVerb } from "../../../types/verbTypes";
+import { IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IPutOnTable } from "../../../types/verb";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
 import { gameConfig } from "../../../config";
 import { calcNextZIndex } from "../../../utils";
 import { createCardEntity, createHandCardFromEntity } from "../../../factories";
+import { EntityTypes } from "../../../types/dataModelDefinitions";
 
 @Singleton
 export class CardVerbHandler {
@@ -20,10 +21,11 @@ export class CardVerbHandler {
         this.gameStateStore = this.tableStateStore.gameStateStore;
     }
  
-    grabFromHand(verb: CardVerb) {
+    grabFromHand(verb: IGrabFromHandVerb) {
+        //TODO: grab from any hand
         this.gameStateStore.changeState(draft => {
             const gameState = original(draft);
-            const {clientId, entityId, entityType, positionX,positionY} = verb;
+            const {clientId, entityId, positionX,positionY} = verb;
             const clientHand = extractClientHandById(draft, clientId);
             const { ownerDeck, faceUp, metadata} = extractCardFromClientHandById(gameState, clientId, entityId); 
             const {zIndexLimit} = gameConfig;
@@ -39,7 +41,7 @@ export class CardVerbHandler {
             // set grabbed info
             extractClientById(draft, clientId).grabbedEntitiy = {
                 entityId,
-                entityType,
+                entityType: EntityTypes.CARD,
                 grabbedAtX: positionX,
                 grabbedAtY: positionY
             }
@@ -51,7 +53,7 @@ export class CardVerbHandler {
         return this.gameStateStore.state;
     }
 
-    putInHand(verb: CardVerb) {
+    putInHand(verb: IPutInHandVerb) {
         this.gameStateStore.changeState(draft => {
             const {clientId, entityId} = verb;
             const handCard = createHandCardFromEntity(extractCardById(original(draft), entityId));
@@ -65,7 +67,7 @@ export class CardVerbHandler {
         return this.gameStateStore.state;
     }
 
-    putOnTable(verb: CardVerb){
+    putOnTable(verb: IPutOnTable){
         const {zIndexLimit} = gameConfig;
         const {clientId, entityId, positionX, positionY} = verb;
 
@@ -94,25 +96,27 @@ export class CardVerbHandler {
         return this.gameStateStore.state;
     }
 
-    flip(verb: CardVerb) {
-        const { entityId, clientId } = verb;
+    flip(verb: IFlipVerb) {
+        const { entityId } = verb;
         const entity = extractCardById(this.gameStateStore.state, entityId);
 
         if(entity){
             this.gameStateStore.changeState(draft => {
                 extractCardById(draft, entityId).faceUp = !entity.faceUp;
             })
-        }else{
-            this.gameStateStore.changeState(draft => {
-                const cardRepresentation = extractCardFromClientHandById(original(draft), clientId, entityId);
-                extractCardFromClientHandById(draft, clientId, entityId).faceUp = !cardRepresentation.faceUp;
-            })
         }
+        //TODO: separate this to unique verb
+        // else{
+        //     this.gameStateStore.changeState(draft => {
+        //         const cardRepresentation = extractCardFromClientHandById(original(draft), clientId, entityId);
+        //         extractCardFromClientHandById(draft, clientId, entityId).faceUp = !cardRepresentation.faceUp;
+        //     })
+        // }
 
         return this.gameStateStore.state;
     }
 
-    addCard(verb: AddCardVerb) {
+    addCard(verb: IAddCardVerb) {
         const {faceUp, positionX, positionY, rotation, metadata} = verb;
         const {zIndexLimit} = gameConfig;
 

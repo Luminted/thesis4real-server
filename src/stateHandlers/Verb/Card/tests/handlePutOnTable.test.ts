@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, CardVerb } from '../../../../types/verbTypes';
+import { CardVerbTypes, IPutOnTable } from '../../../../types/verb';
 import { EntityTypes } from '../../../../types/dataModelDefinitions';
 import { createClientHand } from '../../../../factories';
 import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById, extractCardFromClientHandById } from '../../../../extractors/gameStateExtractors';
@@ -14,13 +14,12 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
     const {entityId} = handCardMock1;
-    let verb: CardVerb;
+    let verb: IPutOnTable;
 
     beforeEach('Setting up test data...', () => {
         verb = {
             clientId: clientId,
             entityId: entityId,
-            entityType: EntityTypes.CARD,
             positionX: 99,
             positionY: 66,
             type: CardVerbTypes.PUT_ON_TABLE

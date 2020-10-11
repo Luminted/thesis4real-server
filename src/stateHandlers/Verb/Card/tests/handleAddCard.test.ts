@@ -3,7 +3,7 @@ import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore";
 import { EntityTypes, CardEntity } from "../../../../types/dataModelDefinitions";
-import { AddCardVerb, CardVerbTypes,  } from "../../../../types/verbTypes";
+import { CardVerbTypes, IAddCardVerb,  } from "../../../../types/verb";
 import { CardVerbHandler } from "../CardVerbHandler";
 
 describe(`handling ${CardVerbTypes.ADD_CARD}`, () => {
@@ -19,10 +19,8 @@ describe(`handling ${CardVerbTypes.ADD_CARD}`, () => {
     })
 
     it("should add a card entity with verb parameters", () => {
-        const verb: AddCardVerb = {
-            clientId,
+        const verb: IAddCardVerb = {
             type: CardVerbTypes.ADD_CARD,
-            entityType: EntityTypes.CARD,
             positionX: 14,
             positionY: 77,
             rotation: 34,
@@ -38,7 +36,6 @@ describe(`handling ${CardVerbTypes.ADD_CARD}`, () => {
         const addedEntity = value as CardEntity;
         assert.equal(addedEntity.positionX, verb.positionX);
         assert.equal(addedEntity.positionY, verb.positionY);
-        assert.equal(addedEntity.entityType, verb.entityType);
         assert.equal(addedEntity.rotation, verb.rotation);
         assert.equal(addedEntity.faceUp, verb.faceUp);
         assert.deepEqual(addedEntity.metadata, verb.metadata);

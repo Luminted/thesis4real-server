@@ -1,5 +1,5 @@
 import { Inject, Singleton } from "typescript-ioc";
-import { CardVerbTypes, DeckVerbTypes, IrregularVerbTypes, SharedVerbTypes, Verb } from "../../types/verbTypes";
+import { CardVerbTypes, DeckVerbTypes, SharedVerbTypes, Verb } from "../../types/verb";
 import { CardVerbHandler } from "./Card/CardVerbHandler";
 import { SharedVerbHandler } from "./Shared/SharedVerbHandler";
 import { DeckVerbHandler } from "./Deck/DeckVerbHandler";
@@ -16,6 +16,7 @@ export class VerbHandler {
     
 
     handleVerb(verb: Verb){
+        console.log("incoming verb:", verb)
         switch(verb.type){
             case SharedVerbTypes.GRAB:
                 return this.sharedVerbHandler.grabFromTable(verb);
@@ -24,15 +25,17 @@ export class VerbHandler {
             case SharedVerbTypes.MOVE:
                 return this.sharedVerbHandler.move(verb);
             case SharedVerbTypes.REMOVE:
-                return this.sharedVerbHandler.release(verb);
+                return this.sharedVerbHandler.remove(verb);
             case SharedVerbTypes.MOVE_TO:
                 return this.sharedVerbHandler.moveTo(verb);
             case SharedVerbTypes.ROTATE:
-                return this.sharedVerbHandler.remove(verb);
+                return this.sharedVerbHandler.rotate(verb);
+
             case DeckVerbTypes.DRAW_FACE_UP:
                 return this.deckVerbHandler.drawCard(verb, true);
             case DeckVerbTypes.RESET:
                 return this.deckVerbHandler.reset(verb);
+                
             case CardVerbTypes.PUT_IN_HAND:
                 return this.cardVerbHandler.putInHand(verb);
             case CardVerbTypes.GRAB_FROM_HAND:
@@ -42,8 +45,6 @@ export class VerbHandler {
             case CardVerbTypes.FLIP:
                 return this.cardVerbHandler.flip(verb);
 
-            case IrregularVerbTypes.ROTATE:
-                return this.sharedVerbHandler.rotate(verb);
             default:
                 return;
         }

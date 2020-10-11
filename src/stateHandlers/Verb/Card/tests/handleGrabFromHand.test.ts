@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, CardVerb } from "../../../../types/verbTypes";
+import { CardVerbTypes, IGrabFromHandVerb } from "../../../../types/verb";
 import { EntityTypes, GrabbedEntity } from "../../../../types/dataModelDefinitions";
 import { createClientHand } from "../../../../factories";
 import { extractClientById, extractCardById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
@@ -7,21 +7,24 @@ import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { mockClient1 } from '../../../../mocks/clientMocks';
-import { cardEntityMock1, handCardMock1 } from '../../../../mocks/entityMocks';
+import { handCardMock1 } from '../../../../mocks/entityMocks';
 
+//TODO: test for grabbedAt and grabbedFrom
 describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     
     const cardVerbHandler = new CardVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}}  = mockClient1;
     const {entityId} = handCardMock1;
-    const verb: CardVerb = {
+    const verb: IGrabFromHandVerb = {
+        clientId,
         type: CardVerbTypes.GRAB_FROM_HAND,
-        clientId: clientId,
         positionX: 0,
         positionY: 0,
         entityId: entityId,
-        entityType: EntityTypes.CARD,
+        grabbedAtX: 14,
+        grabbedAtY: 15,
+        grabbedFrom: clientId
     } 
 
     beforeEach('Setting up test data...', () => {
@@ -38,7 +41,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         const nextClient = extractClientById(nextGameState, verb.clientId);
         const expectedGrabbedEntity: GrabbedEntity = {
             entityId: verb.entityId,
-            entityType: verb.entityType,
+            entityType: EntityTypes.CARD,
             grabbedAtX: verb.positionX,
             grabbedAtY: verb.positionY
         }

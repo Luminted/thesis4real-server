@@ -1,6 +1,6 @@
 import assert from 'assert'
 import {spy} from 'sinon';
-import { SharedVerbTypes, SharedVerb } from "../../../../types/verbTypes";
+import { IGrabVerb, SharedVerbTypes } from "../../../../types/verb";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors/gameStateExtractors";
 import * as utils from '../../../../utils';
 import { mockClient1 } from '../../../../mocks/clientMocks';
@@ -15,7 +15,7 @@ describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
     const {clientInfo: {clientId}} = mockClient1;
     const freeCard = {...cardEntityMock1};
     const grabbedCard = {...cardEntityMock2};
-    const verb: SharedVerb = {
+    const verb: IGrabVerb = {
         clientId,
         type: SharedVerbTypes.GRAB,
         positionX: 0,
@@ -59,7 +59,7 @@ describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
         const {entityId, entityType} = grabbedCard;
         const positionX = 1;
         const positionY = 2;
-        const verb: SharedVerb = {
+        const verb: IGrabVerb = {
             type: SharedVerbTypes.GRAB,
             clientId: clientId,
             positionX: positionX,

@@ -5,7 +5,7 @@ import { calcNextZIndex } from "../../../utils";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { EntityTypes } from "../../../types/dataModelDefinitions";
-import { RotateVerb, SharedVerb, Verb } from "../../../types/verbTypes";
+import { IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb, Verb } from "../../../types/verb";
 
 @Singleton
 export class SharedVerbHandler {
@@ -18,7 +18,7 @@ export class SharedVerbHandler {
         this.gameStateStore = this.tableStateStore.state.gameStateStore;
     }
 
-    grabFromTable(verb: SharedVerb) {
+    grabFromTable(verb: IGrabVerb) {
         this.gameStateStore.changeState(draft => {
             const {positionX, positionY, entityId, entityType, clientId} = verb;
             const {zIndexLimit} = gameConfig;
@@ -38,7 +38,7 @@ export class SharedVerbHandler {
         return this.gameStateStore.state;
     }
 
-    move(verb: SharedVerb) {
+    move(verb: IMoveVerb) {
         this.gameStateStore.changeState(draft => {
             const grabbedEntity = extractGrabbedEntityOfClientById(draft, verb.clientId);
             if(grabbedEntity){
@@ -61,7 +61,7 @@ export class SharedVerbHandler {
         return this.gameStateStore.state;
     }
 
-    moveTo(verb: SharedVerb) {
+    moveTo(verb: IMoveToVerb) {
         this.gameStateStore.changeState(draft => {
             const {positionX, positionY} = verb;
             const entityToMove = extractEntityByTypeAndId(draft, verb.entityType, verb.entityId);
@@ -72,17 +72,17 @@ export class SharedVerbHandler {
         return this.gameStateStore.state;
     }
 
-    release(verb: Verb) {
+    release(verb: IReleaseVerb) {
         this.gameStateStore.changeState(draft => {
-            const {entityType, entityId} = verb;
-            extractClientById(draft, verb.clientId).grabbedEntitiy = null;
+            const {entityType, entityId, clientId} = verb;
+            extractClientById(draft, clientId).grabbedEntitiy = null;
             extractEntityByTypeAndId(draft, entityType, entityId).grabbedBy = null;
         })
 
         return this.gameStateStore.state;
     }
 
-    remove(verb: SharedVerb) {
+    remove(verb: IRemoveVerb) {
         this.gameStateStore.changeState(draft => {
             const {entityType, entityId} = verb;
             if(entityType === EntityTypes.CARD){
@@ -96,7 +96,7 @@ export class SharedVerbHandler {
         return this.gameStateStore.state;
     }
 
-    rotate(verb: RotateVerb){
+    rotate(verb: IRotateVerb){
         this.gameStateStore.changeState(draft => {
             const {entityId,entityType, angle} = verb;
             const entity = extractEntityByTypeAndId(draft, entityType, entityId);

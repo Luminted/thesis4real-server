@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { SharedVerbTypes, SharedVerb } from '../../../../types/verbTypes';
+import { SharedVerbTypes, IRemoveVerb } from '../../../../types/verb';
 import { EntityTypes } from '../../../../types/dataModelDefinitions';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { mockClient1 } from '../../../../mocks/clientMocks';
@@ -25,11 +25,8 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
     })
 
     it('should remove correct deck from game state', function() {
-        const verb: SharedVerb = {
+        const verb: IRemoveVerb = {
             type: verbType,
-            clientId: clientId,
-            positionX: 0,
-            positionY: 0,
             entityId: deckEntityId,
             entityType: EntityTypes.DECK
         }
@@ -40,11 +37,8 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
     })
 
     it('should remove correct card from game state', function() {
-        const verb: SharedVerb = {
+        const verb: IRemoveVerb = {
             type: verbType,
-            clientId: clientId,
-            positionX: 0,
-            positionY: 0,
             entityId: cardEntityId,
             entityType: EntityTypes.CARD
         }
@@ -52,6 +46,9 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
         const nextGameState = sharedVerbHandler.remove(verb);
 
         assert.equal(nextGameState.cards.has(cardEntityId), false);
+    })
+    it('should remove grabbEntity if grabbed', () => {
+        assert.fail();
     })
 
 })

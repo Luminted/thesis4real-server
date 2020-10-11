@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { SharedVerbTypes, SharedVerb } from "../../../../types/verbTypes";
+import { IMoveVerb, SharedVerbTypes } from "../../../../types/verb";
 import { EntityTypes, CardEntity, DeckEntity, GameState } from "../../../../types/dataModelDefinitions";
 import { extractClientById, extractCardById, extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
@@ -36,7 +36,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 x: 2,
                 y: 3
             }
-            let verb: SharedVerb;
+            let verb: IMoveVerb;
             let entityType = EntityTypes.CARD;
             let movedCard: CardEntity;
             let { entityId } =  cardEntityMock1;
@@ -56,8 +56,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 type: testedVerbType,
                 positionX: 1,
                 positionY: 3,
-                entityId,
-                entityType,
                 clientId
             }
            
@@ -73,8 +71,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 type: testedVerbType,
                 positionX: 3,
                 positionY: 3,
-                entityId,
-                entityType,
                 clientId
 
             }
@@ -90,8 +86,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 type: testedVerbType,
                 positionX: 2,
                 positionY: 1,
-                entityId,
-                entityType,
                 clientId
 
             }
@@ -107,8 +101,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 type: testedVerbType,
                 positionX: 2,
                 positionY: 3,
-                entityId,
-                entityType,
                 clientId
 
             }
@@ -121,9 +113,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
         })
         it('should ignore input if the entityId in the input is null', function(){
             const originalState = {...gameStateStore.state};
-            const verb: SharedVerb = {
-                entityId: null,
-                entityType: EntityTypes.CARD,
+            const verb: IMoveVerb = {
                 clientId,
                 type: testedVerbType,
                 positionX:1,
@@ -144,7 +134,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             }
             const entityType = EntityTypes.DECK;
             const {entityId} = deckEntityMock2;
-            let verb: SharedVerb;
+            let verb: IMoveVerb;
             let movedDeck: DeckEntity;
             let nextGameState: GameState;
             
@@ -162,8 +152,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 type: testedVerbType,
                 positionX: 1,
                 positionY: 2,
-                entityId,
-                entityType,
                 clientId
             }
            
@@ -178,8 +166,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 type: testedVerbType,
                 positionX: 3,
                 positionY: 2,
-                entityId,
-                entityType,
                 clientId
 
             }
@@ -195,8 +181,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 type: testedVerbType,
                 positionX: 2,
                 positionY: 1,
-                entityId,
-                entityType,
                 clientId
 
             }
@@ -212,8 +196,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
                 type: testedVerbType,
                 positionX: 2,
                 positionY: 3,
-                entityId,
-                entityType,
                 clientId
 
             }
@@ -226,9 +208,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
         })
         it('should ignore input if the entityId in the input is null', function(){
             const originalState = {...gameStateStore.state}
-            const verb: SharedVerb = {
-                entityId: null,
-                entityType: EntityTypes.CARD,
+            const verb: IMoveVerb = {
                 clientId,
                 type: testedVerbType,
                 positionX:1,
