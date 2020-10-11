@@ -100,7 +100,7 @@ export class SharedVerbHandler {
         this.gameStateStore.changeState(draft => {
             const {entityId,entityType, angle} = verb;
             const entity = extractEntityByTypeAndId(draft, entityType, entityId);
-            entity.rotation += angle;
+            entity.rotation += angle % 360;
         });
 
         return this.gameStateStore.state;
