@@ -25,7 +25,7 @@ export class CardVerbHandler {
         //TODO: grab from any hand
         this.gameStateStore.changeState(draft => {
             const gameState = original(draft);
-            const {clientId, entityId, positionX,positionY} = verb;
+            const {clientId, entityId, positionX,positionY, grabbedAtX, grabbedAtY} = verb;
             const clientHand = extractClientHandById(draft, clientId);
             const { ownerDeck, faceUp, metadata} = extractCardFromClientHandById(gameState, clientId, entityId); 
             const {zIndexLimit} = gameConfig;
@@ -41,9 +41,9 @@ export class CardVerbHandler {
             // set grabbed info
             extractClientById(draft, clientId).grabbedEntitiy = {
                 entityId,
+                grabbedAtX,
+                grabbedAtY,
                 entityType: EntityTypes.CARD,
-                grabbedAtX: positionX,
-                grabbedAtY: positionY
             }
 
             // remove card from hand
