@@ -35,6 +35,10 @@ export class VerbHandler {
                 return this.deckVerbHandler.drawCard(verb, true);
             case DeckVerbTypes.RESET:
                 return this.deckVerbHandler.reset(verb);
+            case DeckVerbTypes.SHUFFLE:
+                return this.deckVerbHandler.shuffle(verb);
+            case DeckVerbTypes.ADD_DECK:
+                return this.deckVerbHandler.addDeck(verb);
                 
             case CardVerbTypes.PUT_IN_HAND:
                 return this.cardVerbHandler.putInHand(verb);
