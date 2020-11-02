@@ -1,3 +1,4 @@
+import throttle from "lodash.throttle";
 import { SocketNamespace } from "..";
 import { Singleton, Inject } from "typescript-ioc";
 import { Verb } from "../../types/verb";
@@ -21,11 +22,12 @@ export class TableNamespace extends SocketNamespace {
     constructor(){
         super();
 
-        this.addEventListener(TableClientEvents.VERB, async (verb: Verb) => {
+        this.addEventListener(TableClientEvents.VERB, (verb: Verb, acknowledgeFunction?: Function) => {
             const nextGameState = this.verbHandler.handleVerb(verb);
 
-            if(nextGameState){
-                this.syncGameState(nextGameState);
+            this.syncGameState(nextGameState);
+            if(acknowledgeFunction){
+                acknowledgeFunction(serializeGameState(nextGameState));
             }
         });
 
@@ -57,7 +59,8 @@ export class TableNamespace extends SocketNamespace {
         });
     }
 
-    private syncGameState(gameState: GameState){
+    private syncGameState = throttle((gameState: GameState) => {
         this.emit(TableServerEvents.SYNC, serializeGameState(gameState));
-    }
+        // TODO: Make the frequency configurable
+    }, 1000/60);
 }
