@@ -70,7 +70,7 @@ describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
     })
    
     it('should put clients seat back to empty seats', function(){
-        const clientsSeat = mockClient1.clientInfo.seatedAt;
+        const clientsSeat = mockClient1.clientInfo.seatId;
        tableStateStore.changeState(draft => {
             draft.emptySeats = [];
         }),

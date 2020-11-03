@@ -1,9 +1,10 @@
 import assert from 'assert'
 import { TableClientEvents, ClientConnectionStatuses } from "../../../types/socketTypes";
-import { extractEmptySeats, extractClientById, extractClientHandById } from '../../../extractors/gameStateExtractors';
+import { extractClientById, extractClientHandById } from '../../../extractors/gameStateExtractors';
 import { TableHandler } from '../TableHandler';
 import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
+import { extractEmptySeats } from '../../../extractors/tableStateExtractor';
 
 
 describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, function(){
@@ -37,7 +38,7 @@ describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, function(){
 
         const client = extractClientById(nextGameState, clientId);
         const nextGameStateEmptySeats = extractEmptySeats(tableStateStore.state);
-        assert.equal(client.clientInfo.seatedAt, nextSeat);
+        assert.equal(client.clientInfo.seatId, nextSeat);
         assert.equal(nextGameStateEmptySeats.includes(nextSeat), false);
     })
     it(`should create client with status ${ClientConnectionStatuses.CONNECTED}`, function(){

@@ -7,7 +7,8 @@ import { serializeGameState } from "../../utils";
 import { GameState, ClientInfo, SerializedGameState } from "../../types/dataModelDefinitions";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
-import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";
+import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";import { GameStateStore } from "../../stores/GameStateStore";
+;
  
 @Singleton
 export class TableNamespace extends SocketNamespace {
@@ -18,9 +19,15 @@ export class TableNamespace extends SocketNamespace {
     private tableHandler: TableHandler;
     @Inject
     private connectionHandler: ConnectionHandler;
+    @Inject
+    private gameStateStore: GameStateStore
 
     constructor(){
         super();
+
+        this.onConnect = (socket) =>{
+            socket.emit(TableServerEvents.SYNC, serializeGameState(this.gameStateStore.state));
+        }
 
         this.addEventListener(TableClientEvents.VERB, (verb: Verb, acknowledgeFunction?: Function) => {
             const nextGameState = this.verbHandler.handleVerb(verb);

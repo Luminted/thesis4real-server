@@ -1,12 +1,13 @@
 import { Inject } from "typescript-ioc";
 import { gameConfig } from "../../config";
-import { extractClientHandCardsById, extractClientsSeatById, extractEmptySeats } from "../../extractors/gameStateExtractors";
+import { extractClientHandCardsById, extractClientsSeatById } from "../../extractors/gameStateExtractors";
 import { createCardEntity } from "../../factories";
 import { calcNextZIndex } from "../../utils";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
 import { ClientHand, Client } from "../../types/dataModelDefinitions";
 import { ClientConnectionStatuses } from "../../types/socketTypes";
+
 
 export class TableHandler {
     @Inject
@@ -18,12 +19,21 @@ export class TableHandler {
     }
 
     joinTable(clientId: string){
-        this.gameStateStore.changeState(draft => {
-            const newClient = this.createClient(clientId);
-            const newHand = this.createEmptyHand(clientId);
-            draft.clients.set(clientId, newClient);
-            draft.hands.set(clientId, newHand);
+        let emptySeatId: number
+        this.tableStateStore.changeState(draft => {
+            emptySeatId = draft.emptySeats.pop();
         })
+        if(emptySeatId !== undefined){
+            this.gameStateStore.changeState(draft => {
+                const newClient = this.createClient(clientId, emptySeatId);
+                const newHand = this.createEmptyHand(clientId);
+                draft.clients.set(clientId, newClient);
+                draft.hands.set(clientId, newHand);
+            })
+        }
+        else{
+            // throw error
+        }
 
         return this.gameStateStore.state;
     }
@@ -61,19 +71,16 @@ export class TableHandler {
         }
     }
 
-    private createClient(id: string, name?: string) {
-        const seat = extractEmptySeats(this.tableStateStore.state).pop();
-        if(seat){
-            const newClient: Client = {
-                clientInfo: {
-                    clientId: id,
-                    seatedAt: seat,
-                    clientName: name,
-                },
-                grabbedEntitiy: null,
-                status: ClientConnectionStatuses.CONNECTED
-            }
-            return newClient;
+    private createClient(id: string, seatId: number ,name?: string) {
+        const newClient: Client = {
+            clientInfo: {
+                seatId,
+                clientId: id,
+                clientName: name,
+            },
+            grabbedEntitiy: null,
+            status: ClientConnectionStatuses.CONNECTED
         }
+        return newClient;
     }
 }

@@ -5,6 +5,7 @@ import { extractClientById } from "../../../extractors/gameStateExtractors";
 import { mockClient1 } from '../../../mocks/clientMocks';
 import { ConnectionHandler } from '../ConnectionHandler';
 import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
+import { extractEmptySeats } from '../../../extractors/tableStateExtractor';
 
 describe(`Event handler for: ${TableClientEvents.DISCONNECT}`, function(){
     const connectionHandler = new ConnectionHandler();
@@ -27,5 +28,13 @@ describe(`Event handler for: ${TableClientEvents.DISCONNECT}`, function(){
         assert.equal(disconnectedClinet.status, ClientConnectionStatuses.DISCONNECTED);
     })
 
-    
+    it('should put back clients seat to the seat pool', () => {
+        const clientSeat = client.clientInfo.seatId;
+        
+        connectionHandler.disconnect(client.clientInfo.clientId);
+
+        const emptySeats = extractEmptySeats(tableStateStore.state);
+
+        assert.equal(emptySeats.includes(clientSeat), true);
+    })
 })

@@ -1,19 +1,21 @@
+import { Client } from "../types/dataModelDefinitions";
 import { ClientConnectionStatuses } from "../types/socketTypes";
-import { Seats } from "../types/dataModelDefinitions";
 
-export const mockClient1 = {
+// interface ClientInfoMock extends Pick<>
+
+export const mockClient1: Client = {
     clientInfo: {
         clientId: 'client-1',
-        seatedAt: Seats.NORTH,
+        seatId: 1,
     },
     grabbedEntitiy: null,
     status: ClientConnectionStatuses.CONNECTED
 }
 
-export const mockClient2 = {
+export const mockClient2: Client = {
     clientInfo: {
         clientId: 'client-2',
-        seatedAt: Seats.SOUTH,
+        seatId: 4,
     },
     grabbedEntitiy: null,
     status: ClientConnectionStatuses.CONNECTED

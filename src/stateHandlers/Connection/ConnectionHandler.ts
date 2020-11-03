@@ -22,7 +22,7 @@ export class ConnectionHandler {
            if(client){
                //temporary code until proper connection handling is implemented
             this.tableStateStore.changeState(draft => {
-                draft.emptySeats.push(client.clientInfo.seatedAt);
+                draft.emptySeats.push(client.clientInfo.seatId);
             })
                draft.clients.delete(client.clientInfo.clientId);
 
