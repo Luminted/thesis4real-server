@@ -14,6 +14,7 @@ export interface Entity {
 }
 
 export interface DeckCard extends Pick<CardEntity, "entityId" | "faceUp" | "metadata"> {
+    //TODO: rethink revealed feature
     revealed: boolean,
 }
 
@@ -59,16 +60,7 @@ export type ClientHand = {
 export type ClientInfo = {
     clientId: string,
     clientName?: string,
-    seatedAt: Seats
-}
-
-export enum Seats {
-    SOUTH = 'SOUTH',
-    NORTH = 'NORTH',
-    SOUTH_WEST = 'SOUTH_WEST',
-    SOUTH_EAST = 'SOUTH_EAST',
-    NORTH_WEST = 'NORTH_WEST',
-    NORTH_EAST = 'NORTH_EAST'
+    seatId: string
 }
 
 export interface GameState {
@@ -82,9 +74,8 @@ export interface GameState {
 
 export type CardTable = {
     readonly gameStateStore: GameStateStore,
-    readonly seats: Seats[],
     defaultPosition: [number, number],
-    emptySeats: Seats[],
+    emptySeats: string[],
 }
 
 export type SerializedGameState = {

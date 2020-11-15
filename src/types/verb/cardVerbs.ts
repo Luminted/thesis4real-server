@@ -18,7 +18,7 @@ export interface IAddCardVerb extends Omit<GenericVerb, "clientId" | "entityId" 
     type: CardVerbTypes.ADD_CARD
     faceUp: boolean
     rotation: number
-    metadata: object
+    metadata?: object
 }
 
 /**

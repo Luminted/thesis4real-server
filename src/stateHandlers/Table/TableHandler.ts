@@ -19,7 +19,7 @@ export class TableHandler {
     }
 
     joinTable(clientId: string){
-        let emptySeatId: number
+        let emptySeatId;
         this.tableStateStore.changeState(draft => {
             emptySeatId = draft.emptySeats.pop();
         })
@@ -71,7 +71,7 @@ export class TableHandler {
         }
     }
 
-    private createClient(id: string, seatId: number ,name?: string) {
+    private createClient(id: string, seatId: string ,name?: string) {
         const newClient: Client = {
             clientInfo: {
                 seatId,
