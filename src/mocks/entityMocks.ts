@@ -1,4 +1,4 @@
-import { CardEntity, DeckEntity, DeckCard, HandCard, EntityTypes } from "../types/dataModelDefinitions";
+import { CardEntity, DeckEntity, IAbstractCardEntity, HandCard, EntityTypes } from "../types/dataModelDefinitions";
 
 export const cardEntityMock1: CardEntity = {
     entityId: 'card-entity-id1',
@@ -24,10 +24,9 @@ export const cardEntityMock2: CardEntity = {
     ownerDeck: null
 }
 
-export const deckCardMock: DeckCard = {
+export const deckCardMock: IAbstractCardEntity = {
     entityId: 'deck-card-id',
     faceUp: false,
-    revealed: false,
 }
 
 export const handCardMock1: HandCard = {

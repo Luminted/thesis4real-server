@@ -31,9 +31,13 @@ export interface IFlipVerb extends Omit<GenericVerb, "clientId" | "positionX" | 
 /**
  * @clientId the client whoes hand the card is placed in
  * @entityId the card being put in hand
+ * @revealed whether the card is revealed to other players or not
+ * @faceUp whether the card is facing up or not
  */
 export interface IPutInHandVerb extends Omit<GenericVerb, "positionX" | "positionY"  > {
     type: CardVerbTypes.PUT_IN_HAND
+    revealed: boolean
+    faceUp: boolean
 }
 
 /**
@@ -42,19 +46,23 @@ export interface IPutInHandVerb extends Omit<GenericVerb, "positionX" | "positio
  * @position where the card should be positioned when grabbed
  * @grabbedAt where card is grabbed
  * @etityId the card being grabbed
+ * @faceUp whether the card is facing up or not
  */
 export interface IGrabFromHandVerb extends GenericVerb {
     type: CardVerbTypes.GRAB_FROM_HAND
     grabbedAtX: number,
     grabbedAtY: number,
     grabbedFrom: string
+    faceUp: boolean
 }
 
 /**
  * @position where the card will be placed
  * @clientId the client who is grabbing the card
  * @entityId the card being placed on the table
+ * @faceUp whether the card is facing up or not
  */
 export interface IPutOnTable extends GenericVerb {
     type: CardVerbTypes.PUT_ON_TABLE
+    faceUp:boolean
 }

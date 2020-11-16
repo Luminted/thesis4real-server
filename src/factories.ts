@@ -24,12 +24,12 @@ export const createCardEntity = (positionX: number,
         entityType: EntityTypes.CARD,
 })
 
-export const createHandCardFromEntity = (cardEntity: CardEntity): HandCard => ({
-    entityId: cardEntity.entityId,
-    faceUp: cardEntity.faceUp,
-    ownerDeck: cardEntity.ownerDeck,
-    revealed: false,
-    metadata: cardEntity.metadata
+export const createHandCard = (entityId, faceUp, ownerDeck, revealed, metadata) => ({
+    entityId,
+    faceUp,
+    ownerDeck,
+    revealed,
+    metadata
 })
 
 export const createDeckEntity = (positionX: number, positionY: number, zIndex: number, entityId: string, rotation: number, grabbedBy: string, metadata: object, cardsMetadata: object[] = []): DeckEntity => ({

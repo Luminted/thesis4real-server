@@ -13,13 +13,11 @@ export interface Entity {
     metadata?: object 
 }
 
-export interface DeckCard extends Pick<CardEntity, "entityId" | "faceUp" | "metadata"> {
-    //TODO: rethink revealed feature
-    revealed: boolean,
-}
+export interface IAbstractCardEntity extends Pick<CardEntity, "entityId" | "faceUp" | "metadata"> {}
 
-export interface HandCard extends DeckCard {
+export interface HandCard extends IAbstractCardEntity {
     ownerDeck: string,
+    revealed: boolean
 }
 export interface CardEntity extends Entity {
     entityId: string,
@@ -30,7 +28,7 @@ export interface CardEntity extends Entity {
 
 export interface DeckEntity extends Entity {
     entityType: EntityTypes.DECK
-    cards: DeckCard[],
+    cards: IAbstractCardEntity[],
     drawIndex: number
 }
 

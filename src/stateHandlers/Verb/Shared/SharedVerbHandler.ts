@@ -5,7 +5,7 @@ import { calcNextZIndex } from "../../../utils";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { EntityTypes } from "../../../types/dataModelDefinitions";
-import { IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb, Verb } from "../../../types/verb";
+import { IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "../../../types/verb";
 
 @Singleton
 export class SharedVerbHandler {
@@ -100,7 +100,7 @@ export class SharedVerbHandler {
         this.gameStateStore.changeState(draft => {
             const {entityId,entityType, angle} = verb;
             const entity = extractEntityByTypeAndId(draft, entityType, entityId);
-            entity.rotation = entity.rotation + angle % 360;
+            entity.rotation = (entity.rotation + angle) % 360;
         });
 
         return this.gameStateStore.state;

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { DeckVerbTypes, IDrawFaceUpVerb } from '../../../../types/verb';
-import { DeckCard } from '../../../../types/dataModelDefinitions';
+import { IAbstractCardEntity } from '../../../../types/dataModelDefinitions';
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { DeckVerbHandler } from '../DeckVerbHandler';
@@ -40,7 +40,7 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         
         const nextGameState = deckVerbHandler.drawCard(verb, true);
 
-        const drawnCard: DeckCard = deck.cards[originalDrawIndex];
+        const drawnCard: IAbstractCardEntity = deck.cards[originalDrawIndex];
         const spawnedCard = extractCardById(nextGameState, drawnCard.entityId);
         assert.equal(spawnedCard.positionX, deck.positionX);
         assert.equal(spawnedCard.positionY, deck.positionY);
@@ -51,7 +51,7 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         
         const nextGameState = deckVerbHandler.drawCard(verb, true);
 
-        const poppedCard: DeckCard = originalDeck.cards[0];
+        const poppedCard: IAbstractCardEntity = originalDeck.cards[0];
         const spawnedCard = extractCardById(nextGameState, poppedCard.entityId);
 
         assert.equal(spawnedCard.ownerDeck, originalDeck.entityId);

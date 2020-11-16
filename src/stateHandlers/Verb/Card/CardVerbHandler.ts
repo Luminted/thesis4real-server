@@ -7,7 +7,7 @@ import { GameStateStore } from "../../../stores/GameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
 import { gameConfig } from "../../../config";
 import { calcNextZIndex } from "../../../utils";
-import { createCardEntity, createHandCardFromEntity } from "../../../factories";
+import { createCardEntity, createHandCard } from "../../../factories";
 import { EntityTypes } from "../../../types/dataModelDefinitions";
 
 @Singleton
@@ -32,7 +32,6 @@ export class CardVerbHandler {
             const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
 
             // create entity from hand card
-            //TODO: rotation should be dynamic
             const grabbedCardEntity = createCardEntity(positionX, positionY, faceUp, entityId, ownerDeck, nextTopZIndex, 0, clientId, metadata);
 
             // add to card entities
@@ -55,8 +54,9 @@ export class CardVerbHandler {
 
     putInHand(verb: IPutInHandVerb) {
         this.gameStateStore.changeState(draft => {
-            const {clientId, entityId} = verb;
-            const handCard = createHandCardFromEntity(extractCardById(original(draft), entityId));
+            const {clientId, entityId, faceUp, revealed} = verb;
+            const { metadata, ownerDeck} = extractCardById(original(draft), entityId);
+            const handCard = createHandCard(entityId, faceUp, ownerDeck, revealed, metadata);
             const clientHand = extractClientHandById(draft, clientId);
 
             clientHand.cards.push(handCard);
@@ -69,17 +69,16 @@ export class CardVerbHandler {
 
     putOnTable(verb: IPutOnTable){
         const {zIndexLimit} = gameConfig;
-        const {clientId, entityId, positionX, positionY} = verb;
+        const {clientId, entityId, positionX, positionY, faceUp} = verb;
 
         this.gameStateStore.changeState(draft => {
             const gameState = original(draft);
             const handCard = extractCardFromClientHandById(gameState, clientId, entityId);
             if(handCard){
-                const { faceUp, ownerDeck, entityId, metadata} = handCard;
+                const { ownerDeck, entityId, metadata} = handCard;
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
 
                 //creating entity
-                //TODO: rotation should be dynamic
                 let cardEntity = createCardEntity(positionX, positionY, faceUp, entityId, ownerDeck, nextTopZIndex, 0, null, metadata );
                 draft.cards.set(cardEntity.entityId, cardEntity);
                 
