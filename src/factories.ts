@@ -2,6 +2,8 @@ import uuidv4 from 'uuid/v4';
 
 import { CardEntity, DeckEntity, EntityTypes, ClientHand, HandCard} from './types/dataModelDefinitions';
 
+
+// TODO: move these functions into handler classes
 export const createCardEntity = (positionX: number,
      positionY: number,
      faceUp: boolean,
@@ -48,4 +50,5 @@ export const createDeckEntity = (positionX: number, positionY: number, zIndex: n
 export const createClientHand = (clientId: string): ClientHand => ({
     clientId,
     cards: [],
+    ordering: []
 })

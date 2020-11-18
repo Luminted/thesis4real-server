@@ -7,7 +7,7 @@ import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { mockClient1 } from '../../../../mocks/clientMocks';
-import { handCardMock1 } from '../../../../mocks/entityMocks';
+import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
 
 //TODO: test for grabbedAt and grabbedFrom
 describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
@@ -18,6 +18,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     const {entityId} = handCardMock1;
     const verb: IGrabFromHandVerb = {
         clientId,
+        faceUp: false,
         type: CardVerbTypes.GRAB_FROM_HAND,
         positionX: 0,
         positionY: 0,
@@ -30,9 +31,11 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
     beforeEach('Setting up test data...', () => {
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
+            const hand = createClientHand(clientId);
+            hand.cards.push({...handCardMock1});
+            hand.ordering.push(0);
             draft.clients.set(clientId, {...mockClient1});
-            draft.hands.set(clientId, createClientHand(clientId));
-            draft.hands.get(clientId).cards.push({...handCardMock1});
+            draft.hands.set(clientId, hand);
         })
     })
 
@@ -42,8 +45,8 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         const expectedGrabbedEntity: GrabbedEntity = {
             entityId: verb.entityId,
             entityType: EntityTypes.CARD,
-            grabbedAtX: verb.positionX,
-            grabbedAtY: verb.positionY
+            grabbedAtX: verb.grabbedAtX,
+            grabbedAtY: verb.grabbedAtY
         }
         assert.deepEqual(nextClient.grabbedEntitiy, expectedGrabbedEntity);
     })
@@ -71,10 +74,26 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
 
         assert.equal(nextHand.cards.some(card => card.entityId === verb.entityId), false);
     })
+    it('should set faceUp of grabbed card according to verb', () => {
+        const nextGameState = cardVerbHandler.grabFromHand(verb);
+        const grabbedCard = extractCardById(nextGameState, entityId);
+
+        assert.equal(grabbedCard.faceUp, verb.faceUp);
+    })
+    it('should update hand ordering accordingly', () => {
+        gameStateStore.changeState(draft => {
+            const handDraft = extractClientHandById(draft ,clientId);
+            handDraft.cards.push({...handCardMock2}, {...handCardMock1});
+            handDraft.ordering.push(1,2);
+        })
+        const {entityId} = handCardMock2;
+        const nextGameState = cardVerbHandler.grabFromHand({...verb, entityId:entityId});
+
+        const {ordering} = extractClientHandById(nextGameState, clientId);
+        assert.deepEqual(ordering, [0,1]);
+    })
 
     it('should set grabbedBy of grabbed card to client ID', function(){
-        const {entityId} = handCardMock1;
-
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const grabbedCard = extractCardById(nextGameState, entityId);
 

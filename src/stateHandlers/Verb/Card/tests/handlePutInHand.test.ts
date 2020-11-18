@@ -1,12 +1,12 @@
 import assert from 'assert';
 import { CardVerbTypes, IPutInHandVerb } from '../../../../types/verb';
 import { createClientHand } from '../../../../factories';
-import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById } from '../../../../extractors/gameStateExtractors';
+import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { Container } from 'typescript-ioc';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
-import { cardEntityMock1 } from '../../../../mocks/entityMocks';
+import { cardEntityMock1, handCardMock1 } from '../../../../mocks/entityMocks';
 
 describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
     const cardVerbHandler = new CardVerbHandler();
@@ -23,6 +23,8 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         type: CardVerbTypes.PUT_IN_HAND,
         clientId: client.clientInfo.clientId,
         entityId: entityId,
+        faceUp: true,
+        revealed: false
     } 
 
     beforeEach('Setting up test data...', () => {
@@ -50,5 +52,32 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
     it('should take out correct card from cards array', function() {
         const nextGameState = cardVerbHandler.putInHand(verb);
         assert.equal(extractCardById(nextGameState ,entityId), undefined);
+    })
+    it('should create hand card with faceUp according to verb', () => {
+        const {clientId} = client.clientInfo;
+        const nextGameState = cardVerbHandler.putInHand(verb);
+        const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId, entityId);
+        assert.equal(cardPutInHand.faceUp, verb.faceUp);
+    })
+    it('should create hand card with revealed according to verb', () => {
+        const {clientId} = client.clientInfo;
+        const nextGameState = cardVerbHandler.putInHand(verb);
+        const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId, entityId);
+        assert.equal(cardPutInHand.revealed, verb.revealed);
+    })
+
+    it('should update hand ordering', () => {
+        const {clientInfo: {clientId}} = client;
+        gameStateStore.changeState(draft => {
+            const hand = extractClientHandById(draft, clientId)
+            hand.cards.push(handCardMock1, handCardMock1);
+            hand.ordering = [1, 0];
+        })
+
+        const nextGameState = cardVerbHandler.putInHand(verb);
+
+        const {ordering} = extractClientHandById(nextGameState, clientId);
+        const expectedOrdering = [1, 0, 2];
+        assert.deepEqual(ordering, expectedOrdering);
     })
 })

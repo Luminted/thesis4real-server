@@ -3,20 +3,22 @@ import { CardVerbTypes, DeckVerbTypes, SharedVerbTypes, Verb } from "../../types
 import { CardVerbHandler } from "./Card/CardVerbHandler";
 import { SharedVerbHandler } from "./Shared/SharedVerbHandler";
 import { DeckVerbHandler } from "./Deck/DeckVerbHandler";
+import { GameStateStore } from "../../stores/GameStateStore";
 
 @Singleton
 export class VerbHandler {
 
     @Inject
-    private sharedVerbHandler: SharedVerbHandler
+    private sharedVerbHandler: SharedVerbHandler;
     @Inject
     private cardVerbHandler: CardVerbHandler;
     @Inject
-    private deckVerbHandler: DeckVerbHandler
+    private deckVerbHandler: DeckVerbHandler;
+    @Inject
+    private gameStateStore: GameStateStore;
     
 
     handleVerb(verb: Verb){
-        console.log("incoming verb:", verb)
         switch(verb.type){
             case SharedVerbTypes.GRAB:
                 return this.sharedVerbHandler.grabFromTable(verb);
@@ -48,9 +50,13 @@ export class VerbHandler {
                 return this.cardVerbHandler.putOnTable(verb);
             case CardVerbTypes.FLIP:
                 return this.cardVerbHandler.flip(verb);
+            case CardVerbTypes.REORDER_HAND:
+                return this.cardVerbHandler.reorderHand(verb);
+            case CardVerbTypes.ADD_CARD:
+                return this.cardVerbHandler.addCard(verb);
 
             default:
-                return;
+                return this.gameStateStore.state;
         }
     }
 

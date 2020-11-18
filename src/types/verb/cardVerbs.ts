@@ -6,6 +6,7 @@ export enum CardVerbTypes {
     PUT_IN_HAND = 'PUT_IN_HAND',
     PUT_ON_TABLE = 'PUT_ON_TABLE',
     GRAB_FROM_HAND = 'GRAB_FROM_HAND',
+    REORDER_HAND = "REORDER_HAND"
 }
 
 /**
@@ -62,7 +63,16 @@ export interface IGrabFromHandVerb extends GenericVerb {
  * @entityId the card being placed on the table
  * @faceUp whether the card is facing up or not
  */
-export interface IPutOnTable extends GenericVerb {
+export interface IPutOnTableVerb extends GenericVerb {
     type: CardVerbTypes.PUT_ON_TABLE
     faceUp:boolean
+}
+
+/**
+ * @clientId the client that's hand is going to be reordered
+ * @order the new ordering of the hand
+ */
+export interface IReorderHandVerb extends Omit<GenericVerb, "entityId" | "positionX" | "positionY"> {
+    type: CardVerbTypes.REORDER_HAND
+    order: number[]
 }

@@ -68,6 +68,7 @@ export class TableHandler {
         return {
             clientId,
             cards: [],
+            ordering: []
         }
     }
 

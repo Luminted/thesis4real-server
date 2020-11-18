@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, IPutOnTable } from '../../../../types/verb';
+import { CardVerbTypes, IPutOnTableVerb } from '../../../../types/verb';
 import { EntityTypes } from '../../../../types/dataModelDefinitions';
 import { createClientHand } from '../../../../factories';
 import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById, extractCardFromClientHandById } from '../../../../extractors/gameStateExtractors';
@@ -7,14 +7,14 @@ import { mockClient1 } from '../../../../mocks/clientMocks';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
-import { handCardMock1 } from '../../../../mocks/entityMocks';
+import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
 
 describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
     const cardVerbHandler = new CardVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
     const {entityId} = handCardMock1;
-    let verb: IPutOnTable;
+    let verb: IPutOnTableVerb;
 
     beforeEach('Setting up test data...', () => {
         verb = {
@@ -22,13 +22,16 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
             entityId: entityId,
             positionX: 99,
             positionY: 66,
+            faceUp: true,
             type: CardVerbTypes.PUT_ON_TABLE
         };
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
+            const hand = createClientHand(clientId)
             draft.clients.set(clientId, {...mockClient1});
-            draft.hands.set(clientId, createClientHand(clientId));
-            draft.hands.get(clientId).cards.push({...handCardMock1});
+            hand.cards.push({...handCardMock1});
+            hand.ordering.push(0);
+            draft.hands.set(clientId, hand);
         })
     })
 
@@ -45,6 +48,13 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
         assert.equal(cardOnTable.positionY, verb.positionY);
     })
 
+    it('should put card with face up according to verb', () => {
+        const nextGameState = cardVerbHandler.putOnTable(verb);
+
+        let cardOnTable = extractCardById(nextGameState, entityId);
+        assert.equal(cardOnTable.faceUp, verb.faceUp);
+    })
+
     it('should remove card from hand of correct client', function() {
         const nextGameState = cardVerbHandler.putOnTable(verb);
         let nextHand = extractClientHandById(nextGameState, clientId);
@@ -55,6 +65,19 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
         const nextGameState = cardVerbHandler.putOnTable(verb);
         let grabbedEntity = extractGrabbedEntityOfClientById(nextGameState, clientId);
         assert.equal(grabbedEntity, null);
+    })
+    it('should update hand ordering', () => {
+        gameStateStore.changeState(draft => {
+            const handDraft = extractClientHandById(draft ,clientId);
+            handDraft.cards.push({...handCardMock2}, {...handCardMock1});
+            handDraft.ordering.push(1,2);
+        })
+
+        const {entityId} = handCardMock2;
+        const nextGameState = cardVerbHandler.putOnTable({...verb, entityId:entityId});
+
+        const {ordering} = extractClientHandById(nextGameState, clientId);
+        assert.deepEqual(ordering, [0,1]);
     })
     
 })

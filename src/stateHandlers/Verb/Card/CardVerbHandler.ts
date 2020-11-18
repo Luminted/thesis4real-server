@@ -1,7 +1,7 @@
 import { original } from "immer";
 import { uuid } from "short-uuid";
 import { Singleton, Inject } from "typescript-ioc";
-import { IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IPutOnTable } from "../../../types/verb";
+import { IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IPutOnTableVerb, IReorderHandVerb } from "../../../types/verb";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
@@ -25,9 +25,11 @@ export class CardVerbHandler {
         //TODO: grab from any hand
         this.gameStateStore.changeState(draft => {
             const gameState = original(draft);
-            const {clientId, entityId, positionX,positionY, grabbedAtX, grabbedAtY} = verb;
+            const {clientId, entityId, positionX,positionY, grabbedAtX, grabbedAtY, faceUp} = verb;
             const clientHand = extractClientHandById(draft, clientId);
-            const { ownerDeck, faceUp, metadata} = extractCardFromClientHandById(gameState, clientId, entityId); 
+            const {cards: cardsInHand, ordering} = clientHand;
+            const grabbedCard = extractCardFromClientHandById(gameState, clientId, entityId); 
+            const {ownerDeck, metadata} = grabbedCard
             const {zIndexLimit} = gameConfig;
             const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
 
@@ -45,10 +47,19 @@ export class CardVerbHandler {
                 entityType: EntityTypes.CARD,
             }
 
-            // remove card from hand
-            clientHand.cards = clientHand.cards.filter(card => card.entityId !== entityId);
+            // remove card from hand & update ordering
+            const indexOfGrabbedCard = cardsInHand.map(card => card.entityId).indexOf(entityId);
+            const orderOfGrabbedCard = ordering[indexOfGrabbedCard];
+            clientHand.cards = cardsInHand.filter(card => card.entityId !== entityId);
+            clientHand.ordering = ordering.reduce<number[]>((acc, curr, index) => {
+                if(!(index === indexOfGrabbedCard)) {
+                    const newOrder = curr > orderOfGrabbedCard ? curr - 1 : curr
+                    return [...acc, newOrder];
+                }
+                return acc;
+            }, [])
         })
-
+        
         return this.gameStateStore.state;
     }
 
@@ -60,6 +71,7 @@ export class CardVerbHandler {
             const clientHand = extractClientHandById(draft, clientId);
 
             clientHand.cards.push(handCard);
+            clientHand.ordering.push(clientHand.ordering.length);
             extractClientById(draft, clientId).grabbedEntitiy = null;
             draft.cards.delete(entityId);
         })
@@ -67,7 +79,7 @@ export class CardVerbHandler {
         return this.gameStateStore.state;
     }
 
-    putOnTable(verb: IPutOnTable){
+    putOnTable(verb: IPutOnTableVerb){
         const {zIndexLimit} = gameConfig;
         const {clientId, entityId, positionX, positionY, faceUp} = verb;
 
@@ -87,6 +99,7 @@ export class CardVerbHandler {
                 if(subjectClientHand){
                     subjectClientHand.cards.filter(card => card.entityId !== entityId);
                 }
+                subjectClientHand.ordering.pop();
         
                 // removing grabbedEntity
                 extractClientById(draft, clientId).grabbedEntitiy = null;
@@ -128,6 +141,13 @@ export class CardVerbHandler {
 
         return this.gameStateStore.state;
     }
-    
 
+    reorderHand(verb: IReorderHandVerb) {
+        const {clientId, order} = verb;
+        this.gameStateStore.changeState(draft => {
+            extractClientHandById(draft, clientId).ordering = order;
+        })
+
+        return this.gameStateStore.state;
+    }
 }

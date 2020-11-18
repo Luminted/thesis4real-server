@@ -53,6 +53,7 @@ export type Client = {
 export type ClientHand = {
     clientId: string,
     cards: HandCard[],
+    ordering: number[]
 }
 
 export type ClientInfo = {
