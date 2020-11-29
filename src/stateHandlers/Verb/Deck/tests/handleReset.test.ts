@@ -57,7 +57,7 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
         const grabbedCard = {...cardEntityMock1, entityId: "grabbedCard-id"}
        gameStateStore.changeState(draft => {
             const {entityId, entityType} = grabbedCard; 
-            draft.clients.get(mockClient1.clientInfo.clientId).grabbedEntitiy = {
+            draft.clients.get(mockClient1.clientInfo.clientId).grabbedEntity = {
                 entityType,
                 entityId,
                 grabbedAtX: 0,
@@ -67,9 +67,9 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
         const nextGameState = deckVerbHandler.reset(verb);
         let isRemoved = true;
         nextGameState.clients.forEach(client => {
-            const {grabbedEntitiy} = client;
-            if(grabbedEntitiy){
-                isRemoved = isRemoved && grabbedEntitiy.entityId !== deckToReset.entityId
+            const {grabbedEntity: grabbedEntity} = client;
+            if(grabbedEntity){
+                isRemoved = isRemoved && grabbedEntity.entityId !== deckToReset.entityId
             }
         })
         assert.equal(isRemoved, true);

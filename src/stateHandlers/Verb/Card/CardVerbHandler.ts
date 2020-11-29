@@ -25,11 +25,11 @@ export class CardVerbHandler {
         //TODO: grab from any hand
         this.gameStateStore.changeState(draft => {
             const gameState = original(draft);
-            const {clientId, entityId, positionX,positionY, grabbedAtX, grabbedAtY, faceUp} = verb;
+            const {clientId, entityId, positionX,positionY, grabbedAtX, grabbedAtY, faceUp, grabbedFrom} = verb;
             const clientHand = extractClientHandById(draft, clientId);
             const {cards: cardsInHand, ordering} = clientHand;
-            const grabbedCard = extractCardFromClientHandById(gameState, clientId, entityId); 
-            const {ownerDeck, metadata} = grabbedCard
+            const grabbedCard = extractCardFromClientHandById(gameState, grabbedFrom, entityId); 
+            const {ownerDeck, metadata} = grabbedCard;
             const {zIndexLimit} = gameConfig;
             const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
 
@@ -40,7 +40,7 @@ export class CardVerbHandler {
             draft.cards.set(grabbedCardEntity.entityId, grabbedCardEntity);
 
             // set grabbed info
-            extractClientById(draft, clientId).grabbedEntitiy = {
+            extractClientById(draft, clientId).grabbedEntity = {
                 entityId,
                 grabbedAtX,
                 grabbedAtY,
@@ -50,6 +50,7 @@ export class CardVerbHandler {
             // remove card from hand & update ordering
             const indexOfGrabbedCard = cardsInHand.map(card => card.entityId).indexOf(entityId);
             const orderOfGrabbedCard = ordering[indexOfGrabbedCard];
+            console.log(clientHand.cards.map(card => card.entityId), entityId);
             clientHand.cards = cardsInHand.filter(card => card.entityId !== entityId);
             clientHand.ordering = ordering.reduce<number[]>((acc, curr, index) => {
                 if(!(index === indexOfGrabbedCard)) {
@@ -65,14 +66,17 @@ export class CardVerbHandler {
 
     putInHand(verb: IPutInHandVerb) {
         this.gameStateStore.changeState(draft => {
-            const {clientId, entityId, faceUp, revealed} = verb;
+            const {clientId, entityId, faceUp} = verb;
             const { metadata, ownerDeck} = extractCardById(original(draft), entityId);
-            const handCard = createHandCard(entityId, faceUp, ownerDeck, revealed, metadata);
+            const handCard = createHandCard(entityId, faceUp, ownerDeck, metadata);
+            const client = extractClientById(draft, clientId);
             const clientHand = extractClientHandById(draft, clientId);
 
             clientHand.cards.push(handCard);
             clientHand.ordering.push(clientHand.ordering.length);
-            extractClientById(draft, clientId).grabbedEntitiy = null;
+            extractClientById(draft, clientId).grabbedEntity = null;
+            // TODO: add this to tests
+            client.grabbedEntity = null;
             draft.cards.delete(entityId);
         })
 
@@ -102,7 +106,7 @@ export class CardVerbHandler {
                 subjectClientHand.ordering.pop();
         
                 // removing grabbedEntity
-                extractClientById(draft, clientId).grabbedEntitiy = null;
+                extractClientById(draft, clientId).grabbedEntity = null;
             }
         })
         return this.gameStateStore.state;

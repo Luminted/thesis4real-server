@@ -6,17 +6,17 @@ import { ClientConnectionStatuses } from "../types/socketTypes";
 export const mockClient1: Client = {
     clientInfo: {
         clientId: 'client-1',
-        seatId: 1,
+        seatId: "1",
     },
-    grabbedEntitiy: null,
+    grabbedEntity: null,
     status: ClientConnectionStatuses.CONNECTED
 }
 
 export const mockClient2: Client = {
     clientInfo: {
         clientId: 'client-2',
-        seatId: 4,
+        seatId: "4",
     },
-    grabbedEntitiy: null,
+    grabbedEntity: null,
     status: ClientConnectionStatuses.CONNECTED
 }

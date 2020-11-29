@@ -1,11 +1,12 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
 import { SharedVerbTypes, IRemoveVerb } from '../../../../types/verb';
-import { EntityTypes } from '../../../../types/dataModelDefinitions';
+import { Client, EntityTypes, GrabbedEntity } from '../../../../types/dataModelDefinitions';
 import { SharedVerbHandler } from '../SharedVerbHandler';
-import { mockClient1 } from '../../../../mocks/clientMocks';
+import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, deckEntityMock1 } from '../../../../mocks/entityMocks';
+import { extractClientById } from '../../../../extractors/gameStateExtractors';
 
 describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
     const sharedVerbHandler = new SharedVerbHandler();
@@ -13,7 +14,6 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
     const {clientInfo: {clientId}} = mockClient1;
     const {entityId: deckEntityId} = deckEntityMock1;
     const {entityId: cardEntityId} = cardEntityMock1;
-    const verbType = SharedVerbTypes.REMOVE;
 
     beforeEach('Setting up test data...', () => {
         gameStateStore.resetState();
@@ -26,7 +26,7 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
 
     it('should remove correct deck from game state', function() {
         const verb: IRemoveVerb = {
-            type: verbType,
+            type: SharedVerbTypes.REMOVE,
             entityId: deckEntityId,
             entityType: EntityTypes.DECK
         }
@@ -38,7 +38,7 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
 
     it('should remove correct card from game state', function() {
         const verb: IRemoveVerb = {
-            type: verbType,
+            type: SharedVerbTypes.REMOVE,
             entityId: cardEntityId,
             entityType: EntityTypes.CARD
         }
@@ -47,8 +47,32 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
 
         assert.equal(nextGameState.cards.has(cardEntityId), false);
     })
-    it('should remove grabbEntity if grabbed', () => {
-        assert.fail();
+    it('should set grabbEntity to null if grabbed', () => {
+        const verb: IRemoveVerb = {
+            type: SharedVerbTypes.REMOVE,
+            entityId: cardEntityId,
+            entityType: EntityTypes.CARD
+        };
+
+        gameStateStore.changeState(draft => {
+            const grabbedEntity: GrabbedEntity = {
+                entityId: cardEntityId,
+                entityType: EntityTypes.CARD,
+                grabbedAtX: 0,
+                grabbedAtY: 0
+            }
+            const client2: Client = {...mockClient2, grabbedEntity: grabbedEntity};
+            extractClientById(draft, clientId).grabbedEntity = grabbedEntity;
+            draft.clients.set(client2.clientInfo.clientId, client2);
+        });
+
+        sharedVerbHandler.remove(verb);
+
+        gameStateStore.state.clients.forEach(client => {
+            const {grabbedEntity} = client;
+            assert.equal(grabbedEntity, null);
+        });
+
     })
 
 })

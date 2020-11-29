@@ -32,12 +32,10 @@ export interface IFlipVerb extends Omit<GenericVerb, "clientId" | "positionX" | 
 /**
  * @clientId the client whoes hand the card is placed in
  * @entityId the card being put in hand
- * @revealed whether the card is revealed to other players or not
  * @faceUp whether the card is facing up or not
  */
 export interface IPutInHandVerb extends Omit<GenericVerb, "positionX" | "positionY"  > {
     type: CardVerbTypes.PUT_IN_HAND
-    revealed: boolean
     faceUp: boolean
 }
 

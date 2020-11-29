@@ -13,12 +13,9 @@ export interface Entity {
     metadata?: object 
 }
 
-export interface IAbstractCardEntity extends Pick<CardEntity, "entityId" | "faceUp" | "metadata"> {}
+export interface HandCard extends Pick<CardEntity, "entityId" | "metadata" | "ownerDeck" | "faceUp"> {}
 
-export interface HandCard extends IAbstractCardEntity {
-    ownerDeck: string,
-    revealed: boolean
-}
+export interface DeckCard extends Pick<CardEntity, "entityId" | "metadata"> {}
 export interface CardEntity extends Entity {
     entityId: string,
     entityType: EntityTypes.CARD,
@@ -28,7 +25,7 @@ export interface CardEntity extends Entity {
 
 export interface DeckEntity extends Entity {
     entityType: EntityTypes.DECK
-    cards: IAbstractCardEntity[],
+    cards: DeckCard[],
     drawIndex: number
 }
 
@@ -46,7 +43,7 @@ export type GrabbedEntity = MaybeNull<{
 
 export type Client = {
     clientInfo: ClientInfo,
-    grabbedEntitiy: GrabbedEntity,
+    grabbedEntity: GrabbedEntity,
     status: ClientConnectionStatuses
 }
 

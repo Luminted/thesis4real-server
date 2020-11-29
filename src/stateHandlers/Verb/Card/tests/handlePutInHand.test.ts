@@ -13,7 +13,7 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const client = {...mockClient1};
     const {entityId, entityType} = cardEntityMock1;
-    client.grabbedEntitiy = {
+    client.grabbedEntity = {
         entityId: entityId,
         entityType: entityType,
         grabbedAtX: 15,
@@ -24,7 +24,6 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         clientId: client.clientInfo.clientId,
         entityId: entityId,
         faceUp: true,
-        revealed: false
     } 
 
     beforeEach('Setting up test data...', () => {
@@ -46,8 +45,8 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
 
     it('should set clients grabbed card to null', function() {  
         const nextGameState = cardVerbHandler.putInHand(verb);
-        const grabbedEntitiy = extractGrabbedEntityOfClientById(nextGameState, client.clientInfo.clientId);
-        assert.equal(grabbedEntitiy, null);
+        const grabbedEntity = extractGrabbedEntityOfClientById(nextGameState, client.clientInfo.clientId);
+        assert.equal(grabbedEntity, null);
     })
     it('should take out correct card from cards array', function() {
         const nextGameState = cardVerbHandler.putInHand(verb);
@@ -58,12 +57,6 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         const nextGameState = cardVerbHandler.putInHand(verb);
         const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId, entityId);
         assert.equal(cardPutInHand.faceUp, verb.faceUp);
-    })
-    it('should create hand card with revealed according to verb', () => {
-        const {clientId} = client.clientInfo;
-        const nextGameState = cardVerbHandler.putInHand(verb);
-        const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId, entityId);
-        assert.equal(cardPutInHand.revealed, verb.revealed);
     })
 
     it('should update hand ordering', () => {

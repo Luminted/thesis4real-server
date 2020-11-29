@@ -2,7 +2,7 @@ import assert from "assert";
 import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore";
-import { DeckEntity, EntityTypes } from "../../../../types/dataModelDefinitions";
+import { DeckEntity } from "../../../../types/dataModelDefinitions";
 import { DeckVerbTypes, IAddDeckVerb } from "../../../../types/verb";
 import { DeckVerbHandler } from "../../Deck";
 
@@ -38,6 +38,6 @@ describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
         assert.equal(addedEntity.positionY, verb.positionY);
         assert.equal(addedEntity.rotation, verb.rotation);
         assert.deepEqual(addedEntity.metadata, verb.metadata);
-        assert.deepEqual(addedEntity.cards, verb.containedCardsMetadata);
+        assert.deepEqual(addedEntity.cards.map(({metadata}) => ({...metadata}) ), verb.containedCardsMetadata);
     })
 })

@@ -48,7 +48,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
             grabbedAtX: verb.grabbedAtX,
             grabbedAtY: verb.grabbedAtY
         }
-        assert.deepEqual(nextClient.grabbedEntitiy, expectedGrabbedEntity);
+        assert.deepEqual(nextClient.grabbedEntity, expectedGrabbedEntity);
     })
 
     it('should add grabbed card to cards', function(){

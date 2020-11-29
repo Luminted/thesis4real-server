@@ -58,9 +58,9 @@ export class DeckVerbHandler {
 
             //removing grabbed cards
             draft.clients.forEach(client => {
-                const {grabbedEntitiy} = client;
-                if(grabbedEntitiy && grabbedEntitiy.entityId === entityId){
-                    client.grabbedEntitiy = null;
+                const {grabbedEntity: grabbedEntity} = client;
+                if(grabbedEntity && grabbedEntity.entityId === entityId){
+                    client.grabbedEntity = null;
                 }
             })
         })
@@ -81,12 +81,12 @@ export class DeckVerbHandler {
     }
 
     addDeck(verb: IAddDeckVerb) {
-        const {positionX, positionY, rotation, metadata, containedCardsMetadata: containedCards} = verb;
+        const {positionX, positionY, rotation, metadata, containedCardsMetadata} = verb;
         const {zIndexLimit} = gameConfig;
 
         this.gameStateStore.changeState(draft => {
             const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-            const newDeck = createDeckEntity(positionX, positionY, nextZIndex, uuid(), rotation, null, metadata, containedCards);
+            const newDeck = createDeckEntity(positionX, positionY, nextZIndex, uuid(), rotation, null, metadata, containedCardsMetadata);
 
             draft.decks.set(newDeck.entityId, newDeck);
         })

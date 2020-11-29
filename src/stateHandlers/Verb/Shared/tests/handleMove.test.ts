@@ -43,7 +43,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             let nextGameState: GameState;
             
             gameStateStore.changeState(draft => {
-                extractClientById(draft, clientId).grabbedEntitiy = {
+                extractClientById(draft, clientId).grabbedEntity = {
                     entityId,
                     entityType,
                     grabbedAtX: grabbedAt.x,
@@ -62,7 +62,6 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             nextGameState = sharedVerbHandler.move(verb);
 
             movedCard = extractCardById(nextGameState, entityId);
-            console.log(cardEntityMock2.positionX, verb.positionX, grabbedAt.x)
             assert.equal(movedCard.positionX, cardEntityMock1.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedCard.positionY, cardEntityMock1.positionY + verb.positionY - grabbedAt.y);
 
@@ -139,7 +138,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             let nextGameState: GameState;
             
             gameStateStore.changeState(draft => {
-            extractClientById(draft, clientId).grabbedEntitiy = {
+            extractClientById(draft, clientId).grabbedEntity = {
                     entityId,
                     entityType,
                     grabbedAtX: grabbedAt.x,

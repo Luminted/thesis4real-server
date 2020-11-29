@@ -51,9 +51,9 @@ export class TableHandler {
             const [positionX, positionY] = defaultPosition;
             const {zIndexLimit} = gameConfig;
             extractClientHandCardsById(draft, clientId).forEach(handCard => {
-                const { entityId, ownerDeck, revealed, metadata} = handCard;
+                const { entityId, ownerDeck, metadata} = handCard;
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-                const cardEntity = createCardEntity(positionX, positionY, revealed, entityId, ownerDeck, nextTopZIndex, 0, null, metadata);
+                const cardEntity = createCardEntity(positionX, positionY, false, entityId, ownerDeck, nextTopZIndex, 0, null, metadata);
                 draft.cards.set(cardEntity.entityId, cardEntity);
             });
         
@@ -79,7 +79,7 @@ export class TableHandler {
                 clientId: id,
                 clientName: name,
             },
-            grabbedEntitiy: null,
+            grabbedEntity: null,
             status: ClientConnectionStatuses.CONNECTED
         }
         return newClient;

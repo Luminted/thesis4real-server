@@ -25,7 +25,7 @@ export class SharedVerbHandler {
             const entity = extractEntityByTypeAndId(draft, entityType, entityId);
             if(entity && entity.grabbedBy === null){
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-                extractClientById(draft, verb.clientId).grabbedEntitiy = {
+                extractClientById(draft, verb.clientId).grabbedEntity = {
                     entityId,
                     entityType,
                     grabbedAtX: positionX,
@@ -75,7 +75,7 @@ export class SharedVerbHandler {
     release(verb: IReleaseVerb) {
         this.gameStateStore.changeState(draft => {
             const {entityType, entityId, clientId} = verb;
-            extractClientById(draft, clientId).grabbedEntitiy = null;
+            extractClientById(draft, clientId).grabbedEntity = null;
             extractEntityByTypeAndId(draft, entityType, entityId).grabbedBy = null;
         })
 
@@ -91,6 +91,16 @@ export class SharedVerbHandler {
             else if(entityType === EntityTypes.DECK){
                 draft.decks.delete(entityId);
             }
+
+            // remove from clients who are grabbing it
+            draft.clients.forEach(client => {
+                const {grabbedEntity} = client;
+                if(grabbedEntity !== null){
+                    if( grabbedEntity.entityId === entityId){
+                        client.grabbedEntity = null;
+                    }
+                }
+            })
         })
 
         return this.gameStateStore.state;

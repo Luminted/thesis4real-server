@@ -5,7 +5,7 @@ export function extractClientById(state: GameState, clientId: string){
 }
 
 export function extractGrabbedEntityOfClientById(state: GameState, clientId){
-    return extractClientById(state, clientId)?.grabbedEntitiy;
+    return extractClientById(state, clientId)?.grabbedEntity;
 }
 
 export function extractCardById(state: GameState, entityId: string){

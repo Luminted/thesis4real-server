@@ -26,11 +26,10 @@ export const createCardEntity = (positionX: number,
         entityType: EntityTypes.CARD,
 })
 
-export const createHandCard = (entityId, faceUp, ownerDeck, revealed, metadata) => ({
+export const createHandCard = (entityId, faceUp, ownerDeck, metadata) => ({
     entityId,
     faceUp,
     ownerDeck,
-    revealed,
     metadata
 })
 
@@ -44,7 +43,7 @@ export const createDeckEntity = (positionX: number, positionY: number, zIndex: n
     metadata,
     entityType: EntityTypes.DECK,
     drawIndex: 0,
-    cards: cardsMetadata.map(metadata => ({metadata, faceUp: false, revealed: false, entityId: uuidv4()}))
+    cards: cardsMetadata.map(metadata => ({ metadata, entityId: uuidv4()}))
 })
 
 export const createClientHand = (clientId: string): ClientHand => ({
