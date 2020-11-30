@@ -1,16 +1,17 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
 import { extractClientHandById } from '../../../../extractors/gameStateExtractors';
-import { createClientHand } from '../../../../factories';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { handCardMock1 } from '../../../../mocks/entityMocks';
 import { TableStateStore } from '../../../../stores/TableStateStore';
 import { CardVerbTypes, IReorderHandVerb } from '../../../../types/verb';
+import { TableHandler } from '../../../Table';
 import { CardVerbHandler } from '../CardVerbHandler';
 
 describe(`handle ${CardVerbTypes.REORDER_HAND} verb`, () => {
     
     const cardVerbHandler = new CardVerbHandler();
+    const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
     const verb: IReorderHandVerb = {
@@ -23,7 +24,7 @@ describe(`handle ${CardVerbTypes.REORDER_HAND} verb`, () => {
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
             draft.clients.set(clientId, {...mockClient1});
-            draft.hands.set(clientId, createClientHand(clientId));
+            draft.hands.set(clientId, tableHandler.createClientHand(clientId));
 
             draft.hands.get(clientId).cards.push({...handCardMock1});
             draft.hands.get(clientId).cards.push({...handCardMock1});

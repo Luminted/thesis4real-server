@@ -2,16 +2,17 @@ import assert from 'assert';
 import {mockClient1, mockClient2} from '../../../../mocks/clientMocks';
 import {deckEntityMock1, cardEntityMock1, cardEntityMock2, handCardMock1, handCardMock2} from '../../../../mocks/entityMocks';
 import { DeckVerbTypes, IResetVerb } from '../../../../types/verb';
-import { EntityTypes, HandCard } from '../../../../types/dataModelDefinitions';
-import { createClientHand } from '../../../../factories';
+import { HandCard } from '../../../../types/dataModelDefinitions';
 import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { Container } from 'typescript-ioc';
 import { DeckVerbHandler } from '../DeckVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
+import { TableHandler } from '../../../Table';
 
 
 describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
     const deckVerbHandler = new DeckVerbHandler();
+    const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const deckToReset = {...deckEntityMock1};
     const client1Card: HandCard = {...handCardMock1, ownerDeck: deckToReset.entityId}
@@ -29,8 +30,8 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
         
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
-            const client1Hand = createClientHand(client1Id);
-            const client2Hand = createClientHand(client2Id);
+            const client1Hand = tableHandler.createClientHand(client1Id);
+            const client2Hand = tableHandler.createClientHand(client2Id);
             cardsBelongingToDeck.forEach((card => {
                 draft.cards.set(card.entityId, card);
             }))
@@ -86,11 +87,17 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
         assert.equal(resetDeck.drawIndex, 0);
     })
     it("should update hand ordering accordingly", () => {
-        //TODO: ordering must be redone on reset
         gameStateStore.changeState(draft => {
             const client1Hand =  extractClientHandById(draft, client1Id);
-           client1Hand.cards.push({...handCardMock2}, {...handCardMock1, ownerDeck: deckToReset.entityId})
-        })
+            client1Hand.cards = [{...handCardMock1, ownerDeck: deckToReset.entityId}, {...handCardMock1}, {...handCardMock1, ownerDeck: deckToReset.entityId}, {...handCardMock1}];
+            client1Hand.ordering = [0,3,1,2];
+        });
+
+        const nextGameState = deckVerbHandler.reset(verb);
+
+        const expectedOrdering = [1,0];
+        const {ordering} = extractClientHandById(nextGameState, client1Id);
+        assert.deepEqual(ordering, expectedOrdering);
     })
 
 })

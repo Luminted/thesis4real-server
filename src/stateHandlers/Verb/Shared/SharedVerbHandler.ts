@@ -1,5 +1,5 @@
 import { Inject, Singleton } from "typescript-ioc";
-import { gameConfig } from "../../../config";
+import { zIndexLimit } from "../../../config";
 import { extractClientById, extractEntityByTypeAndId, extractGrabbedEntityOfClientById } from "../../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../../utils";
 import { GameStateStore } from "../../../stores/GameStateStore";
@@ -21,7 +21,6 @@ export class SharedVerbHandler {
     grabFromTable(verb: IGrabVerb) {
         this.gameStateStore.changeState(draft => {
             const {positionX, positionY, entityId, entityType, clientId} = verb;
-            const {zIndexLimit} = gameConfig;
             const entity = extractEntityByTypeAndId(draft, entityType, entityId);
             if(entity && entity.grabbedBy === null){
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);

@@ -1,16 +1,16 @@
 import assert from 'assert';
 import { CardVerbTypes, IPutOnTableVerb } from '../../../../types/verb';
-import { EntityTypes } from '../../../../types/dataModelDefinitions';
-import { createClientHand } from '../../../../factories';
 import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById, extractCardFromClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
+import { TableHandler } from '../../../Table';
 
 describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
     const cardVerbHandler = new CardVerbHandler();
+    const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
     const {entityId} = handCardMock1;
@@ -27,7 +27,7 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
         };
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
-            const hand = createClientHand(clientId)
+            const hand = tableHandler.createClientHand(clientId)
             draft.clients.set(clientId, {...mockClient1});
             hand.cards.push({...handCardMock1});
             hand.ordering.push(0);
@@ -70,11 +70,11 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
         gameStateStore.changeState(draft => {
             const handDraft = extractClientHandById(draft ,clientId);
             handDraft.cards.push({...handCardMock2}, {...handCardMock1});
-            handDraft.ordering.push(1,2);
+            handDraft.ordering.push(2,1);
         })
 
         const {entityId} = handCardMock2;
-        const nextGameState = cardVerbHandler.putOnTable({...verb, entityId:entityId});
+        const nextGameState = cardVerbHandler.putOnTable({...verb, entityId});
 
         const {ordering} = extractClientHandById(nextGameState, clientId);
         assert.deepEqual(ordering, [0,1]);

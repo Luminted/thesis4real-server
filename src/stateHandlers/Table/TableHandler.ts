@@ -1,17 +1,19 @@
 import { Inject } from "typescript-ioc";
-import { gameConfig } from "../../config";
 import { extractClientHandCardsById, extractClientsSeatById } from "../../extractors/gameStateExtractors";
-import { createCardEntity } from "../../factories";
 import { calcNextZIndex } from "../../utils";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
 import { ClientHand, Client } from "../../types/dataModelDefinitions";
 import { ClientConnectionStatuses } from "../../types/socketTypes";
+import { CardVerbHandler } from "../Verb/Card";
+import {zIndexLimit} from "../../config";
 
 
 export class TableHandler {
     @Inject
     private tableStateStore: TableStateStore;
+    @Inject
+    private cardVerbHandler: CardVerbHandler;
     private gameStateStore: GameStateStore;
 
     constructor(){
@@ -26,7 +28,7 @@ export class TableHandler {
         if(emptySeatId !== undefined){
             this.gameStateStore.changeState(draft => {
                 const newClient = this.createClient(clientId, emptySeatId);
-                const newHand = this.createEmptyHand(clientId);
+                const newHand = this.createClientHand(clientId);
                 draft.clients.set(clientId, newClient);
                 draft.hands.set(clientId, newHand);
             })
@@ -49,11 +51,10 @@ export class TableHandler {
         // removing hand and client
         this.gameStateStore.changeState(draft => {
             const [positionX, positionY] = defaultPosition;
-            const {zIndexLimit} = gameConfig;
             extractClientHandCardsById(draft, clientId).forEach(handCard => {
                 const { entityId, ownerDeck, metadata} = handCard;
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-                const cardEntity = createCardEntity(positionX, positionY, false, entityId, ownerDeck, nextTopZIndex, 0, null, metadata);
+                const cardEntity = this.cardVerbHandler.createCardEntity(positionX, positionY, false, entityId, ownerDeck, nextTopZIndex, 0, null, metadata);
                 draft.cards.set(cardEntity.entityId, cardEntity);
             });
         
@@ -64,7 +65,7 @@ export class TableHandler {
         return this.gameStateStore.state;
     }
 
-    private createEmptyHand(clientId: string): ClientHand {
+    createClientHand(clientId: string): ClientHand {
         return {
             clientId,
             cards: [],

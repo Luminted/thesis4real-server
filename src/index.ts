@@ -2,11 +2,8 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import {tableRouter} from './routes/table/tableRoute';
-import { createDeckEntity } from './factories';
 import { Container } from 'typescript-ioc';
 import { Socket } from './socket';
-import { TableStateStore } from './stores/TableStateStore/TableStateStore';
-import { uuid } from 'short-uuid';
 
 const app = express();
 app.use(express.json());
@@ -19,21 +16,8 @@ Container.bindName("httpServer").to(server);
 Container.get(Socket);
 
 const node_env = process.env.NODE_ENV;
-if(node_env === 'production'){
-}
-else if(node_env === 'development'){
-    // let [devTable, gameState] = createTable(4100, 2200, 2, [0,0],'dev');
-    const tableStore = Container.get(TableStateStore);
-    const {gameStateStore} = tableStore
-    gameStateStore.changeState(draft => {
-        const deck1 = createDeckEntity(0, 0, 0, uuid(), 0, null, {}, [{id: 1}, {id: 2}])
-        console.log(deck1.entityId);
-        draft.decks.set(deck1.entityId, deck1);
-    })
-    console.log(`Dev table set up. Id: whatever`);
-}
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8081;
 server.listen(port, function(){
     console.log(`running in ${node_env} mode`);
     console.log(`listening on port ${port}` );

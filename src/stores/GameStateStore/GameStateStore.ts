@@ -12,6 +12,6 @@ const initialState: GameState = {
 
 export class GameStateStore extends Store<GameState> {
     constructor(){
-        super(initialState)
+        super(initialState);
     }
 }

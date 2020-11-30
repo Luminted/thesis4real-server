@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { createDeckEntity } from "../factories"
 import { calcNextZIndex } from "./utils"
 import { GameStateStore } from '../stores/GameStateStore';
 import { cardEntityMock1, deckEntityMock1 } from '../mocks/entityMocks';

@@ -1,15 +1,16 @@
 import assert from 'assert';
 import { CardVerbTypes, IPutInHandVerb } from '../../../../types/verb';
-import { createClientHand } from '../../../../factories';
 import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { Container } from 'typescript-ioc';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, handCardMock1 } from '../../../../mocks/entityMocks';
+import { TableHandler } from '../../../Table';
 
 describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
     const cardVerbHandler = new CardVerbHandler();
+    const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const client = {...mockClient1};
     const {entityId, entityType} = cardEntityMock1;
@@ -32,7 +33,7 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         gameStateStore.changeState(draft => {
             draft.cards.set(entityId, {...cardEntityMock1});
             draft.clients.set(clientId, client);
-            draft.hands.set(clientId, createClientHand(clientId))
+            draft.hands.set(clientId, tableHandler.createClientHand(clientId))
         })
     })
 

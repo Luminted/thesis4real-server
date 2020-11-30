@@ -3,18 +3,21 @@ import {shuffle} from "@pacote/shuffle";
 import { original } from "immer";
 import {uuid} from "short-uuid";
 import { extractDeckById } from "../../../extractors/gameStateExtractors";
-import { createCardEntity, createDeckEntity } from "../../../factories";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb } from "../../../types/verb";
-import { calcNextZIndex } from "../../../utils";
-import { gameConfig } from "../../../config";
+import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
+import { zIndexLimit } from "../../../config";
+import { CardVerbHandler } from "../Card";
+import { DeckEntity, EntityTypes } from "../../../types/dataModelDefinitions";
 
 @Singleton
 export class DeckVerbHandler {
 
     @Inject
     private tableStateStore: TableStateStore;
+    @Inject
+    private cardVerbHandler: CardVerbHandler;
     private gameStateStore: GameStateStore;
 
     constructor(){
@@ -23,12 +26,11 @@ export class DeckVerbHandler {
 
     drawCard(verb: IDrawFaceUpVerb, faceUp: boolean = true) {
         this.gameStateStore.changeState(draft => {
-            const {zIndexLimit} = gameConfig;
             const {entityId} = verb;
             const deck = extractDeckById(draft, entityId);
             const drawnCard = deck.cards[deck.drawIndex];
             const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-            const spawnedCard = createCardEntity(deck.positionX, deck.positionY, faceUp, drawnCard.entityId, deck.entityId, nextTopZIndex, deck.rotation, null, drawnCard.metadata);
+            const spawnedCard = this.cardVerbHandler.createCardEntity(deck.positionX, deck.positionY, faceUp, drawnCard.entityId, deck.entityId, nextTopZIndex, deck.rotation, null, drawnCard.metadata);
             
             deck.drawIndex++;
             draft.cards.set(spawnedCard.entityId, spawnedCard);
@@ -53,8 +55,19 @@ export class DeckVerbHandler {
             //removing from hands
             draft.hands.forEach(hand => {
                 const {clientId} = hand;
-                hand.cards = draft.hands.get(clientId).cards.filter(card => card.ownerDeck !== entityId);
-                })
+                const { cards, ordering} = draft.hands.get(clientId);
+                const cardsBelongingToResetDeckIndexes = cards.reduce((acc, {ownerDeck}, index) => {
+                    if(ownerDeck === entityId){
+                        return [...acc, index];
+                    }
+                    else{
+                        return acc;
+                    }
+                },[])
+                console.log("~~~~~", cardsBelongingToResetDeckIndexes);
+                hand.cards = cards.filter(({ownerDeck}) => ownerDeck !== entityId);
+                hand.ordering = removeAndUpdateOrderings(ordering, cardsBelongingToResetDeckIndexes);
+            })
 
             //removing grabbed cards
             draft.clients.forEach(client => {
@@ -82,15 +95,29 @@ export class DeckVerbHandler {
 
     addDeck(verb: IAddDeckVerb) {
         const {positionX, positionY, rotation, metadata, containedCardsMetadata} = verb;
-        const {zIndexLimit} = gameConfig;
 
         this.gameStateStore.changeState(draft => {
             const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-            const newDeck = createDeckEntity(positionX, positionY, nextZIndex, uuid(), rotation, null, metadata, containedCardsMetadata);
+            const newDeck = this.createDeckEntity(positionX, positionY, nextZIndex, uuid(), rotation, null, metadata, containedCardsMetadata);
 
             draft.decks.set(newDeck.entityId, newDeck);
         })
 
         return this.gameStateStore.state;
+    }
+
+    createDeckEntity(positionX: number, positionY: number, zIndex: number, entityId: string, rotation: number, grabbedBy: string, metadata: object, cardsMetadata: object[] = []): DeckEntity {
+        return {
+            positionX,
+            positionY,
+            rotation,
+            entityId,
+            grabbedBy,
+            zIndex,
+            metadata,
+            entityType: EntityTypes.DECK,
+            drawIndex: 0,
+            cards: cardsMetadata.map(metadata => ({ metadata, entityId: uuid()}))
+        }
     }
 }

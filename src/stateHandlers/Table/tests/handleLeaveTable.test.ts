@@ -1,6 +1,5 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { createClientHand } from "../../../factories";
 import { extractClientById, extractClientHandById, extractCardById } from '../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../mocks/clientMocks';
 import { TableHandler } from '../TableHandler';
@@ -21,7 +20,7 @@ describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
         gameStateStore.resetState();
         tableStateStore.resetState();
         gameStateStore.changeState(draft => {
-            const clientHand = createClientHand(clientId);
+            const clientHand = tableHandler.createClientHand(clientId);
             clientHand.cards.push(cardInClientsHand1, cardInClientsHand2);
             draft.clients.set(clientId, {...mockClient1});
             draft.hands.set(clientId, clientHand);

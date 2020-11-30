@@ -7,8 +7,8 @@ export class Store<T> {
     private initialState: T;
 
     constructor(initialState: T){
-        // TODO: see if this can be initialized to an immutable object
-        this.state = initialState;
+        // making state immutable from initialization
+        this.state = produce(initialState, () => {});
         this.initialState = initialState;
     }
 

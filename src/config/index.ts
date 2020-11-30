@@ -1,2 +1,1 @@
-export {gameConfig} from './gameConfig'
-export * from "./table";
+export * from "./serverConfig";

@@ -7,8 +7,9 @@ import { serializeGameState } from "../../utils";
 import { GameState, ClientInfo, SerializedGameState } from "../../types/dataModelDefinitions";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
-import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";import { GameStateStore } from "../../stores/GameStateStore";
-;
+import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";
+import { GameStateStore } from "../../stores/GameStateStore";
+import { serverTick } from "../../config";
  
 @Singleton
 export class TableNamespace extends SocketNamespace {
@@ -68,6 +69,5 @@ export class TableNamespace extends SocketNamespace {
 
     private syncGameState = throttle((gameState: GameState) => {
         this.emit(TableServerEvents.SYNC, serializeGameState(gameState));
-        // TODO: Make the frequency configurable
-    }, 1000/60);
+    }, serverTick);
 }

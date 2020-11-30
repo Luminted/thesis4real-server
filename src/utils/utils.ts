@@ -21,12 +21,12 @@ export function calcNextZIndex(gameStateDraft: GameState, zIndexLimit: number){
     if(nextZIndex > zIndexLimit){
         const absoluteNumberOfEntities = cards.size + decks.size;
         //resetting cards
-        for(let [entityId, entity] of gameStateDraft.cards){
+        for(let [_, entity] of gameStateDraft.cards){
             entity.zIndex = entity.zIndex - zIndexLimit + absoluteNumberOfEntities - 1
         }
 
         //resetting decks
-        for(let [entityId, entity] of gameStateDraft.decks){
+        for(let [_, entity] of gameStateDraft.decks){
             entity.zIndex = entity.zIndex - zIndexLimit + absoluteNumberOfEntities - 1
         }
 
