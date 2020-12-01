@@ -6,7 +6,6 @@ const initialState: TGameState = {
     clients: new Map<string, TClient>(),
     decks: new Map<string, IDeckEntity>(),
     hands: new Map<string, TClientHand>(),
-    entityScale: 1,
     topZIndex: 0,
 }
 

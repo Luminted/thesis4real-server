@@ -64,7 +64,6 @@ export type TGameState = {
     decks: Map<string, IDeckEntity>,
     clients: Map<string, TClient>,
     hands: Map<string, TClientHand>,
-    entityScale: number,
     topZIndex: number,
 }
 
@@ -79,5 +78,4 @@ export type TSerializedGameState = {
     decks: IDeckEntity[],
     clients: TClient[],
     hands: TClientHand[],
-    entityScale: number
 }

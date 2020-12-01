@@ -14,7 +14,6 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
     const {clientInfo: {clientId}} = mockClient1;
     const boundCard = { ...cardEntityMock2};
     const boundDeck = { ...deckEntityMock2};
-    const entityScale = 2;
 
     beforeEach('Setting up test data...', () => {
         gameStateStore.resetState();
@@ -24,7 +23,6 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
             draft.decks.set(deckEntityMock1.entityId, {...deckEntityMock1});
             draft.decks.set(boundDeck.entityId, boundDeck);
             draft.clients.set(clientId, {...mockClient1});
-            draft.entityScale = entityScale;
         })
     })
 

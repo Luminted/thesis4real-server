@@ -10,7 +10,6 @@ export const serializeGameState = (gameState: TGameState): TSerializedGameState 
         clients: [...gameState.clients.values()],
         hands: [...gameState.hands.values()],
         decks: [...gameState.decks.values()],
-        entityScale: gameState.entityScale
     }
 }
 
