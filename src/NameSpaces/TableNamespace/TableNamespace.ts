@@ -71,7 +71,10 @@ export class TableNamespace extends SocketNamespace {
     private serializeGameState(gameState: TGameState): TSerializedGameState {
         return {
             cards: [...gameState.cards.values()],
-            clients: [...gameState.clients.values()],
+            clients: [...gameState.clients.values()].map(({clientInfo, status}) => ({
+                clientInfo,
+                status
+            })),
             hands: [...gameState.hands.values()],
             decks: [...gameState.decks.values()],
         }

@@ -76,6 +76,6 @@ export type TCardTable = {
 export type TSerializedGameState = {
     cards: ICardEntity[],
     decks: IDeckEntity[],
-    clients: TClient[],
+    clients: Omit<TClient, "grabbedEntity">[],
     hands: TClientHand[],
 }
