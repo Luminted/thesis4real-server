@@ -1,14 +1,12 @@
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import {tableRouter} from './routes/table/tableRoute';
 import { Container } from 'typescript-ioc';
 import { Socket } from './socket';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(tableRouter);
 
 const server = http.createServer(app);
 Container.bindName("httpServer").to(server);
