@@ -1,6 +1,6 @@
 import assert from 'assert'
 import {spy} from 'sinon';
-import { IGrabVerb, SharedVerbTypes } from "../../../../typings";
+import { IGrabVerb, ESharedVerbTypes } from "../../../../typings";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors/gameStateExtractors";
 import * as utils from '../../../../utils';
 import { mockClient1 } from '../../../../mocks/clientMocks';
@@ -9,7 +9,7 @@ import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, cardEntityMock2 } from '../../../../mocks/entityMocks';
 
-describe(`handle ${SharedVerbTypes.GRAB} verb`, () => {
+describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
@@ -17,7 +17,7 @@ describe(`handle ${SharedVerbTypes.GRAB} verb`, () => {
     const grabbedCard = {...cardEntityMock2};
     const verb: IGrabVerb = {
         clientId,
-        type: SharedVerbTypes.GRAB,
+        type: ESharedVerbTypes.GRAB,
         positionX: 0,
         positionY: 1,
         entityId: freeCard.entityId,
@@ -60,7 +60,7 @@ describe(`handle ${SharedVerbTypes.GRAB} verb`, () => {
         const positionX = 1;
         const positionY = 2;
         const verb: IGrabVerb = {
-            type: SharedVerbTypes.GRAB,
+            type: ESharedVerbTypes.GRAB,
             clientId: clientId,
             positionX: positionX,
             positionY,

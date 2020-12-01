@@ -1,4 +1,4 @@
-export enum TableClientEvents {
+export enum ETableClientEvents {
     //built in events
     CONNECT = 'connect',
     DISCONNECT = 'disconnect',
@@ -11,11 +11,11 @@ export enum TableClientEvents {
     KICK_PLAYER = 'KICK_PLAYER',
 }
 
-export enum TableServerEvents {
+export enum ETableServerEvents {
     SYNC = 'SYNC',
 }
 
-export enum ClientConnectionStatuses {
+export enum EClientConnectionStatuses {
     CONNECTED = 'CONNECTED',
     DISCONNECTED = 'DISCONNECTED',
 }

@@ -1,13 +1,13 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { ClientConnectionStatuses, TableClientEvents } from "../../../typings";
+import { EClientConnectionStatuses, ETableClientEvents } from "../../../typings";
 import { extractClientById } from "../../../extractors/gameStateExtractors";
 import { mockClient1 } from '../../../mocks/clientMocks';
 import { ConnectionHandler } from '../ConnectionHandler';
 import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
 import { extractEmptySeats } from '../../../extractors/tableStateExtractor';
 
-describe(`Event handler for: ${TableClientEvents.DISCONNECT}`, () => {
+describe(`Event handler for: ${ETableClientEvents.DISCONNECT}`, () => {
     const connectionHandler = new ConnectionHandler();
     const tableStateStore = Container.get(TableStateStore);
     const gameStateStore = tableStateStore.state.gameStateStore;
@@ -21,11 +21,11 @@ describe(`Event handler for: ${TableClientEvents.DISCONNECT}`, () => {
         })
     })
 
-    it(`should set clients connection status to ${ClientConnectionStatuses.DISCONNECTED}`, () => {
+    it(`should set clients connection status to ${EClientConnectionStatuses.DISCONNECTED}`, () => {
         connectionHandler.disconnect(client.clientInfo.clientId);
 
         const disconnectedClinet = extractClientById(gameStateStore.state, clientId);
-        assert.equal(disconnectedClinet.status, ClientConnectionStatuses.DISCONNECTED);
+        assert.equal(disconnectedClinet.status, EClientConnectionStatuses.DISCONNECTED);
     })
 
     it('should put back clients seat to the seat pool', () => {

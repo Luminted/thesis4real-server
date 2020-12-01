@@ -3,7 +3,7 @@ import { extractClientHandCardsById, extractClientsSeatById } from "../../extrac
 import { calcNextZIndex } from "../../utils";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
-import { ClientHand, Client, ClientConnectionStatuses } from "../../typings";
+import { TClientHand, TClient, EClientConnectionStatuses } from "../../typings";
 import { CardVerbHandler } from "../Verb/Card";
 import {zIndexLimit} from "../../config";
 
@@ -64,7 +64,7 @@ export class TableHandler {
         return this.gameStateStore.state;
     }
 
-    createClientHand(clientId: string): ClientHand {
+    createClientHand(clientId: string): TClientHand {
         return {
             clientId,
             cards: [],
@@ -73,14 +73,14 @@ export class TableHandler {
     }
 
     private createClient(id: string, seatId: string ,name?: string) {
-        const newClient: Client = {
+        const newClient: TClient = {
             clientInfo: {
                 seatId,
                 clientId: id,
                 clientName: name,
             },
             grabbedEntity: null,
-            status: ClientConnectionStatuses.CONNECTED
+            status: EClientConnectionStatuses.CONNECTED
         }
         return newClient;
     }

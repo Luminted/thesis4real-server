@@ -1,7 +1,7 @@
-import { GenericVerb } from ".";
-import { EntityTypes } from "../gameStateTypings";
+import { IGenericVerb } from ".";
+import { EEntityTypes } from "../gameStateTypings";
 
-export enum SharedVerbTypes {
+export enum ESharedVerbTypes {
     GRAB = 'GRAB',
     MOVE = 'MOVE',
     RELEASE = 'RELEASE',
@@ -13,8 +13,8 @@ export enum SharedVerbTypes {
 /**
  * @entityType used for lookup
  */
-interface ISharedVerb extends GenericVerb {
-    entityType: EntityTypes
+interface ISharedVerb extends IGenericVerb {
+    entityType: EEntityTypes
 }
 
 /**
@@ -23,7 +23,7 @@ interface ISharedVerb extends GenericVerb {
  * @entityId entity being grabbed
  */
 export interface IGrabVerb extends ISharedVerb {
-    type: SharedVerbTypes.GRAB
+    type: ESharedVerbTypes.GRAB
 }
 
 /**
@@ -31,21 +31,21 @@ export interface IGrabVerb extends ISharedVerb {
  * @clientId client who is moving entity
  */
 export interface IMoveVerb extends Omit<ISharedVerb, "entityType" | "entityId"> {
-    type: SharedVerbTypes.MOVE
+    type: ESharedVerbTypes.MOVE
 }
 
 /**
  * @clientId client who is releasing the entity
  */
 export interface IReleaseVerb extends Omit<ISharedVerb, "positionX" | "positionY"> {
-    type: SharedVerbTypes.RELEASE
+    type: ESharedVerbTypes.RELEASE
 }
 
 /**
  * @entityId entity being removed
  */
 export interface IRemoveVerb extends Omit<ISharedVerb, "positionX" | "positionY" | "clientId"> {
-    type: SharedVerbTypes.REMOVE
+    type: ESharedVerbTypes.REMOVE
 }
 
 /**
@@ -54,7 +54,7 @@ export interface IRemoveVerb extends Omit<ISharedVerb, "positionX" | "positionY"
 
  */
 export interface IMoveToVerb extends Omit<ISharedVerb, "clientId"> {
-    type: SharedVerbTypes.MOVE_TO
+    type: ESharedVerbTypes.MOVE_TO
 }
 
 /**
@@ -62,6 +62,6 @@ export interface IMoveToVerb extends Omit<ISharedVerb, "clientId"> {
  * @angle the amount it is rotated by
  */
 export interface IRotateVerb extends Omit<ISharedVerb, "positionX" | "positionY" | "clientId" > {
-    type: SharedVerbTypes.ROTATE
+    type: ESharedVerbTypes.ROTATE
     angle: number
 }

@@ -1,14 +1,14 @@
 import {Socket} from 'socket.io';
 
-export type PlainSocketListener = {
+export type TPlainSocketListener = {
     name: string,
-    handler: SocketEventHandler,
+    handler: TSocketEventHandler,
 }
 
-export type SocketListenerUsingSocket = {
+export type TSocketListenerUsingSocket = {
     name: string,   
-    handler: SocketEventUsingSocket,
+    handler: TSocketEventUsingSocket,
 }
 
-export type SocketEventHandler = (...args: any[]) => void;
-export type SocketEventUsingSocket = (socket: Socket) => (...args: any[]) => void;
+export type TSocketEventHandler = (...args: any[]) => void;
+export type TSocketEventUsingSocket = (socket: Socket) => (...args: any[]) => void;

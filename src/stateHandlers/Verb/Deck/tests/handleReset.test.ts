@@ -1,7 +1,7 @@
 import assert from 'assert';
 import {mockClient1, mockClient2} from '../../../../mocks/clientMocks';
 import {deckEntityMock1, cardEntityMock1, cardEntityMock2, handCardMock1, handCardMock2} from '../../../../mocks/entityMocks';
-import { DeckVerbTypes, IResetVerb, HandCard } from '../../../../typings';
+import { EDeckVerbTypes, IResetVerb, IHandCard } from '../../../../typings';
 import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { Container } from 'typescript-ioc';
 import { DeckVerbHandler } from '../DeckVerbHandler';
@@ -9,14 +9,14 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 import { TableHandler } from '../../../Table';
 
 
-describe(`handle ${DeckVerbTypes.RESET} verb`, () => {
+describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const deckToReset = {...deckEntityMock1};
-    const client1Card: HandCard = {...handCardMock1, ownerDeck: deckToReset.entityId}
-    const client2Card: HandCard = {...handCardMock2, ownerDeck: deckToReset.entityId}
-    const verbType = DeckVerbTypes.RESET;
+    const client1Card: IHandCard = {...handCardMock1, ownerDeck: deckToReset.entityId}
+    const client2Card: IHandCard = {...handCardMock2, ownerDeck: deckToReset.entityId}
+    const verbType = EDeckVerbTypes.RESET;
     const cardsBelongingToDeck = [{...cardEntityMock1, ownerDeck: deckToReset.entityId}, {...cardEntityMock2, ownerDeck: deckToReset.entityId}];
     const client1Id = mockClient1.clientInfo.clientId;
     const client2Id = mockClient2.clientInfo.clientId;

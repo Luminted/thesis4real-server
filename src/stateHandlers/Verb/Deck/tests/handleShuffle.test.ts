@@ -3,17 +3,17 @@ import { Container } from "typescript-ioc";
 import { extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { deckEntityMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
-import { DeckVerbTypes, IShuffleVerb } from "../../../../typings";
+import { EDeckVerbTypes, IShuffleVerb } from "../../../../typings";
 import { DeckVerbHandler } from "../DeckVerbHandler";
 
-describe(`handling ${DeckVerbTypes.SHUFFLE}`, () => {
+describe(`handling ${EDeckVerbTypes.SHUFFLE}`, () => {
 
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {entityId} = deckEntityMock1;
     const verb: IShuffleVerb = {
         entityId,
-        type: DeckVerbTypes.SHUFFLE,
+        type: EDeckVerbTypes.SHUFFLE,
     }
 
     beforeEach(() => {

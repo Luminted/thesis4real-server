@@ -1,16 +1,16 @@
 import { Store } from "../Store";
-import { GameState, CardEntity, Client, DeckEntity, ClientHand } from "../../typings";
+import { TGameState, ICardEntity, TClient, IDeckEntity, TClientHand } from "../../typings";
 
-const initialState: GameState = {
-    cards: new Map<string, CardEntity>(),
-    clients: new Map<string, Client>(),
-    decks: new Map<string, DeckEntity>(),
-    hands: new Map<string, ClientHand>(),
+const initialState: TGameState = {
+    cards: new Map<string, ICardEntity>(),
+    clients: new Map<string, TClient>(),
+    decks: new Map<string, IDeckEntity>(),
+    hands: new Map<string, TClientHand>(),
     entityScale: 1,
     topZIndex: 0,
 }
 
-export class GameStateStore extends Store<GameState> {
+export class GameStateStore extends Store<TGameState> {
     constructor(){
         super(initialState);
     }

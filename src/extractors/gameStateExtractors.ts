@@ -1,50 +1,50 @@
-import {GameState, EntityTypes} from '../typings'
+import {TGameState, EEntityTypes} from '../typings'
 
-export const extractClientById = (state: GameState, clientId: string)=> {
+export const extractClientById = (state: TGameState, clientId: string)=> {
     return state.clients.get(clientId) || null;
 }
 
-export const extractGrabbedEntityOfClientById = (state: GameState, clientId)=> {
+export const extractGrabbedEntityOfClientById = (state: TGameState, clientId)=> {
     return extractClientById(state, clientId)?.grabbedEntity;
 }
 
-export const extractCardById = (state: GameState, entityId: string)=> {
+export const extractCardById = (state: TGameState, entityId: string)=> {
     return state.cards.get(entityId) || null;
 }
 
-export const extractDeckById = (state: GameState, entityId: string)=> {
+export const extractDeckById = (state: TGameState, entityId: string)=> {
     return state.decks.get(entityId);
 }
 
-export const extractEntityByTypeAndId = (state: GameState, entityType: EntityTypes, entityId: string)=> {
-    if(entityType === EntityTypes.CARD){
+export const extractEntityByTypeAndId = (state: TGameState, entityType: EEntityTypes, entityId: string)=> {
+    if(entityType === EEntityTypes.CARD){
         return extractCardById(state, entityId);
     }
-    else if(entityType === EntityTypes.DECK){
+    else if(entityType === EEntityTypes.DECK){
         return extractDeckById(state, entityId);
     }
 }
 
-export const extractClientHandById = (state: GameState, clientId: string) => {
+export const extractClientHandById = (state: TGameState, clientId: string) => {
     return state.hands.get(clientId);
 }
 
-export const extractNumberOfClients = (state: GameState) : number => {
+export const extractNumberOfClients = (state: TGameState) : number => {
     return state.clients.size;
 }
 
-export const extractCardFromClientHandById = (state: GameState, clientId:string, entityId: string) => {
+export const extractCardFromClientHandById = (state: TGameState, clientId:string, entityId: string) => {
     return state.hands.get(clientId)?.cards.find(card => card.entityId === entityId);
 }
 
-export const extractClientHandCardsById = (state: GameState, clientId: string)=> {
+export const extractClientHandCardsById = (state: TGameState, clientId: string)=> {
     return state.hands.get(clientId)?.cards || null;
 }
 
-export const extractCardFromDeckById = (state: GameState, deckId: string, cardId: string)=> {
+export const extractCardFromDeckById = (state: TGameState, deckId: string, cardId: string)=> {
     return state.decks.get(deckId).cards.find(card => card.entityId === cardId);
 }
 
-export const extractClientsSeatById = (state: GameState, clientId: string)=> {
+export const extractClientsSeatById = (state: TGameState, clientId: string)=> {
     return state.clients.get(clientId)?.clientInfo.seatId || null;
 }

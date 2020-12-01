@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, IPutOnTableVerb } from '../../../../typings';
+import { ECardVerbTypes, IPutOnTableVerb } from '../../../../typings';
 import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById, extractCardFromClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { CardVerbHandler } from '../CardVerbHandler';
@@ -8,7 +8,7 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../Table';
 
-describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, ()=> {
+describe(`handle ${ECardVerbTypes.PUT_ON_TABLE} verb`, ()=> {
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
@@ -23,7 +23,7 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, ()=> {
             positionX: 99,
             positionY: 66,
             faceUp: true,
-            type: CardVerbTypes.PUT_ON_TABLE
+            type: ECardVerbTypes.PUT_ON_TABLE
         };
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {

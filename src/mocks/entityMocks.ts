@@ -1,9 +1,9 @@
-import { CardEntity, DeckEntity, DeckCard, HandCard, EntityTypes } from "../typings";
+import { ICardEntity, IDeckEntity, IDeckCard, IHandCard, EEntityTypes } from "../typings";
 
-export const cardEntityMock1: CardEntity = {
+export const cardEntityMock1: ICardEntity = {
     entityId: 'card-entity-id1',
     rotation: 0,
-    entityType: EntityTypes.CARD,
+    entityType: EEntityTypes.CARD,
     grabbedBy: null,
     positionX: 0,
     positionY: 1,
@@ -12,10 +12,10 @@ export const cardEntityMock1: CardEntity = {
     ownerDeck: null
 }
 
-export const cardEntityMock2: CardEntity = {
+export const cardEntityMock2: ICardEntity = {
     entityId: 'card-entity-id2',
     rotation: 0,
-    entityType: EntityTypes.CARD,
+    entityType: EEntityTypes.CARD,
     grabbedBy: null,
     positionX: 0,
     positionY: 1,
@@ -24,26 +24,26 @@ export const cardEntityMock2: CardEntity = {
     ownerDeck: null
 }
 
-export const deckCardMock: DeckCard = {
+export const deckCardMock: IDeckCard = {
     entityId: 'deck-card-id',
 }
 
-export const handCardMock1: HandCard = {
+export const handCardMock1: IHandCard = {
     entityId: 'hand-card-id1',
     faceUp: true,
     ownerDeck: null,
 }
 
-export const handCardMock2: HandCard = {
+export const handCardMock2: IHandCard = {
     entityId: 'hand-card-id2',
     faceUp: true,
     ownerDeck: null,
 }
 
-export const deckEntityMock1: DeckEntity = {
+export const deckEntityMock1: IDeckEntity = {
     entityId: 'deck-entity-id1',
     rotation: 0,
-    entityType: EntityTypes.DECK,
+    entityType: EEntityTypes.DECK,
     grabbedBy: null,
     positionX: 4,
     positionY: 16,
@@ -52,10 +52,10 @@ export const deckEntityMock1: DeckEntity = {
     drawIndex: 0,
 }
 
-export const deckEntityMock2: DeckEntity = {
+export const deckEntityMock2: IDeckEntity = {
     entityId: 'deck-entity-id2',
     rotation: 0,
-    entityType: EntityTypes.DECK,
+    entityType: EEntityTypes.DECK,
     grabbedBy: null,
     positionX: 4,
     positionY: 16,

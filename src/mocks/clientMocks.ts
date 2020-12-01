@@ -1,21 +1,19 @@
-import { ClientConnectionStatuses, Client } from "../typings";
+import { EClientConnectionStatuses, TClient } from "../typings";
 
-// interface ClientInfoMock extends Pick<>
-
-export const mockClient1: Client = {
+export const mockClient1: TClient = {
     clientInfo: {
         clientId: 'client-1',
         seatId: "1",
     },
     grabbedEntity: null,
-    status: ClientConnectionStatuses.CONNECTED
+    status: EClientConnectionStatuses.CONNECTED
 }
 
-export const mockClient2: Client = {
+export const mockClient2: TClient = {
     clientInfo: {
         clientId: 'client-2',
         seatId: "4",
     },
     grabbedEntity: null,
-    status: ClientConnectionStatuses.CONNECTED
+    status: EClientConnectionStatuses.CONNECTED
 }

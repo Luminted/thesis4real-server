@@ -4,18 +4,18 @@ import { extractClientHandById } from '../../../../extractors/gameStateExtractor
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { handCardMock1 } from '../../../../mocks/entityMocks';
 import { TableStateStore } from '../../../../stores/TableStateStore';
-import { CardVerbTypes, IReorderHandVerb } from '../../../../typings';
+import { ECardVerbTypes, IReorderHandVerb } from '../../../../typings';
 import { TableHandler } from '../../../Table';
 import { CardVerbHandler } from '../CardVerbHandler';
 
-describe(`handle ${CardVerbTypes.REORDER_HAND} verb`, () => {
+describe(`handle ${ECardVerbTypes.REORDER_HAND} verb`, () => {
     
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
     const verb: IReorderHandVerb = {
-        type: CardVerbTypes.REORDER_HAND,
+        type: ECardVerbTypes.REORDER_HAND,
         clientId,
         order: [0,3,2,1],
     }

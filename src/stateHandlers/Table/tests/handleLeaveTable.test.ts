@@ -4,10 +4,10 @@ import { extractClientById, extractClientHandById, extractCardById } from '../..
 import { mockClient1 } from '../../../mocks/clientMocks';
 import { TableHandler } from '../TableHandler';
 import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
-import { TableClientEvents } from '../../../typings';
+import { ETableClientEvents } from '../../../typings';
 import { cardEntityMock1, handCardMock1, handCardMock2 } from '../../../mocks/entityMocks';
 
-describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, () => {
+describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore)
     const gameStateStore = tableStateStore.state.gameStateStore;

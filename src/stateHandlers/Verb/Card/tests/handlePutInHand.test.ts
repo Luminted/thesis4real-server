@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, IPutInHandVerb } from '../../../../typings';
+import { ECardVerbTypes, IPutInHandVerb } from '../../../../typings';
 import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { Container } from 'typescript-ioc';
@@ -8,7 +8,7 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 import { cardEntityMock1, handCardMock1 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../Table';
 
-describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, () => {
+describe(`handle ${ECardVerbTypes.PUT_IN_HAND} verb`, () => {
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
@@ -21,7 +21,7 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, () => {
         grabbedAtY: 20
     }
     const verb: IPutInHandVerb = {
-        type: CardVerbTypes.PUT_IN_HAND,
+        type: ECardVerbTypes.PUT_IN_HAND,
         clientId: client.clientInfo.clientId,
         entityId: entityId,
         faceUp: true,

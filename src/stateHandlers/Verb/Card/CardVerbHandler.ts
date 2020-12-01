@@ -1,7 +1,7 @@
 import { original } from "immer";
 import { uuid } from "short-uuid";
 import { Singleton, Inject } from "typescript-ioc";
-import { CardEntity, EntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IPutOnTableVerb, IReorderHandVerb } from "../../../typings";
+import { ICardEntity, EEntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IPutOnTableVerb, IReorderHandVerb } from "../../../typings";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
@@ -40,7 +40,7 @@ export class CardVerbHandler {
                 entityId,
                 grabbedAtX,
                 grabbedAtY,
-                entityType: EntityTypes.CARD,
+                entityType: EEntityTypes.CARD,
             }
 
             // remove card from hand & update ordering
@@ -143,7 +143,7 @@ export class CardVerbHandler {
         zIndex: number,
         rotation: number,
         grabbedBy: string,
-        metadata: object): CardEntity 
+        metadata: object): ICardEntity 
        {
            return {
                positionX,
@@ -155,7 +155,7 @@ export class CardVerbHandler {
                zIndex,
                grabbedBy,
                metadata,
-               entityType: EntityTypes.CARD,
+               entityType: EEntityTypes.CARD,
            }
    }
 

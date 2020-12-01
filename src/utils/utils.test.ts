@@ -2,7 +2,7 @@ import assert from 'assert';
 import { calcNextZIndex } from "./utils"
 import { GameStateStore } from '../stores/GameStateStore';
 import { cardEntityMock1, deckEntityMock1 } from '../mocks/entityMocks';
-import { CardEntity, DeckEntity } from '../typings';
+import { ICardEntity, IDeckEntity } from '../typings';
 
 describe('Testing utility functions', () =>{
     describe('calcNextZIndex', () =>{
@@ -52,12 +52,12 @@ describe('Testing utility functions', () =>{
            gameStateStore.changeState(draft => {
                 for(let i = 0; i < numberOfCards; i++){
                     const cardId = `${numberOfEntities - i - 1}`;
-                    const card: CardEntity = {...cardEntityMock1, entityId: cardId, zIndex: zIndexLimit - i};
+                    const card: ICardEntity = {...cardEntityMock1, entityId: cardId, zIndex: zIndexLimit - i};
                     draft.cards.set(card.entityId, card);
                 }
                 for(let i = 0; i < numberOfDecks; i++){
                     const deckId = `${numberOfEntities - numberOfCards - i - 1}`;
-                    const deck: DeckEntity = {...deckEntityMock1, entityId: deckId, zIndex: zIndexLimit - numberOfCards - i};
+                    const deck: IDeckEntity = {...deckEntityMock1, entityId: deckId, zIndex: zIndexLimit - numberOfCards - i};
                     draft.decks.set(deck.entityId, deck);
                 }
                 draft.topZIndex = zIndexLimit;

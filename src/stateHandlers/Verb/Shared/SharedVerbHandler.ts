@@ -4,7 +4,7 @@ import { extractClientById, extractEntityByTypeAndId, extractGrabbedEntityOfClie
 import { calcNextZIndex } from "../../../utils";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
-import { EntityTypes, IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "../../../typings";
+import { EEntityTypes, IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "../../../typings";
 
 @Singleton
 export class SharedVerbHandler {
@@ -83,10 +83,10 @@ export class SharedVerbHandler {
     remove(verb: IRemoveVerb) {
         this.gameStateStore.changeState(draft => {
             const {entityType, entityId} = verb;
-            if(entityType === EntityTypes.CARD){
+            if(entityType === EEntityTypes.CARD){
                 draft.cards.delete(entityId);
             }
-            else if(entityType === EntityTypes.DECK){
+            else if(entityType === EEntityTypes.DECK){
                 draft.decks.delete(entityId);
             }
 

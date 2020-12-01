@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, IGrabFromHandVerb, EntityTypes, GrabbedEntity } from "../../../../typings";
+import { ECardVerbTypes, IGrabFromHandVerb, EEntityTypes, TGrabbedEntity } from "../../../../typings";
 import { extractClientById, extractCardById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';
@@ -8,7 +8,7 @@ import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
 import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../Table';
 
-describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, () => {
+describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
@@ -19,7 +19,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     const verb: IGrabFromHandVerb = {
         clientId: client2Id,
         faceUp: false,
-        type: CardVerbTypes.GRAB_FROM_HAND,
+        type: ECardVerbTypes.GRAB_FROM_HAND,
         positionX: 0,
         positionY: 0,
         entityId: entityId,
@@ -43,9 +43,9 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     it('should set grabbed entity of correct client with the cards data', () =>{
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const nextClient = extractClientById(nextGameState, verb.clientId);
-        const expectedGrabbedEntity: GrabbedEntity = {
+        const expectedGrabbedEntity: TGrabbedEntity = {
             entityId: verb.entityId,
-            entityType: EntityTypes.CARD,
+            entityType: EEntityTypes.CARD,
             grabbedAtX: verb.grabbedAtX,
             grabbedAtY: verb.grabbedAtY
         }

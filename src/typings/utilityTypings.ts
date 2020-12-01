@@ -1,1 +1,1 @@
-export type MaybeNull<T> = T | null
+export type TMaybeNull<T> = T | null

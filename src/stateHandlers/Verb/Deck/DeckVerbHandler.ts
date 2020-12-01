@@ -5,7 +5,7 @@ import {uuid} from "short-uuid";
 import { extractDeckById } from "../../../extractors/gameStateExtractors";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
-import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, DeckEntity, EntityTypes } from "../../../typings";
+import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 import { zIndexLimit } from "../../../config";
 import { CardVerbHandler } from "../Card";
@@ -105,7 +105,7 @@ export class DeckVerbHandler {
         return this.gameStateStore.state;
     }
 
-    createDeckEntity(positionX: number, positionY: number, zIndex: number, entityId: string, rotation: number, grabbedBy: string, metadata: object, cardsMetadata: object[] = []): DeckEntity {
+    createDeckEntity(positionX: number, positionY: number, zIndex: number, entityId: string, rotation: number, grabbedBy: string, metadata: object, cardsMetadata: object[] = []): IDeckEntity {
         return {
             positionX,
             positionY,
@@ -114,7 +114,7 @@ export class DeckVerbHandler {
             grabbedBy,
             zIndex,
             metadata,
-            entityType: EntityTypes.DECK,
+            entityType: EEntityTypes.DECK,
             drawIndex: 0,
             cards: cardsMetadata.map(metadata => ({ metadata, entityId: uuid()}))
         }

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { TableClientEvents, ClientConnectionStatuses } from "../../../typings";
+import { ETableClientEvents, EClientConnectionStatuses } from "../../../typings";
 import { extractClientById, extractClientHandById } from '../../../extractors/gameStateExtractors';
 import { TableHandler } from '../TableHandler';
 import { Container } from 'typescript-ioc';
@@ -7,7 +7,7 @@ import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore
 import { extractEmptySeats } from '../../../extractors/tableStateExtractor';
 
 
-describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, () => {
+describe(`Socket handler for: ${ETableClientEvents.JOIN_TABLE}`, () => {
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore);
     const gameStateStore = tableStateStore.state.gameStateStore;
@@ -41,10 +41,10 @@ describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, () => {
         assert.equal(client.clientInfo.seatId, nextSeat);
         assert.equal(nextGameStateEmptySeats.includes(nextSeat), false);
     })
-    it(`should create client with status ${ClientConnectionStatuses.CONNECTED}`, () => {
+    it(`should create client with status ${EClientConnectionStatuses.CONNECTED}`, () => {
         const nextGameState = tableHandler.joinTable(clientId);
 
         const createdClient = extractClientById(nextGameState, clientId);
-        assert.equal(createdClient.status, ClientConnectionStatuses.CONNECTED);
+        assert.equal(createdClient.status, EClientConnectionStatuses.CONNECTED);
     })
 })

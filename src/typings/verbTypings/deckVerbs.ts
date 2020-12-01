@@ -1,6 +1,6 @@
-import {GenericVerb} from "./index";
+import {IGenericVerb} from "./index";
 
-export enum DeckVerbTypes {
+export enum EDeckVerbTypes {
     ADD_DECK = 'ADD_DECK',
     DRAW_FACE_UP = 'DRAW_FACE_UP',
     DRAW_FACE_DOWN = 'DRAW_FACE_DOWN',
@@ -14,8 +14,8 @@ export enum DeckVerbTypes {
  * @metadata client side info of deck
  * @containedCardsMetadata client side info of cards in deck
  */
-export interface IAddDeckVerb extends Omit<GenericVerb, "entityId" | "clientId"> {
-    type: DeckVerbTypes.ADD_DECK
+export interface IAddDeckVerb extends Omit<IGenericVerb, "entityId" | "clientId"> {
+    type: EDeckVerbTypes.ADD_DECK
     rotation: number,
     metadata: object,
     containedCardsMetadata: object[]
@@ -24,27 +24,27 @@ export interface IAddDeckVerb extends Omit<GenericVerb, "entityId" | "clientId">
 /**
  * @entityId deck to draw from
  */
-export interface IDrawFaceUpVerb extends Omit<GenericVerb, "clientId" | "positionX" | "positionY"> {
-    type: DeckVerbTypes.DRAW_FACE_UP
+export interface IDrawFaceUpVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+    type: EDeckVerbTypes.DRAW_FACE_UP
 }
 
 /**
  * @entityId deck to draw from
  */
-export interface IDrawFaceDownVerb extends Omit<GenericVerb, "clientId" | "positionX" | "positionY"> {
-    type: DeckVerbTypes.DRAW_FACE_DOWN
+export interface IDrawFaceDownVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+    type: EDeckVerbTypes.DRAW_FACE_DOWN
 }
 
 /**
  * @entityId deck being reset
  */
-export interface IResetVerb extends Omit<GenericVerb, "clientId" | "positionX" | "positionY"> {
-    type: DeckVerbTypes.RESET
+export interface IResetVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+    type: EDeckVerbTypes.RESET
 }
 
 /**
  * @entityId deck being shuffled
  */
-export interface IShuffleVerb extends Omit<GenericVerb, "clientId" | "positionX" | "positionY"> {
-    type: DeckVerbTypes.SHUFFLE
+export interface IShuffleVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+    type: EDeckVerbTypes.SHUFFLE
 }

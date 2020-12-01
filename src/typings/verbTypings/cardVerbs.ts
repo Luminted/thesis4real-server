@@ -1,6 +1,6 @@
-import {GenericVerb} from "./index";
+import {IGenericVerb} from "./index";
 
-export enum CardVerbTypes {
+export enum ECardVerbTypes {
     ADD_CARD = 'ADD_CARD',
     FLIP = 'FLIP',
     PUT_IN_HAND = 'PUT_IN_HAND',
@@ -15,8 +15,8 @@ export enum CardVerbTypes {
  * @rotation card will be placed at this rotation
  * @metadata client specific info of card
  */
-export interface IAddCardVerb extends Omit<GenericVerb, "clientId" | "entityId" > {
-    type: CardVerbTypes.ADD_CARD
+export interface IAddCardVerb extends Omit<IGenericVerb, "clientId" | "entityId" > {
+    type: ECardVerbTypes.ADD_CARD
     faceUp: boolean
     rotation: number
     metadata?: object
@@ -25,8 +25,8 @@ export interface IAddCardVerb extends Omit<GenericVerb, "clientId" | "entityId" 
 /**
  * @entityId card being flipped
  */
-export interface IFlipVerb extends Omit<GenericVerb, "clientId" | "positionX" | "positionY" > {
-    type: CardVerbTypes.FLIP
+export interface IFlipVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY" > {
+    type: ECardVerbTypes.FLIP
 }
 
 /**
@@ -34,8 +34,8 @@ export interface IFlipVerb extends Omit<GenericVerb, "clientId" | "positionX" | 
  * @entityId the card being put in hand
  * @faceUp whether the card is facing up or not
  */
-export interface IPutInHandVerb extends Omit<GenericVerb, "positionX" | "positionY"  > {
-    type: CardVerbTypes.PUT_IN_HAND
+export interface IPutInHandVerb extends Omit<IGenericVerb, "positionX" | "positionY"  > {
+    type: ECardVerbTypes.PUT_IN_HAND
     faceUp: boolean
 }
 
@@ -47,8 +47,8 @@ export interface IPutInHandVerb extends Omit<GenericVerb, "positionX" | "positio
  * @etityId the card being grabbed
  * @faceUp whether the card is facing up or not
  */
-export interface IGrabFromHandVerb extends GenericVerb {
-    type: CardVerbTypes.GRAB_FROM_HAND
+export interface IGrabFromHandVerb extends IGenericVerb {
+    type: ECardVerbTypes.GRAB_FROM_HAND
     grabbedAtX: number,
     grabbedAtY: number,
     grabbedFrom: string
@@ -61,8 +61,8 @@ export interface IGrabFromHandVerb extends GenericVerb {
  * @entityId the card being placed on the table
  * @faceUp whether the card is facing up or not
  */
-export interface IPutOnTableVerb extends GenericVerb {
-    type: CardVerbTypes.PUT_ON_TABLE
+export interface IPutOnTableVerb extends IGenericVerb {
+    type: ECardVerbTypes.PUT_ON_TABLE
     faceUp:boolean
 }
 
@@ -70,7 +70,7 @@ export interface IPutOnTableVerb extends GenericVerb {
  * @clientId the client that's hand is going to be reordered
  * @order the new ordering of the hand
  */
-export interface IReorderHandVerb extends Omit<GenericVerb, "entityId" | "positionX" | "positionY"> {
-    type: CardVerbTypes.REORDER_HAND
+export interface IReorderHandVerb extends Omit<IGenericVerb, "entityId" | "positionX" | "positionY"> {
+    type: ECardVerbTypes.REORDER_HAND
     order: number[]
 }

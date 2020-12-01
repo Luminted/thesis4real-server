@@ -1,83 +1,83 @@
-import {MaybeNull} from './utilityTypings'
-import { ClientConnectionStatuses } from './socketTypings';
+import {TMaybeNull} from './utilityTypings'
+import { EClientConnectionStatuses } from './socketTypings';
 import { GameStateStore } from '../stores/GameStateStore';
 
-export interface Entity {
-    readonly entityType: EntityTypes,
+export interface IEntity {
+    readonly entityType: EEntityTypes,
     readonly entityId: string,
     positionX: number,
     positionY: number,
-    grabbedBy: MaybeNull<string>
+    grabbedBy: TMaybeNull<string>
     zIndex: number,
     rotation: number,
     metadata?: object 
 }
 
-export interface HandCard extends Pick<CardEntity, "entityId" | "metadata" | "ownerDeck" | "faceUp"> {}
+export interface IHandCard extends Pick<ICardEntity, "entityId" | "metadata" | "ownerDeck" | "faceUp"> {}
 
-export interface DeckCard extends Pick<CardEntity, "entityId" | "metadata"> {}
-export interface CardEntity extends Entity {
+export interface IDeckCard extends Pick<ICardEntity, "entityId" | "metadata"> {}
+export interface ICardEntity extends IEntity {
     entityId: string,
-    entityType: EntityTypes.CARD,
+    entityType: EEntityTypes.CARD,
     faceUp: boolean,
-    ownerDeck: MaybeNull<string>,
+    ownerDeck: TMaybeNull<string>,
 }
 
-export interface DeckEntity extends Entity {
-    entityType: EntityTypes.DECK
-    cards: DeckCard[],
+export interface IDeckEntity extends IEntity {
+    entityType: EEntityTypes.DECK
+    cards: IDeckCard[],
     drawIndex: number
 }
 
-export enum EntityTypes {
+export enum EEntityTypes {
     CARD = 'CARD',
     DECK = 'DECK'
 }
 
-export type GrabbedEntity = MaybeNull<{
+export type TGrabbedEntity = TMaybeNull<{
     entityId: string,
-    entityType: EntityTypes
+    entityType: EEntityTypes
     grabbedAtX: number,
     grabbedAtY: number
 }>
 
-export type Client = {
-    clientInfo: ClientInfo,
-    grabbedEntity: GrabbedEntity,
-    status: ClientConnectionStatuses
+export type TClient = {
+    clientInfo: TClientInfo,
+    grabbedEntity: TGrabbedEntity,
+    status: EClientConnectionStatuses
 }
 
-export type ClientHand = {
+export type TClientHand = {
     clientId: string,
-    cards: HandCard[],
+    cards: IHandCard[],
     ordering: number[]
 }
 
-export type ClientInfo = {
+export type TClientInfo = {
     clientId: string,
     clientName?: string,
     seatId: string
 }
 
-export interface GameState {
-    cards: Map<string, CardEntity>,
-    decks: Map<string, DeckEntity>,
-    clients: Map<string, Client>,
-    hands: Map<string, ClientHand>,
+export type TGameState = {
+    cards: Map<string, ICardEntity>,
+    decks: Map<string, IDeckEntity>,
+    clients: Map<string, TClient>,
+    hands: Map<string, TClientHand>,
     entityScale: number,
     topZIndex: number,
 }
 
-export type CardTable = {
+export type TCardTable = {
     readonly gameStateStore: GameStateStore,
     defaultPosition: [number, number],
     emptySeats: string[],
 }
 
-export type SerializedGameState = {
-    cards: CardEntity[],
-    decks: DeckEntity[],
-    clients: Client[],
-    hands: ClientHand[],
+export type TSerializedGameState = {
+    cards: ICardEntity[],
+    decks: IDeckEntity[],
+    clients: TClient[],
+    hands: TClientHand[],
     entityScale: number
 }

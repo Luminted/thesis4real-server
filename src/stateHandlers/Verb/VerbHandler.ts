@@ -1,5 +1,5 @@
 import { Inject, Singleton } from "typescript-ioc";
-import { CardVerbTypes, DeckVerbTypes, SharedVerbTypes, Verb } from "../../typings";
+import { ECardVerbTypes, EDeckVerbTypes, ESharedVerbTypes, TVerb } from "../../typings";
 import { CardVerbHandler } from "./Card/CardVerbHandler";
 import { SharedVerbHandler } from "./Shared/SharedVerbHandler";
 import { DeckVerbHandler } from "./Deck/DeckVerbHandler";
@@ -18,41 +18,41 @@ export class VerbHandler {
     private gameStateStore: GameStateStore;
     
 
-    handleVerb(verb: Verb){
+    handleVerb(verb: TVerb){
         switch(verb.type){
-            case SharedVerbTypes.GRAB:
+            case ESharedVerbTypes.GRAB:
                 return this.sharedVerbHandler.grabFromTable(verb);
-            case SharedVerbTypes.RELEASE:
+            case ESharedVerbTypes.RELEASE:
                 return this.sharedVerbHandler.release(verb);
-            case SharedVerbTypes.MOVE:
+            case ESharedVerbTypes.MOVE:
                 return this.sharedVerbHandler.move(verb);
-            case SharedVerbTypes.REMOVE:
+            case ESharedVerbTypes.REMOVE:
                 return this.sharedVerbHandler.remove(verb);
-            case SharedVerbTypes.MOVE_TO:
+            case ESharedVerbTypes.MOVE_TO:
                 return this.sharedVerbHandler.moveTo(verb);
-            case SharedVerbTypes.ROTATE:
+            case ESharedVerbTypes.ROTATE:
                 return this.sharedVerbHandler.rotate(verb);
 
-            case DeckVerbTypes.DRAW_FACE_UP:
+            case EDeckVerbTypes.DRAW_FACE_UP:
                 return this.deckVerbHandler.drawCard(verb, true);
-            case DeckVerbTypes.RESET:
+            case EDeckVerbTypes.RESET:
                 return this.deckVerbHandler.reset(verb);
-            case DeckVerbTypes.SHUFFLE:
+            case EDeckVerbTypes.SHUFFLE:
                 return this.deckVerbHandler.shuffle(verb);
-            case DeckVerbTypes.ADD_DECK:
+            case EDeckVerbTypes.ADD_DECK:
                 return this.deckVerbHandler.addDeck(verb);
                 
-            case CardVerbTypes.PUT_IN_HAND:
+            case ECardVerbTypes.PUT_IN_HAND:
                 return this.cardVerbHandler.putInHand(verb);
-            case CardVerbTypes.GRAB_FROM_HAND:
+            case ECardVerbTypes.GRAB_FROM_HAND:
                 return this.cardVerbHandler.grabFromHand(verb);
-            case CardVerbTypes.PUT_ON_TABLE:
+            case ECardVerbTypes.PUT_ON_TABLE:
                 return this.cardVerbHandler.putOnTable(verb);
-            case CardVerbTypes.FLIP:
+            case ECardVerbTypes.FLIP:
                 return this.cardVerbHandler.flip(verb);
-            case CardVerbTypes.REORDER_HAND:
+            case ECardVerbTypes.REORDER_HAND:
                 return this.cardVerbHandler.reorderHand(verb);
-            case CardVerbTypes.ADD_CARD:
+            case ECardVerbTypes.ADD_CARD:
                 return this.cardVerbHandler.addCard(verb);
 
             default:

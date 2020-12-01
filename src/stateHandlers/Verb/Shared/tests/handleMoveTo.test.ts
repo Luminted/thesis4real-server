@@ -1,13 +1,13 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { IMoveToVerb, SharedVerbTypes, EntityTypes } from '../../../../typings';
+import { IMoveToVerb, ESharedVerbTypes, EEntityTypes } from '../../../../typings';
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, deckEntityMock1 } from '../../../../mocks/entityMocks';
 
-describe(`handle ${SharedVerbTypes.MOVE_TO}`, () => {
+describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
@@ -25,9 +25,9 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, () => {
 
     it('should move the correct card to given position', () => {
         const verb: IMoveToVerb = {
-            type: SharedVerbTypes.MOVE_TO,
+            type: ESharedVerbTypes.MOVE_TO,
             entityId: cardEntityId,
-            entityType: EntityTypes.CARD,
+            entityType: EEntityTypes.CARD,
             positionX: 666,
             positionY: 777,
         }
@@ -41,9 +41,9 @@ describe(`handle ${SharedVerbTypes.MOVE_TO}`, () => {
 
     it('should move the correct deck to given position', () => {
         const verb: IMoveToVerb = {
-            type: SharedVerbTypes.MOVE_TO,
+            type: ESharedVerbTypes.MOVE_TO,
             entityId: deckEntityId,
-            entityType: EntityTypes.DECK,
+            entityType: EEntityTypes.DECK,
             positionX: 888,
             positionY: 999,
         }

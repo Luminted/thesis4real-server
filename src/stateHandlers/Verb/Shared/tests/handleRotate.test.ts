@@ -4,17 +4,17 @@ import { extractCardById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { cardEntityMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
-import { IRotateVerb, SharedVerbTypes } from "../../../../typings";
+import { IRotateVerb, ESharedVerbTypes } from "../../../../typings";
 import { SharedVerbHandler } from "../SharedVerbHandler";
 
 
-describe(`handle ${SharedVerbTypes.ROTATE}`, () => {
+describe(`handle ${ESharedVerbTypes.ROTATE}`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {entityId, entityType} = cardEntityMock1;
     const {clientInfo: {clientId}} = mockClient1;
     const verb: IRotateVerb = {
-        type: SharedVerbTypes.ROTATE,
+        type: ESharedVerbTypes.ROTATE,
         angle: 12,
         entityId: entityId,
         entityType: entityType,

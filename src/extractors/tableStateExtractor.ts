@@ -1,6 +1,6 @@
-import { CardTable } from "../typings";
+import { TCardTable } from "../typings";
 
 
-export const extractEmptySeats = (state: CardTable) => {
+export const extractEmptySeats = (state: TCardTable) => {
     return state.emptySeats;
 }

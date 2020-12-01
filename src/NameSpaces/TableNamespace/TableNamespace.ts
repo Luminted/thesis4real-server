@@ -1,7 +1,7 @@
 import throttle from "lodash.throttle";
 import { SocketNamespace } from "..";
 import { Singleton, Inject } from "typescript-ioc";
-import { TableClientEvents, TableServerEvents, Verb, GameState, ClientInfo, SerializedGameState } from "../../typings";
+import { ETableClientEvents, ETableServerEvents, TVerb, TGameState, TClientInfo, TSerializedGameState } from "../../typings";
 import { serializeGameState } from "../../utils";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
@@ -25,10 +25,10 @@ export class TableNamespace extends SocketNamespace {
         super();
 
         this.onConnect = (socket) =>{
-            socket.emit(TableServerEvents.SYNC, serializeGameState(this.gameStateStore.state));
+            socket.emit(ETableServerEvents.SYNC, serializeGameState(this.gameStateStore.state));
         }
 
-        this.addEventListener(TableClientEvents.VERB, (verb: Verb, acknowledgeFunction?: Function) => {
+        this.addEventListener(ETableClientEvents.VERB, (verb: TVerb, acknowledgeFunction?: Function) => {
             const nextGameState = this.verbHandler.handleVerb(verb);
 
             this.syncGameState(nextGameState);
@@ -37,7 +37,7 @@ export class TableNamespace extends SocketNamespace {
             }
         });
 
-        this.addEventListenerWithSocket(TableClientEvents.JOIN_TABLE, (socket: SocketIO.Socket) => (acknowledgeFunction?: (clientInfo: ClientInfo, gameState: SerializedGameState) => void) => {
+        this.addEventListenerWithSocket(ETableClientEvents.JOIN_TABLE, (socket: SocketIO.Socket) => (acknowledgeFunction?: (clientInfo: TClientInfo, gameState: TSerializedGameState) => void) => {
             const { id } = socket;
             console.log(id, ' joined table');
 
@@ -54,7 +54,7 @@ export class TableNamespace extends SocketNamespace {
         })
 
         // TODO: type reason and handle cases
-        this.addEventListenerWithSocket(TableClientEvents.DISCONNECT, (socket: SocketIO.Socket) => (reason: string) => {
+        this.addEventListenerWithSocket(ETableClientEvents.DISCONNECT, (socket: SocketIO.Socket) => (reason: string) => {
             console.log('Disconnection reason: ', reason);
             
             const {id} = socket;
@@ -65,7 +65,7 @@ export class TableNamespace extends SocketNamespace {
         });
     }
 
-    private syncGameState = throttle((gameState: GameState) => {
-        this.emit(TableServerEvents.SYNC, serializeGameState(gameState));
+    private syncGameState = throttle((gameState: TGameState) => {
+        this.emit(ETableServerEvents.SYNC, serializeGameState(gameState));
     }, serverTick);
 }

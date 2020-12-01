@@ -2,10 +2,10 @@ import assert from "assert";
 import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore";
-import { DeckVerbTypes, IAddDeckVerb, DeckEntity } from "../../../../typings";
+import { EDeckVerbTypes, IAddDeckVerb, IDeckEntity } from "../../../../typings";
 import { DeckVerbHandler } from "../../Deck";
 
-describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
+describe(`handle ${EDeckVerbTypes.ADD_DECK}`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const {gameStateStore} = Container.get(TableStateStore).state;
     const {clientInfo: {clientId}} = mockClient1;
@@ -19,7 +19,7 @@ describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
 
     it("should add a deck entity with verb parameters", () => {
         const verb: IAddDeckVerb = {
-            type: DeckVerbTypes.ADD_DECK,
+            type: EDeckVerbTypes.ADD_DECK,
             positionX: 14,
             positionY: 77,
             rotation: 34,
@@ -32,7 +32,7 @@ describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {
         const nextGameState = deckVerbHandler.addDeck(verb);
 
         const { value } = nextGameState.decks.values().next();
-        const addedEntity = value as DeckEntity;
+        const addedEntity = value as IDeckEntity;
         assert.equal(addedEntity.positionX, verb.positionX);
         assert.equal(addedEntity.positionY, verb.positionY);
         assert.equal(addedEntity.rotation, verb.rotation);

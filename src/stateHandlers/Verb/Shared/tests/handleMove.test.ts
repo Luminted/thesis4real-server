@@ -1,13 +1,13 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { EntityTypes, CardEntity, DeckEntity, GameState, IMoveVerb, SharedVerbTypes } from "../../../../typings";
+import { EEntityTypes, ICardEntity, IDeckEntity, TGameState, IMoveVerb, ESharedVerbTypes } from "../../../../typings";
 import { extractClientById, extractCardById, extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore';
 import { cardEntityMock1, cardEntityMock2, deckEntityMock1, deckEntityMock2 } from '../../../../mocks/entityMocks';
 
-describe(`handle ${SharedVerbTypes.MOVE}`, () =>{
+describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
     const sharedVerbHandler = new SharedVerbHandler();
     const tableStateStore = Container.get(TableStateStore); 
     const gameStateStore = tableStateStore.state.gameStateStore;
@@ -28,18 +28,18 @@ describe(`handle ${SharedVerbTypes.MOVE}`, () =>{
         })
     })
 
-    const testedVerbType = SharedVerbTypes.MOVE;
-    describe(`EntityType: ${EntityTypes.CARD}`, () => {
+    const testedVerbType = ESharedVerbTypes.MOVE;
+    describe(`EntityType: ${EEntityTypes.CARD}`, () => {
         it('should move the correct card by the offset of input mouse position and update grabbedEntity position for correct client', () => {
             const grabbedAt = {
                 x: 2,
                 y: 3
             }
             let verb: IMoveVerb;
-            let entityType = EntityTypes.CARD;
-            let movedCard: CardEntity;
+            let entityType = EEntityTypes.CARD;
+            let movedCard: ICardEntity;
             let { entityId } =  cardEntityMock1;
-            let nextGameState: GameState;
+            let nextGameState: TGameState;
             
             gameStateStore.changeState(draft => {
                 extractClientById(draft, clientId).grabbedEntity = {
@@ -124,17 +124,17 @@ describe(`handle ${SharedVerbTypes.MOVE}`, () =>{
         })
     })
 
-    describe(`EntityType: ${EntityTypes.DECK}`, () => {
+    describe(`EntityType: ${EEntityTypes.DECK}`, () => {
         it('should move the correct card by the offset of input mouse position and update grabbedEntity position for correct client', () => {
             const grabbedAt = {
                 x: 2,
                 y: 3
             }
-            const entityType = EntityTypes.DECK;
+            const entityType = EEntityTypes.DECK;
             const {entityId} = deckEntityMock2;
             let verb: IMoveVerb;
-            let movedDeck: DeckEntity;
-            let nextGameState: GameState;
+            let movedDeck: IDeckEntity;
+            let nextGameState: TGameState;
             
             gameStateStore.changeState(draft => {
             extractClientById(draft, clientId).grabbedEntity = {

@@ -1,11 +1,11 @@
 import { Socket } from '../socket'
-import { SocketListenerUsingSocket, PlainSocketListener, SocketEventHandler, SocketEventUsingSocket } from './typings';
+import { TSocketListenerUsingSocket, TPlainSocketListener, TSocketEventHandler, TSocketEventUsingSocket } from './typings';
 import { Namespace } from 'socket.io';
 
 export class SocketNamespace {
     public socket: Socket;
-    public plainListeners: PlainSocketListener[] = [];
-    public listenersUsingSocket: SocketListenerUsingSocket[] = [];
+    public plainListeners: TPlainSocketListener[] = [];
+    public listenersUsingSocket: TSocketListenerUsingSocket[] = [];
     public onConnect: (socket: SocketIO.Socket) => void | null = null;
     public nameSpace: Namespace;
 
@@ -29,14 +29,14 @@ export class SocketNamespace {
 
     }
 
-    public addEventListener(name: string, handler: SocketEventHandler) {
+    public addEventListener(name: string, handler: TSocketEventHandler) {
         this.plainListeners.push({
             name,
             handler
         })
     }
 
-    public addEventListenerWithSocket(name: string, handler: SocketEventUsingSocket) {
+    public addEventListenerWithSocket(name: string, handler: TSocketEventUsingSocket) {
         this.listenersUsingSocket.push({
             name,
             handler

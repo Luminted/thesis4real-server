@@ -4,15 +4,15 @@ import { extractCardById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { cardEntityMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
-import { CardVerbTypes, IFlipVerb } from "../../../../typings";
+import { ECardVerbTypes, IFlipVerb } from "../../../../typings";
 import { CardVerbHandler } from "../CardVerbHandler";
 
-describe(`handling ${CardVerbTypes.FLIP}`, () => {
+describe(`handling ${ECardVerbTypes.FLIP}`, () => {
     const cardVerbHandler = new CardVerbHandler();
     const {gameStateStore} = Container.get(TableStateStore).state;
     const {clientInfo: {clientId}} = mockClient1;
     const verbBase: Omit<IFlipVerb, "entityId"> = {
-        type: CardVerbTypes.FLIP,
+        type: ECardVerbTypes.FLIP,
     }
 
     beforeEach(() => {
