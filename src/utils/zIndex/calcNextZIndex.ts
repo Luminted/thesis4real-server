@@ -1,17 +1,4 @@
-import { TGameState, TSerializedGameState } from "../typings";
-
-export const clamp = (value, min, max) => {
-    return Math.min(Math.max(value, min), max);
-}
-
-export const serializeGameState = (gameState: TGameState): TSerializedGameState => {
-    return {
-        cards: [...gameState.cards.values()],
-        clients: [...gameState.clients.values()],
-        hands: [...gameState.hands.values()],
-        decks: [...gameState.decks.values()],
-    }
-}
+import { TGameState } from "../../typings";
 
 // WARNING: This function has side effects. Use it only with Immer draft!
 export const calcNextZIndex = (gameStateDraft: TGameState, zIndexLimit: number)=> {

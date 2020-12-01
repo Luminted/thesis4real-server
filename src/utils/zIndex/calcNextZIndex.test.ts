@@ -1,14 +1,14 @@
 import assert from 'assert';
-import { calcNextZIndex } from "./utils"
-import { GameStateStore } from '../stores/GameStateStore';
-import { cardEntityMock1, deckEntityMock1 } from '../mocks/entityMocks';
-import { ICardEntity, IDeckEntity } from '../typings';
+import { calcNextZIndex } from "./calcNextZIndex"
+import { GameStateStore } from '../../stores/GameStateStore';
+import { cardEntityMock1, deckEntityMock1 } from '../../mocks/entityMocks';
+import { ICardEntity, IDeckEntity } from '../../typings';
 
 describe('Testing utility functions', () =>{
     describe('calcNextZIndex', () =>{
         let gameStateStore = new GameStateStore();
         
-        this.beforeEach(() => {
+        beforeEach(() => {
             gameStateStore.resetState();
         })
 
