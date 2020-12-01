@@ -4,15 +4,15 @@ import { GameStateStore } from '../stores/GameStateStore';
 import { cardEntityMock1, deckEntityMock1 } from '../mocks/entityMocks';
 import { CardEntity, DeckEntity } from '../types/dataModelDefinitions';
 
-describe('Testing utility functions', function(){
-    describe('calcNextZIndex', function(){
+describe('Testing utility functions', () =>{
+    describe('calcNextZIndex', () =>{
         let gameStateStore = new GameStateStore();
         
         this.beforeEach(() => {
             gameStateStore.resetState();
         })
 
-        it('should return topZIndex + 1', function(){
+        it('should return topZIndex + 1', () =>{
             const topZIndex = 2;
             const zIndexLimit = 10;
             gameStateStore.changeState(draft => {
@@ -21,7 +21,7 @@ describe('Testing utility functions', function(){
                 assert.equal(nextZIndex, topZIndex + 1)
             })
         })
-        it('should increment topZIndex by one', function(){
+        it('should increment topZIndex by one', () =>{
             const zIndexLimit = 10;
             const originalState = {...gameStateStore.state};
             gameStateStore.changeState(draft => {
@@ -29,7 +29,7 @@ describe('Testing utility functions', function(){
                 assert.equal(draft.topZIndex, originalState.topZIndex + 1);
             });
         })
-        it('should set topZIndex to the number of entities and return with it if z-index limit is reached', function(){
+        it('should set topZIndex to the number of entities and return with it if z-index limit is reached', () =>{
             const numberOfEntities = 15;
             const zIndexLimit = 50;
             gameStateStore.changeState(draft => {
@@ -44,7 +44,7 @@ describe('Testing utility functions', function(){
                 assert.equal(nextZIndex, numberOfEntities);
             })
         })
-        it('should reset z-indexes of all entities to start from 0 in order if topZIndex reaches limit', function(){
+        it('should reset z-indexes of all entities to start from 0 in order if topZIndex reaches limit', () =>{
             const zIndexLimit = 50;
             const numberOfCards = 6;
             const numberOfDecks = 4;

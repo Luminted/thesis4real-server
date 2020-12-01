@@ -8,7 +8,7 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 import { Container } from 'typescript-ioc';
 import { deckEntityMock1 } from '../../../../mocks/entityMocks';
 
-describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
+describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
@@ -35,7 +35,7 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         assert.equal(faceUp, true);
     })
 
-    it('should spawn a card directly on top of the deck', function() {
+    it('should spawn a card directly on top of the deck', () => {
         const originalDrawIndex = deck.drawIndex;
         
         const nextGameState = deckVerbHandler.drawCard(verb, true);
@@ -46,7 +46,7 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
         assert.equal(spawnedCard.positionY, deck.positionY);
     })
 
-    it('should spawn a card entity with the decks ID as ownerDeck', function() {
+    it('should spawn a card entity with the decks ID as ownerDeck', () => {
         const originalDeck = deck;
         
         const nextGameState = deckVerbHandler.drawCard(verb, true);
@@ -56,7 +56,7 @@ describe(`handle ${DeckVerbTypes.DRAW_FACE_UP} verb`, function() {
 
         assert.equal(spawnedCard.ownerDeck, originalDeck.entityId);
     })
-    it('should increase the decks drawIndex by 1', function() {
+    it('should increase the decks drawIndex by 1', () => {
         const originalState = {...gameStateStore.state};
         
         const nextGameState = deckVerbHandler.drawCard(verb, true);

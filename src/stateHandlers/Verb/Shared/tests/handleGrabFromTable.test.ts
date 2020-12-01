@@ -9,7 +9,7 @@ import { Container } from 'typescript-ioc';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, cardEntityMock2 } from '../../../../mocks/entityMocks';
 
-describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
+describe(`handle ${SharedVerbTypes.GRAB} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
@@ -34,7 +34,7 @@ describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
         });
     })
 
-    it('Assignes data of clicked card to correct clients grabbedEntity.', function(){
+    it('Assignes data of clicked card to correct clients grabbedEntity.', () =>{
         const {entityId} = freeCard;
         const {positionX, positionY} = verb;
 
@@ -46,7 +46,7 @@ describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
         assert.equal(grabbedEntity.grabbedAtY, positionY);
     });
 
-    it('should set grabbedBy to clients ID', function(){
+    it('should set grabbedBy to clients ID', () =>{
         const {entityId, entityType} = freeCard;
         
         const nextGameState = sharedVerbHandler.grabFromTable(verb);
@@ -54,7 +54,7 @@ describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
         const nextCard = extractEntityByTypeAndId(nextGameState ,entityType, entityId);
         assert.equal(nextCard.grabbedBy, clientId);
     })
-    it('should do nothing if card is already grabbed', function(){
+    it('should do nothing if card is already grabbed', () =>{
         const originalState = {...gameStateStore.state}
         const {entityId, entityType} = grabbedCard;
         const positionX = 1;
@@ -72,7 +72,7 @@ describe(`handle ${SharedVerbTypes.GRAB} verb`, function() {
 
         assert.deepEqual(nextGameState, originalState);
     })
-    it('should set zIndex of grabbed card to result of calcNextZIndex', function(){
+    it('should set zIndex of grabbed card to result of calcNextZIndex', () =>{
         const calcNextZIndexSpy = spy(utils, 'calcNextZIndex');
 
         const nextGameState = sharedVerbHandler.grabFromTable(verb);

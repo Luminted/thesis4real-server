@@ -8,7 +8,7 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 import { cardEntityMock1, deckEntityMock1 } from '../../../../mocks/entityMocks';
 import { extractClientById } from '../../../../extractors/gameStateExtractors';
 
-describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
+describe(`handle ${SharedVerbTypes.REMOVE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
@@ -24,7 +24,7 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
         })
     })
 
-    it('should remove correct deck from game state', function() {
+    it('should remove correct deck from game state', () => {
         const verb: IRemoveVerb = {
             type: SharedVerbTypes.REMOVE,
             entityId: deckEntityId,
@@ -36,7 +36,7 @@ describe(`handle ${SharedVerbTypes.REMOVE} verb`, function() {
         assert.equal(nextGameState.decks.has(deckEntityId), false);
     })
 
-    it('should remove correct card from game state', function() {
+    it('should remove correct card from game state', () => {
         const verb: IRemoveVerb = {
             type: SharedVerbTypes.REMOVE,
             entityId: cardEntityId,

@@ -7,7 +7,7 @@ import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore
 import { extractEmptySeats } from '../../../extractors/tableStateExtractor';
 
 
-describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, function(){
+describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, () => {
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore);
     const gameStateStore = tableStateStore.state.gameStateStore;
@@ -17,20 +17,20 @@ describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, function(){
         gameStateStore.resetState();
     })
 
-    it('should create client with given clientId', function(){
+    it('should create client with given clientId', () => {
         const nextGameState = tableHandler.joinTable(clientId);
 
         const client = extractClientById(nextGameState, clientId);
         assert.notEqual(client, undefined);
     })
 
-    it('should create hand for client', function(){
+    it('should create hand for client', () => {
         const nextGameState = tableHandler.joinTable(clientId);
 
         const hand = extractClientHandById(nextGameState, clientId);
         assert.notEqual(hand, undefined);
     })
-    it('should assign the next empty seat to client and remove it from empty seats', function(){
+    it('should assign the next empty seat to client and remove it from empty seats', () => {
         const emptySeats = extractEmptySeats(tableStateStore.state);
         const nextSeat = emptySeats[emptySeats.length -1];
         
@@ -41,7 +41,7 @@ describe(`Socket handler for: ${TableClientEvents.JOIN_TABLE}`, function(){
         assert.equal(client.clientInfo.seatId, nextSeat);
         assert.equal(nextGameStateEmptySeats.includes(nextSeat), false);
     })
-    it(`should create client with status ${ClientConnectionStatuses.CONNECTED}`, function(){
+    it(`should create client with status ${ClientConnectionStatuses.CONNECTED}`, () => {
         const nextGameState = tableHandler.joinTable(clientId);
 
         const createdClient = extractClientById(nextGameState, clientId);

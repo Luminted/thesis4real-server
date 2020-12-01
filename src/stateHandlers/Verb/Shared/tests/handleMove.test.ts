@@ -8,7 +8,7 @@ import { SharedVerbHandler } from '../SharedVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore';
 import { cardEntityMock1, cardEntityMock2, deckEntityMock1, deckEntityMock2 } from '../../../../mocks/entityMocks';
 
-describe(`handle ${SharedVerbTypes.MOVE}`, function(){
+describe(`handle ${SharedVerbTypes.MOVE}`, () =>{
     const sharedVerbHandler = new SharedVerbHandler();
     const tableStateStore = Container.get(TableStateStore); 
     const gameStateStore = tableStateStore.state.gameStateStore;
@@ -30,8 +30,8 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
     })
 
     const testedVerbType = SharedVerbTypes.MOVE;
-    describe(`EntityType: ${EntityTypes.CARD}`, function() {
-        it('should move the correct card by the offset of input mouse position and update grabbedEntity position for correct client', function() {
+    describe(`EntityType: ${EntityTypes.CARD}`, () => {
+        it('should move the correct card by the offset of input mouse position and update grabbedEntity position for correct client', () => {
             const grabbedAt = {
                 x: 2,
                 y: 3
@@ -110,7 +110,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             assert.equal(movedCard.positionX, cardEntityMock1.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedCard.positionY, cardEntityMock1.positionY + verb.positionY - grabbedAt.y);
         })
-        it('should ignore input if the entityId in the input is null', function(){
+        it('should ignore input if the entityId in the input is null', () =>{
             const originalState = {...gameStateStore.state};
             const verb: IMoveVerb = {
                 clientId,
@@ -125,8 +125,8 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
         })
     })
 
-    describe(`EntityType: ${EntityTypes.DECK}`, function() {
-        it('should move the correct card by the offset of input mouse position and update grabbedEntity position for correct client', function() {
+    describe(`EntityType: ${EntityTypes.DECK}`, () => {
+        it('should move the correct card by the offset of input mouse position and update grabbedEntity position for correct client', () => {
             const grabbedAt = {
                 x: 2,
                 y: 3
@@ -205,7 +205,7 @@ describe(`handle ${SharedVerbTypes.MOVE}`, function(){
             assert.equal(movedDeck.positionX, deckEntityMock2.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedDeck.positionY, deckEntityMock2.positionY + verb.positionY - grabbedAt.y);
         })
-        it('should ignore input if the entityId in the input is null', function(){
+        it('should ignore input if the entityId in the input is null', () =>{
             const originalState = {...gameStateStore.state}
             const verb: IMoveVerb = {
                 clientId,

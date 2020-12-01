@@ -9,7 +9,7 @@ import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
 import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../Table';
 
-describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
+describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
@@ -41,7 +41,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         })
     })
 
-    it('should set grabbed entity of correct client with the cards data', function(){
+    it('should set grabbed entity of correct client with the cards data', () =>{
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const nextClient = extractClientById(nextGameState, verb.clientId);
         const expectedGrabbedEntity: GrabbedEntity = {
@@ -53,14 +53,14 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         assert.deepEqual(nextClient.grabbedEntity, expectedGrabbedEntity);
     })
 
-    it('should add grabbed card to cards', function(){
+    it('should add grabbed card to cards', () =>{
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const grabbedCard = extractCardById(nextGameState, verb.entityId);
 
         assert.notEqual(grabbedCard, undefined);
     });
 
-    it('should put the card at the position according to the verb', function(){ 
+    it('should put the card at the position according to the verb', () =>{ 
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const grabbedCard = extractCardById(nextGameState, verb.entityId);
         const expectedPositionX = verb.positionX;
@@ -70,7 +70,7 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         assert.equal(grabbedCard.positionY, expectedPositionY);
     })
 
-    it('should remove card from hand it was grabbed from', function(){
+    it('should remove card from hand it was grabbed from', () =>{
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const nextHand = extractClientHandById(nextGameState, verb.grabbedFrom);
 
@@ -96,14 +96,14 @@ describe(`handle ${CardVerbTypes.GRAB_FROM_HAND} verb`, function() {
         assert.deepEqual(ordering, [0,1]);
     })
 
-    it('should set grabbedBy of grabbed card to client ID', function(){
+    it('should set grabbedBy of grabbed card to client ID', () =>{
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const grabbedCard = extractCardById(nextGameState, entityId);
 
         assert.equal(grabbedCard.grabbedBy, client2Id);
     })
 
-    it('should set z-index of grabbed card to next one in line', function(){
+    it('should set z-index of grabbed card to next one in line', () =>{
         const nextGameState = cardVerbHandler.grabFromHand(verb);
         const grabbedCard = extractCardById(nextGameState, verb.entityId);
 

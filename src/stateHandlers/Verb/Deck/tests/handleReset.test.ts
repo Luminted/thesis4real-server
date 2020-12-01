@@ -10,7 +10,7 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 import { TableHandler } from '../../../Table';
 
 
-describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
+describe(`handle ${DeckVerbTypes.RESET} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
@@ -47,14 +47,14 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
         })
     })
 
-    it('should remove all cards off the table belonging to the reset deck', function() {
+    it('should remove all cards off the table belonging to the reset deck', () => {
         const nextGameState = deckVerbHandler.reset(verb);
         for(const card of cardsBelongingToDeck){
             assert.equal(nextGameState.cards.has(card.entityId), false);
         }
     })
 
-    it('should remove grabbed cards belonging to the reset deck', function(){
+    it('should remove grabbed cards belonging to the reset deck', () =>{
         const grabbedCard = {...cardEntityMock1, entityId: "grabbedCard-id"}
        gameStateStore.changeState(draft => {
             const {entityId, entityType} = grabbedCard; 
@@ -76,12 +76,12 @@ describe(`handle ${DeckVerbTypes.RESET} verb`, function() {
         assert.equal(isRemoved, true);
     })
 
-    it('should remove all cards out of player hands belonging to the reset deck', function(){
+    it('should remove all cards out of player hands belonging to the reset deck', () =>{
         const nextGameState = deckVerbHandler.reset(verb);
         assert.equal(extractClientHandById(nextGameState, mockClient1.clientInfo.clientId).cards.some(card => card.entityId === client1Card.entityId), false);
         assert.equal(extractClientHandById(nextGameState, mockClient2.clientInfo.clientId).cards.some(card => card.entityId === client2Card.entityId), false);
     })
-    it('should set drawIndex to 0', function(){
+    it('should set drawIndex to 0', () =>{
         const nextGameState = deckVerbHandler.reset(verb);
         const resetDeck = extractDeckById(nextGameState, deckToReset.entityId);
         assert.equal(resetDeck.drawIndex, 0);

@@ -6,7 +6,7 @@ import { deckEntityMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
 import { DeckVerbTypes, IDrawFaceDownVerb } from "../../../../types/verb";
 import { DeckVerbHandler } from "../DeckVerbHandler";
-
+//TODO: do this
 // describe(`handle ${DeckVerbTypes.DRAW_FACE_UP}`, () => {
 //     const deckVerbHandler = new DeckVerbHandler();
 //     const {gameStateStore} = Container.get(TableStateStore).state;

@@ -1,10 +1,10 @@
 import { GameState, SerializedGameState } from "../types/dataModelDefinitions";
 
-export function clamp(value, min, max) {
+export const clamp = (value, min, max) => {
     return Math.min(Math.max(value, min), max);
 }
 
-export function serializeGameState(gameState: GameState): SerializedGameState {
+export const serializeGameState = (gameState: GameState): SerializedGameState => {
     return {
         cards: [...gameState.cards.values()],
         clients: [...gameState.clients.values()],
@@ -15,7 +15,7 @@ export function serializeGameState(gameState: GameState): SerializedGameState {
 }
 
 // WARNING: This function has side effects. Use it only with Immer draft!
-export function calcNextZIndex(gameStateDraft: GameState, zIndexLimit: number){
+export const calcNextZIndex = (gameStateDraft: GameState, zIndexLimit: number)=> {
     const {cards, decks} = gameStateDraft;
     const nextZIndex = ++gameStateDraft.topZIndex;
     if(nextZIndex > zIndexLimit){

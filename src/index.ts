@@ -18,7 +18,7 @@ Container.get(Socket);
 const node_env = process.env.NODE_ENV;
 
 const port = process.env.PORT || 8081;
-server.listen(port, function(){
+server.listen(port, () => {
     console.log(`running in ${node_env} mode`);
     console.log(`listening on port ${port}` );
 });

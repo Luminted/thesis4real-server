@@ -7,7 +7,7 @@ import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore
 import { TableClientEvents } from '../../../types/socketTypes';
 import { cardEntityMock1, handCardMock1, handCardMock2 } from '../../../mocks/entityMocks';
 
-describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
+describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, () => {
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore)
     const gameStateStore = tableStateStore.state.gameStateStore;
@@ -30,19 +30,19 @@ describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
         })
     })
 
-    it('should remove client from clients', function(){
+    it('should remove client from clients', () => {
         const nextGameState = tableHandler.leaveTable(clientId);
 
         const removedClient = extractClientById(nextGameState, clientId);
         assert.equal(removedClient, null);
     });
-    it('should remove clients hand', function(){
+    it('should remove clients hand', () => {
         const nextGameState = tableHandler.leaveTable(clientId);
 
         const removedHand = extractClientHandById(nextGameState, clientId);
         assert.equal(removedHand, null);
     })
-    it('should put cards in clients hand on table at default point', function(){
+    it('should put cards in clients hand on table at default point', () => {
         const nextGameState = tableHandler.leaveTable(clientId);
 
         const cardPutBackOnTable1 = extractCardById(nextGameState, cardInClientsHand1.entityId);
@@ -53,7 +53,7 @@ describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
         assert.equal(cardPutBackOnTable2.positionY, defaultPosition[1]);
     });
 
-    it('should put cards from hand on top of cards on table', function(){
+    it('should put cards from hand on top of cards on table', () => {
         const entityOnTable = {...cardEntityMock1}
         gameStateStore.changeState(draft => {
             entityOnTable.zIndex = draft.topZIndex;
@@ -68,7 +68,7 @@ describe(`Testing ${TableClientEvents.LEAVE_TABLE}`, function(){
         assert.equal(cardPutBackOnTable2.zIndex > nextEntityOnTable.zIndex, true);
     })
    
-    it('should put clients seat back to empty seats', function(){
+    it('should put clients seat back to empty seats', () => {
         const clientsSeat = mockClient1.clientInfo.seatId;
        tableStateStore.changeState(draft => {
             draft.emptySeats = [];

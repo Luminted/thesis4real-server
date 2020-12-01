@@ -8,7 +8,7 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 import { cardEntityMock1, handCardMock1 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../Table';
 
-describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
+describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, () => {
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
@@ -37,19 +37,19 @@ describe(`handle ${CardVerbTypes.PUT_IN_HAND} verb`, function() {
         })
     })
 
-    it('should add the grabbed card to the correct hand', function(){
+    it('should add the grabbed card to the correct hand', () =>{
         const {clientId} = client.clientInfo;
         const nextGameState = cardVerbHandler.putInHand(verb);
         const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId, entityId);
         assert.notEqual(cardPutInHand, undefined);
     })
 
-    it('should set clients grabbed card to null', function() {  
+    it('should set clients grabbed card to null', () => {  
         const nextGameState = cardVerbHandler.putInHand(verb);
         const grabbedEntity = extractGrabbedEntityOfClientById(nextGameState, client.clientInfo.clientId);
         assert.equal(grabbedEntity, null);
     })
-    it('should take out correct card from cards array', function() {
+    it('should take out correct card from cards array', () => {
         const nextGameState = cardVerbHandler.putInHand(verb);
         assert.equal(extractCardById(nextGameState ,entityId), undefined);
     })

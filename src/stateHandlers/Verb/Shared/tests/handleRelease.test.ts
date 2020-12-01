@@ -8,7 +8,7 @@ import { SharedVerbHandler } from '../SharedVerbHandler';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1 } from '../../../../mocks/entityMocks';
 
-describe(`handle ${SharedVerbTypes.RELEASE} verb`, function() {
+describe(`handle ${SharedVerbTypes.RELEASE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
     const {clientInfo: {clientId}} = mockClient1;
@@ -29,14 +29,14 @@ describe(`handle ${SharedVerbTypes.RELEASE} verb`, function() {
         })
     })
 
-    describe(`EntityType: ${EntityTypes.CARD}`, function(){
-        it('should set grabbedEntity to null for correct client.', function(){     
+    describe(`EntityType: ${EntityTypes.CARD}`, () =>{
+        it('should set grabbedEntity to null for correct client.', () =>{     
             const nextGameState = sharedVerbHandler.release(verb);
 
             const grabbedEntity =extractGrabbedEntityOfClientById(nextGameState, verb.clientId);
             assert.equal(grabbedEntity, null);
         })
-        it('should set the grabbedBy to null on released entity', function(){
+        it('should set the grabbedBy to null on released entity', () =>{
             const {entityId, entityType} = verb;
             
             const nextGameState = sharedVerbHandler.release(verb);

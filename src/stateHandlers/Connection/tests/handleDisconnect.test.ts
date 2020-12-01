@@ -7,7 +7,7 @@ import { ConnectionHandler } from '../ConnectionHandler';
 import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
 import { extractEmptySeats } from '../../../extractors/tableStateExtractor';
 
-describe(`Event handler for: ${TableClientEvents.DISCONNECT}`, function(){
+describe(`Event handler for: ${TableClientEvents.DISCONNECT}`, () => {
     const connectionHandler = new ConnectionHandler();
     const tableStateStore = Container.get(TableStateStore);
     const gameStateStore = tableStateStore.state.gameStateStore;

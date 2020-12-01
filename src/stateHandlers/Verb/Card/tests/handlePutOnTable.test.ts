@@ -8,7 +8,7 @@ import { TableStateStore } from '../../../../stores/TableStateStore/TableStateSt
 import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../Table';
 
-describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
+describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, ()=> {
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
@@ -35,13 +35,13 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
         })
     })
 
-    it('should add card to cards array', function(){
+    it('should add card to cards array', ()=>{
         const nextGameState = cardVerbHandler.putOnTable(verb);
         let cardOnTable = extractCardById(nextGameState, entityId);
         assert.notEqual(cardOnTable, undefined);
     });
 
-    it('should put it on the given position', function(){
+    it('should put it on the given position', ()=>{
         const nextGameState = cardVerbHandler.putOnTable(verb);
         let cardOnTable = extractCardById(nextGameState, entityId);
         assert.equal(cardOnTable.positionX, verb.positionX);
@@ -55,13 +55,13 @@ describe(`handle ${CardVerbTypes.PUT_ON_TABLE} verb`, function() {
         assert.equal(cardOnTable.faceUp, verb.faceUp);
     })
 
-    it('should remove card from hand of correct client', function() {
+    it('should remove card from hand of correct client', ()=> {
         const nextGameState = cardVerbHandler.putOnTable(verb);
         let nextHand = extractClientHandById(nextGameState, clientId);
         assert.notEqual(nextHand.cards.find(card => card.entityId === entityId), undefined);
     })
 
-    it('should set grabbed entity to null', function(){
+    it('should set grabbed entity to null', ()=>{
         const nextGameState = cardVerbHandler.putOnTable(verb);
         let grabbedEntity = extractGrabbedEntityOfClientById(nextGameState, clientId);
         assert.equal(grabbedEntity, null);
