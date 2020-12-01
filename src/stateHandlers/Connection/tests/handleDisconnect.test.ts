@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { ClientConnectionStatuses, TableClientEvents } from "../../../types/socketTypes";
+import { ClientConnectionStatuses, TableClientEvents } from "../../../typings";
 import { extractClientById } from "../../../extractors/gameStateExtractors";
 import { mockClient1 } from '../../../mocks/clientMocks';
 import { ConnectionHandler } from '../ConnectionHandler';

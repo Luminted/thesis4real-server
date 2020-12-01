@@ -1,6 +1,5 @@
 import assert from 'assert';
-import { DeckVerbTypes, IDrawFaceUpVerb } from '../../../../types/verb';
-import { DeckCard } from '../../../../types/dataModelDefinitions';
+import { DeckVerbTypes, IDrawFaceUpVerb, DeckCard } from '../../../../typings';
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { DeckVerbHandler } from '../DeckVerbHandler';

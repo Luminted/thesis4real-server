@@ -2,7 +2,7 @@ import assert from 'assert';
 import { calcNextZIndex } from "./utils"
 import { GameStateStore } from '../stores/GameStateStore';
 import { cardEntityMock1, deckEntityMock1 } from '../mocks/entityMocks';
-import { CardEntity, DeckEntity } from '../types/dataModelDefinitions';
+import { CardEntity, DeckEntity } from '../typings';
 
 describe('Testing utility functions', () =>{
     describe('calcNextZIndex', () =>{

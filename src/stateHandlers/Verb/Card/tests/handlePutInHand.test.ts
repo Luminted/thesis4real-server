@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, IPutInHandVerb } from '../../../../types/verb';
+import { CardVerbTypes, IPutInHandVerb } from '../../../../typings';
 import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { Container } from 'typescript-ioc';

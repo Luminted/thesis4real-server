@@ -4,7 +4,7 @@ import { extractClientHandById } from '../../../../extractors/gameStateExtractor
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { handCardMock1 } from '../../../../mocks/entityMocks';
 import { TableStateStore } from '../../../../stores/TableStateStore';
-import { CardVerbTypes, IReorderHandVerb } from '../../../../types/verb';
+import { CardVerbTypes, IReorderHandVerb } from '../../../../typings';
 import { TableHandler } from '../../../Table';
 import { CardVerbHandler } from '../CardVerbHandler';
 

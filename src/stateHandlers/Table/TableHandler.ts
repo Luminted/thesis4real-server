@@ -3,8 +3,7 @@ import { extractClientHandCardsById, extractClientsSeatById } from "../../extrac
 import { calcNextZIndex } from "../../utils";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
-import { ClientHand, Client } from "../../types/dataModelDefinitions";
-import { ClientConnectionStatuses } from "../../types/socketTypes";
+import { ClientHand, Client, ClientConnectionStatuses } from "../../typings";
 import { CardVerbHandler } from "../Verb/Card";
 import {zIndexLimit} from "../../config";
 

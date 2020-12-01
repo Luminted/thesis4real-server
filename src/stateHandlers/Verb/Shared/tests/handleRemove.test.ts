@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { SharedVerbTypes, IRemoveVerb } from '../../../../types/verb';
-import { Client, EntityTypes, GrabbedEntity } from '../../../../types/dataModelDefinitions';
+import { SharedVerbTypes, IRemoveVerb, Client, EntityTypes, GrabbedEntity } from '../../../../typings';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
 import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';

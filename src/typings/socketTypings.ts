@@ -4,7 +4,6 @@ export enum TableClientEvents {
     DISCONNECT = 'disconnect',
     RECONNECT = 'reconnect',
     
-    
     JOIN_TABLE = 'JOIN_TABLE',
     REJOIN_TABLE = 'REJOIN_TABLE',
     VERB = 'VERB',
@@ -14,14 +13,6 @@ export enum TableClientEvents {
 
 export enum TableServerEvents {
     SYNC = 'SYNC',
-}
-
-export type JoinTablePayload = {
-    clientId: string,
-}
-
-export type LeaveTablePayload = {
-    
 }
 
 export enum ClientConnectionStatuses {

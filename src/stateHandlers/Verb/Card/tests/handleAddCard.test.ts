@@ -2,8 +2,7 @@ import assert from "assert";
 import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore";
-import { EntityTypes, CardEntity } from "../../../../types/dataModelDefinitions";
-import { CardVerbTypes, IAddCardVerb,  } from "../../../../types/verb";
+import { CardVerbTypes, IAddCardVerb, CardEntity } from "../../../../typings";
 import { CardVerbHandler } from "../CardVerbHandler";
 
 describe(`handling ${CardVerbTypes.ADD_CARD}`, () => {

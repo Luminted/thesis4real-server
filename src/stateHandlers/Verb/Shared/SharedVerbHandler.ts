@@ -4,8 +4,7 @@ import { extractClientById, extractEntityByTypeAndId, extractGrabbedEntityOfClie
 import { calcNextZIndex } from "../../../utils";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
-import { EntityTypes } from "../../../types/dataModelDefinitions";
-import { IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "../../../types/verb";
+import { EntityTypes, IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "../../../typings";
 
 @Singleton
 export class SharedVerbHandler {

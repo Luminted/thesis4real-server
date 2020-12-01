@@ -1,4 +1,4 @@
-import { GameState, SerializedGameState } from "../types/dataModelDefinitions";
+import { GameState, SerializedGameState } from "../typings";
 
 export const clamp = (value, min, max) => {
     return Math.min(Math.max(value, min), max);

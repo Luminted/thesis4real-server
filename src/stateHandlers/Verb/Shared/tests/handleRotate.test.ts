@@ -4,7 +4,7 @@ import { extractCardById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { cardEntityMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
-import { IRotateVerb, SharedVerbTypes } from "../../../../types/verb";
+import { IRotateVerb, SharedVerbTypes } from "../../../../typings";
 import { SharedVerbHandler } from "../SharedVerbHandler";
 
 

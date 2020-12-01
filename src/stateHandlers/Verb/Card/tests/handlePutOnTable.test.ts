@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, IPutOnTableVerb } from '../../../../types/verb';
+import { CardVerbTypes, IPutOnTableVerb } from '../../../../typings';
 import { extractCardById, extractGrabbedEntityOfClientById, extractClientHandById, extractCardFromClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { CardVerbHandler } from '../CardVerbHandler';

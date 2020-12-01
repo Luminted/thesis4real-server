@@ -1,5 +1,5 @@
 import { GenericVerb } from ".";
-import { EntityTypes } from "../dataModelDefinitions";
+import { EntityTypes } from "../gameStateTypings";
 
 export enum SharedVerbTypes {
     GRAB = 'GRAB',

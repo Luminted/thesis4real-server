@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { TableClientEvents, ClientConnectionStatuses } from "../../../types/socketTypes";
+import { TableClientEvents, ClientConnectionStatuses } from "../../../typings";
 import { extractClientById, extractClientHandById } from '../../../extractors/gameStateExtractors';
 import { TableHandler } from '../TableHandler';
 import { Container } from 'typescript-ioc';

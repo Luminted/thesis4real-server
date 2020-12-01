@@ -2,8 +2,7 @@ import assert from "assert";
 import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore";
-import { DeckEntity } from "../../../../types/dataModelDefinitions";
-import { DeckVerbTypes, IAddDeckVerb } from "../../../../types/verb";
+import { DeckVerbTypes, IAddDeckVerb, DeckEntity } from "../../../../typings";
 import { DeckVerbHandler } from "../../Deck";
 
 describe(`handle ${DeckVerbTypes.ADD_DECK}`, () => {

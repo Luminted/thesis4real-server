@@ -1,10 +1,8 @@
 import throttle from "lodash.throttle";
 import { SocketNamespace } from "..";
 import { Singleton, Inject } from "typescript-ioc";
-import { Verb } from "../../types/verb";
-import { TableClientEvents, TableServerEvents } from "../../types/socketTypes";
+import { TableClientEvents, TableServerEvents, Verb, GameState, ClientInfo, SerializedGameState } from "../../typings";
 import { serializeGameState } from "../../utils";
-import { GameState, ClientInfo, SerializedGameState } from "../../types/dataModelDefinitions";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
 import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";

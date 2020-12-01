@@ -1,6 +1,6 @@
 import assert from 'assert'
 import {spy} from 'sinon';
-import { IGrabVerb, SharedVerbTypes } from "../../../../types/verb";
+import { IGrabVerb, SharedVerbTypes } from "../../../../typings";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors/gameStateExtractors";
 import * as utils from '../../../../utils';
 import { mockClient1 } from '../../../../mocks/clientMocks';

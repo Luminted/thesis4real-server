@@ -5,11 +5,10 @@ import {uuid} from "short-uuid";
 import { extractDeckById } from "../../../extractors/gameStateExtractors";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
-import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb } from "../../../types/verb";
+import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, DeckEntity, EntityTypes } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 import { zIndexLimit } from "../../../config";
 import { CardVerbHandler } from "../Card";
-import { DeckEntity, EntityTypes } from "../../../types/dataModelDefinitions";
 
 @Singleton
 export class DeckVerbHandler {

@@ -1,5 +1,4 @@
-import { Client } from "../types/dataModelDefinitions";
-import { ClientConnectionStatuses } from "../types/socketTypes";
+import { ClientConnectionStatuses, Client } from "../typings";
 
 // interface ClientInfoMock extends Pick<>
 

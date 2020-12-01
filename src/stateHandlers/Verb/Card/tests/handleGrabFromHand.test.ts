@@ -1,6 +1,5 @@
 import assert from 'assert';
-import { CardVerbTypes, IGrabFromHandVerb } from "../../../../types/verb";
-import { EntityTypes, GrabbedEntity } from "../../../../types/dataModelDefinitions";
+import { CardVerbTypes, IGrabFromHandVerb, EntityTypes, GrabbedEntity } from "../../../../typings";
 import { extractClientById, extractCardById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';

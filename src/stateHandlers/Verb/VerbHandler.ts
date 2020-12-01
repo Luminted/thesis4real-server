@@ -1,5 +1,5 @@
 import { Inject, Singleton } from "typescript-ioc";
-import { CardVerbTypes, DeckVerbTypes, SharedVerbTypes, Verb } from "../../types/verb";
+import { CardVerbTypes, DeckVerbTypes, SharedVerbTypes, Verb } from "../../typings";
 import { CardVerbHandler } from "./Card/CardVerbHandler";
 import { SharedVerbHandler } from "./Shared/SharedVerbHandler";
 import { DeckVerbHandler } from "./Deck/DeckVerbHandler";

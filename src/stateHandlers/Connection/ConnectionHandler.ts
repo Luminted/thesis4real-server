@@ -1,9 +1,7 @@
-import { table } from "console";
 import { Inject, Singleton } from "typescript-ioc";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
-import { ClientConnectionStatuses } from "../../types/socketTypes";
 
 @Singleton
 export class ConnectionHandler {

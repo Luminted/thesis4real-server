@@ -1,4 +1,4 @@
-import { CardTable } from "../types/dataModelDefinitions";
+import { CardTable } from "../typings";
 
 
 export const extractEmptySeats = (state: CardTable) => {

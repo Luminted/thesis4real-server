@@ -1,5 +1,5 @@
-import {MaybeNull} from './genericTypes'
-import { ClientConnectionStatuses } from './socketTypes';
+import {MaybeNull} from './utilityTypings'
+import { ClientConnectionStatuses } from './socketTypings';
 import { GameStateStore } from '../stores/GameStateStore';
 
 export interface Entity {

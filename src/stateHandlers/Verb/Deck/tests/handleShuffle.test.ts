@@ -3,7 +3,7 @@ import { Container } from "typescript-ioc";
 import { extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { deckEntityMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
-import { DeckVerbTypes, IShuffleVerb } from "../../../../types/verb";
+import { DeckVerbTypes, IShuffleVerb } from "../../../../typings";
 import { DeckVerbHandler } from "../DeckVerbHandler";
 
 describe(`handling ${DeckVerbTypes.SHUFFLE}`, () => {

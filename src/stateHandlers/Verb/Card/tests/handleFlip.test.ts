@@ -4,7 +4,7 @@ import { extractCardById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { cardEntityMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
-import { CardVerbTypes, IFlipVerb } from "../../../../types/verb";
+import { CardVerbTypes, IFlipVerb } from "../../../../typings";
 import { CardVerbHandler } from "../CardVerbHandler";
 
 describe(`handling ${CardVerbTypes.FLIP}`, () => {

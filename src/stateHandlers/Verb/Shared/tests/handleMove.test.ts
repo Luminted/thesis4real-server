@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { IMoveVerb, SharedVerbTypes } from "../../../../types/verb";
-import { EntityTypes, CardEntity, DeckEntity, GameState } from "../../../../types/dataModelDefinitions";
+import { EntityTypes, CardEntity, DeckEntity, GameState, IMoveVerb, SharedVerbTypes } from "../../../../typings";
 import { extractClientById, extractCardById, extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { SharedVerbHandler } from '../SharedVerbHandler';

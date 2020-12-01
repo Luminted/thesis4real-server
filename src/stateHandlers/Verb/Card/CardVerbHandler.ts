@@ -1,13 +1,12 @@
 import { original } from "immer";
 import { uuid } from "short-uuid";
 import { Singleton, Inject } from "typescript-ioc";
-import { IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IPutOnTableVerb, IReorderHandVerb } from "../../../types/verb";
+import { CardEntity, EntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IPutOnTableVerb, IReorderHandVerb } from "../../../typings";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
 import { zIndexLimit } from "../../../config";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
-import { CardEntity, EntityTypes } from "../../../types/dataModelDefinitions";
 
 @Singleton
 export class CardVerbHandler {

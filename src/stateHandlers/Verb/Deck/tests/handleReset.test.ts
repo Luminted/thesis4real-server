@@ -1,8 +1,7 @@
 import assert from 'assert';
 import {mockClient1, mockClient2} from '../../../../mocks/clientMocks';
 import {deckEntityMock1, cardEntityMock1, cardEntityMock2, handCardMock1, handCardMock2} from '../../../../mocks/entityMocks';
-import { DeckVerbTypes, IResetVerb } from '../../../../types/verb';
-import { HandCard } from '../../../../types/dataModelDefinitions';
+import { DeckVerbTypes, IResetVerb, HandCard } from '../../../../typings';
 import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { Container } from 'typescript-ioc';
 import { DeckVerbHandler } from '../DeckVerbHandler';

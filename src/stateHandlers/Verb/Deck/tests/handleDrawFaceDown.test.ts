@@ -4,7 +4,7 @@ import { extractCardById, extractDeckById } from "../../../../extractors/gameSta
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { deckEntityMock1 } from "../../../../mocks/entityMocks";
 import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
-import { DeckVerbTypes, IDrawFaceDownVerb } from "../../../../types/verb";
+import { DeckVerbTypes, IDrawFaceDownVerb } from "../../../../typings/verbTypings";
 import { DeckVerbHandler } from "../DeckVerbHandler";
 //TODO: do this
 // describe(`handle ${DeckVerbTypes.DRAW_FACE_UP}`, () => {

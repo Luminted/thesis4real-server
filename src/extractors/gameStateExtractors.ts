@@ -1,4 +1,4 @@
-import {GameState, EntityTypes} from '../types/dataModelDefinitions'
+import {GameState, EntityTypes} from '../typings'
 
 export const extractClientById = (state: GameState, clientId: string)=> {
     return state.clients.get(clientId) || null;

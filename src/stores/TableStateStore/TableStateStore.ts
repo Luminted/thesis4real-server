@@ -1,7 +1,7 @@
 import { Singleton } from "typescript-ioc";
 import { Store } from "../Store";
 import {numberOfSeats} from "../../config";
-import { CardTable } from "../../types/dataModelDefinitions";
+import { CardTable } from "../../typings";
 import { GameStateStore } from "../GameStateStore";
 
 const initialState: CardTable = {

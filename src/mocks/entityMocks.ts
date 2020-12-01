@@ -1,4 +1,4 @@
-import { CardEntity, DeckEntity, DeckCard, HandCard, EntityTypes } from "../types/dataModelDefinitions";
+import { CardEntity, DeckEntity, DeckCard, HandCard, EntityTypes } from "../typings";
 
 export const cardEntityMock1: CardEntity = {
     entityId: 'card-entity-id1',
