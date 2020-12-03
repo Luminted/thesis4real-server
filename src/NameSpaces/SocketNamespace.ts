@@ -3,7 +3,6 @@ import { TSocketListenerUsingSocket, TPlainSocketListener, TSocketEventHandler, 
 import { Namespace } from 'socket.io';
 
 export class SocketNamespace {
-    public socket: Socket;
     public plainListeners: TPlainSocketListener[] = [];
     public listenersUsingSocket: TSocketListenerUsingSocket[] = [];
     public onConnect: (socket: SocketIO.Socket) => void | null = null;

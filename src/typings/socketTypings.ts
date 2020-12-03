@@ -13,9 +13,15 @@ export enum ETableClientEvents {
 
 export enum ETableServerEvents {
     SYNC = 'SYNC',
+    CUSTOM_ERROR = "CUSTOM_ERROR",
 }
 
 export enum EClientConnectionStatuses {
     CONNECTED = 'CONNECTED',
     DISCONNECTED = 'DISCONNECTED',
+}
+
+export type TCustomError = {
+    code: number,
+    message: string
 }

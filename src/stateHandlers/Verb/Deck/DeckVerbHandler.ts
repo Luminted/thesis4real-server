@@ -2,7 +2,7 @@ import { Inject, Singleton } from "typescript-ioc";
 import {shuffle} from "@pacote/shuffle";
 import { original } from "immer";
 import {uuid} from "short-uuid";
-import { extractDeckById } from "../../../extractors/gameStateExtractors";
+import { extractClientHandById, extractDeckById } from "../../../extractors/gameStateExtractors";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes } from "../../../typings";
@@ -54,7 +54,7 @@ export class DeckVerbHandler {
             //removing from hands
             draft.hands.forEach(hand => {
                 const {clientId} = hand;
-                const { cards, ordering} = draft.hands.get(clientId);
+                const { cards, ordering} = extractClientHandById(draft, clientId);
                 const cardsBelongingToResetDeckIndexes = cards.reduce((acc, {ownerDeck}, index) => {
                     if(ownerDeck === entityId){
                         return [...acc, index];
@@ -62,8 +62,7 @@ export class DeckVerbHandler {
                     else{
                         return acc;
                     }
-                },[])
-                console.log("~~~~~", cardsBelongingToResetDeckIndexes);
+                },[]);
                 hand.cards = cards.filter(({ownerDeck}) => ownerDeck !== entityId);
                 hand.ordering = removeAndUpdateOrderings(ordering, cardsBelongingToResetDeckIndexes);
             })

@@ -1,12 +1,14 @@
 import throttle from "lodash.throttle";
 import { SocketNamespace } from "..";
 import { Singleton, Inject } from "typescript-ioc";
-import { ETableClientEvents, ETableServerEvents, TVerb, TGameState, TClientInfo, TSerializedGameState } from "../../typings";
+import { ETableClientEvents, ETableServerEvents, TVerb, TGameState, TClientInfo, TSerializedGameState, TCustomError } from "../../typings";
 import { extractClientById } from "../../extractors/gameStateExtractors";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
 import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { serverTick } from "../../config";
+import {getVerbError} from "../../utils";
+import { ExtractorError } from "../../error/ExtractorError";
  
 @Singleton
 export class TableNamespace extends SocketNamespace {
@@ -28,12 +30,23 @@ export class TableNamespace extends SocketNamespace {
         }
 
         this.addEventListener(ETableClientEvents.VERB, (verb: TVerb, acknowledgeFunction?: Function) => {
-            const nextGameState = this.verbHandler.handleVerb(verb);
-
-            this.syncGameState(nextGameState);
-            if(acknowledgeFunction){
-                acknowledgeFunction(this.serializeGameState(nextGameState));
+            let nextGameState: TGameState;
+            try{
+                nextGameState = this.verbHandler.handleVerb(verb);
             }
+            catch(e){
+                if(e instanceof ExtractorError){
+                    this.emitCustomError(getVerbError(verb.type, e.message));
+                }
+            }
+
+            if(nextGameState){
+                this.syncGameState(nextGameState);
+                if(acknowledgeFunction){
+                    acknowledgeFunction(this.serializeGameState(nextGameState));
+                }
+            }
+
         });
 
         this.addEventListenerWithSocket(ETableClientEvents.JOIN_TABLE, (socket: SocketIO.Socket) => (acknowledgeFunction?: (clientInfo: TClientInfo, gameState: TSerializedGameState) => void) => {
@@ -67,6 +80,10 @@ export class TableNamespace extends SocketNamespace {
     private syncGameState = throttle((gameState: TGameState) => {
         this.emit(ETableServerEvents.SYNC, this.serializeGameState(gameState));
     }, serverTick);
+
+    private emitCustomError(error: TCustomError){
+        this.emit(ETableServerEvents.CUSTOM_ERROR, error);
+    }
 
     private serializeGameState(gameState: TGameState): TSerializedGameState {
         return {

@@ -77,24 +77,22 @@ export class CardVerbHandler {
         this.gameStateStore.changeState(draft => {
             const gameState = original(draft);
             const handCard = extractCardFromClientHandById(gameState, clientId, entityId);
-            if(handCard){
-                const { ownerDeck, entityId, metadata} = handCard;
+                const { ownerDeck, entityId: handCardId, metadata} = handCard;
                 const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
 
                 //creating entity
-                let cardEntity = this.createCardEntity(positionX, positionY, faceUp, entityId, ownerDeck, nextTopZIndex, 0, null, metadata );
+                let cardEntity = this.createCardEntity(positionX, positionY, faceUp, handCardId, ownerDeck, nextTopZIndex, 0, null, metadata );
                 draft.cards.set(cardEntity.entityId, cardEntity);
                 
                 //removing from hand
                 let subjectClientHand = extractClientHandById(draft, clientId);
                 if(subjectClientHand){
-                    subjectClientHand.cards.filter(card => card.entityId !== entityId);
+                    subjectClientHand.cards.filter(card => card.entityId !== handCardId);
                 }
                 subjectClientHand.ordering.pop();
         
                 // removing grabbedEntity
                 extractClientById(draft, clientId).grabbedEntity = null;
-            }
         })
         return this.gameStateStore.state;
     }
@@ -103,11 +101,9 @@ export class CardVerbHandler {
         const { entityId } = verb;
         const entity = extractCardById(this.gameStateStore.state, entityId);
 
-        if(entity){
-            this.gameStateStore.changeState(draft => {
-                extractCardById(draft, entityId).faceUp = !entity.faceUp;
-            })
-        }
+        this.gameStateStore.changeState(draft => {
+            extractCardById(draft, entityId).faceUp = !entity.faceUp;
+        })
 
         return this.gameStateStore.state;
     }
