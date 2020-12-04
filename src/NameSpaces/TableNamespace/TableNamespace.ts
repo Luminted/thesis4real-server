@@ -8,7 +8,7 @@ import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHand
 import { GameStateStore } from "../../stores/GameStateStore";
 import { serverTick } from "../../config";
 import {getVerbError} from "../../utils";
-import { ExtractorError } from "../../error/ExtractorError";
+import { VerbError } from "../../error/VerbError";
  
 @Singleton
 export class TableNamespace extends SocketNamespace {
@@ -35,7 +35,7 @@ export class TableNamespace extends SocketNamespace {
                 nextGameState = this.verbHandler.handleVerb(verb);
             }
             catch(e){
-                if(e instanceof ExtractorError){
+                if(e instanceof VerbError){
                     this.emitCustomError(getVerbError(verb.type, e.message));
                 }
             }

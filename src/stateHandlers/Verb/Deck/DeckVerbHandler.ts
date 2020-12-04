@@ -5,10 +5,11 @@ import {uuid} from "short-uuid";
 import { extractClientHandById, extractDeckById } from "../../../extractors/gameStateExtractors";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
-import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes } from "../../../typings";
+import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes, IDrawFaceDownVerb, EDeckVerbTypes } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 import { zIndexLimit } from "../../../config";
 import { CardVerbHandler } from "../Card";
+import { VerbError } from "../../../error/VerbError";
 
 @Singleton
 export class DeckVerbHandler {
@@ -23,16 +24,17 @@ export class DeckVerbHandler {
         this.gameStateStore = this.tableStateStore.state.gameStateStore;
     }
 
-    drawCard(verb: IDrawFaceUpVerb, faceUp: boolean = true) {
+    drawCard(verb: IDrawFaceUpVerb | IDrawFaceDownVerb, drawFaceUp: boolean) {
         this.gameStateStore.changeState(draft => {
-            const {entityId} = verb;
-            const deck = extractDeckById(draft, entityId);
-            const drawnCard = deck.cards[deck.drawIndex];
-            const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-            const spawnedCard = this.cardVerbHandler.createCardEntity(deck.positionX, deck.positionY, faceUp, drawnCard.entityId, deck.entityId, nextTopZIndex, deck.rotation, null, drawnCard.metadata);
+            const {entityId: deckEntityId} = verb;
+            const nextZIndex = calcNextZIndex(draft, zIndexLimit);
+            const deck = extractDeckById(draft, deckEntityId);
+            const {entityId: cardEntityId, metadata} = this.getTopCard(deck);
+            const {positionX, positionY, rotation, drawIndex} = deck;
+            const drawnCardEntity = this.cardVerbHandler.createCardEntity(positionX, positionY, drawFaceUp, cardEntityId, deckEntityId, nextZIndex, rotation, null, metadata);
             
-            deck.drawIndex++;
-            draft.cards.set(spawnedCard.entityId, spawnedCard);
+            deck.drawIndex = drawIndex + 1;
+            draft.cards.set(cardEntityId, drawnCardEntity);
         })
 
         return this.gameStateStore.state;
@@ -117,5 +119,16 @@ export class DeckVerbHandler {
             drawIndex: 0,
             cards: cardsMetadata.map(metadata => ({ metadata, entityId: uuid()}))
         }
+    }
+
+    private getTopCard(deck: IDeckEntity) {
+        const { cards } = deck;
+        const topCard = cards[deck.drawIndex];
+
+        if(!topCard){
+            throw new VerbError("No cards left in deck.");
+        }
+        
+        return topCard;
     }
 }

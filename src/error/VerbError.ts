@@ -1,4 +1,4 @@
-export class ExtractorError extends Error {
+export class VerbError extends Error {
     constructor(message?: string){
         super(message);
     }
