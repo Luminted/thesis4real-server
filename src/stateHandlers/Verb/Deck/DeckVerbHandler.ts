@@ -4,7 +4,6 @@ import { original } from "immer";
 import {uuid} from "short-uuid";
 import { extractClientHandById, extractDeckById } from "../../../extractors/gameStateExtractors";
 import { GameStateStore } from "../../../stores/GameStateStore";
-import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes, IDrawFaceDownVerb, EDeckVerbTypes } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 import { zIndexLimit } from "../../../config";
@@ -15,14 +14,9 @@ import { VerbError } from "../../../error/VerbError";
 export class DeckVerbHandler {
 
     @Inject
-    private tableStateStore: TableStateStore;
+    private gameStateStore: GameStateStore;
     @Inject
     private cardVerbHandler: CardVerbHandler;
-    private gameStateStore: GameStateStore;
-
-    constructor(){
-        this.gameStateStore = this.tableStateStore.state.gameStateStore;
-    }
 
     drawCard(verb: IDrawFaceUpVerb | IDrawFaceDownVerb, drawFaceUp: boolean) {
         this.gameStateStore.changeState(draft => {

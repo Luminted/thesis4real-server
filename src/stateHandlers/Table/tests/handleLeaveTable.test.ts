@@ -6,11 +6,12 @@ import { TableHandler } from '../TableHandler';
 import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
 import { ETableClientEvents } from '../../../typings';
 import { cardEntityMock1, handCardMock1, handCardMock2 } from '../../../mocks/entityMocks';
+import { GameStateStore } from '../../../stores/GameStateStore';
 
 describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore)
-    const gameStateStore = tableStateStore.state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore);
     const {clientInfo: { clientId }} = mockClient1;
     const cardInClientsHand1 = {...handCardMock1}
     const cardInClientsHand2 = {...handCardMock2};
@@ -33,14 +34,14 @@ describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
     it('should remove client from clients', () => {
         const nextGameState = tableHandler.leaveTable(clientId);
 
-        const removedClient = extractClientById(nextGameState, clientId);
-        assert.equal(removedClient, null);
+        const removedClient = nextGameState.clients.get(clientId);
+        assert.equal(removedClient, undefined);
     });
     it('should remove clients hand', () => {
         const nextGameState = tableHandler.leaveTable(clientId);
 
-        const removedHand = extractClientHandById(nextGameState, clientId);
-        assert.equal(removedHand, null);
+        const removedHand = nextGameState.hands.get(clientId);
+        assert.equal(removedHand, undefined);
     })
     it('should put cards in clients hand on table at default point', () => {
         const nextGameState = tableHandler.leaveTable(clientId);

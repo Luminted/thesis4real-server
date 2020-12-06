@@ -1,17 +1,18 @@
 import assert from 'assert'
 import {spy} from 'sinon';
+import cloneDeep from "lodash.clonedeep";
 import { IGrabVerb, ESharedVerbTypes } from "../../../../typings";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors/gameStateExtractors";
 import * as utils from '../../../../utils';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { Container } from 'typescript-ioc';
-import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, cardEntityMock2 } from '../../../../mocks/entityMocks';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
     const freeCard = {...cardEntityMock1};
     const grabbedCard = {...cardEntityMock2};
@@ -55,7 +56,7 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
         assert.equal(nextCard.grabbedBy, clientId);
     })
     it('should do nothing if card is already grabbed', () =>{
-        const originalState = {...gameStateStore.state}
+        const originalState = cloneDeep(gameStateStore.state);
         const {entityId, entityType} = grabbedCard;
         const positionX = 1;
         const positionY = 2;

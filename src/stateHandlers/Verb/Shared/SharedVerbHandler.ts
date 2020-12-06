@@ -3,19 +3,13 @@ import { zIndexLimit } from "../../../config";
 import { extractClientById, extractEntityByTypeAndId, extractGrabbedEntityOfClientById } from "../../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../../utils";
 import { GameStateStore } from "../../../stores/GameStateStore";
-import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
 import { EEntityTypes, IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "../../../typings";
 
 @Singleton
 export class SharedVerbHandler {
 
     @Inject
-    private tableStateStore: TableStateStore;
     private gameStateStore: GameStateStore;
-
-    constructor(){
-        this.gameStateStore = this.tableStateStore.state.gameStateStore;
-    }
 
     grabFromTable(verb: IGrabVerb) {
         this.gameStateStore.changeState(draft => {

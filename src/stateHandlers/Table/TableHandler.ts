@@ -3,7 +3,7 @@ import { extractClientHandCardsById, extractClientsSeatById } from "../../extrac
 import { calcNextZIndex } from "../../utils";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
-import { TClientHand, TClient, EClientConnectionStatuses } from "../../typings";
+import { TClientHand, TClient, EClientConnectionStatuses, TMaybeNull } from "../../typings";
 import { CardVerbHandler } from "../Verb/Card";
 import {zIndexLimit} from "../../config";
 
@@ -12,28 +12,33 @@ export class TableHandler {
     @Inject
     private tableStateStore: TableStateStore;
     @Inject
-    private cardVerbHandler: CardVerbHandler;
     private gameStateStore: GameStateStore;
+    @Inject
+    private cardVerbHandler: CardVerbHandler;
 
-    constructor(){
-        this.gameStateStore = this.tableStateStore.state.gameStateStore;
-    }
+    joinTable(requestedSeatId: TMaybeNull<string>, clientId: string){
+        const {emptySeats} = this.tableStateStore.state;
 
-    joinTable(clientId: string){
-        let emptySeatId;
-        this.tableStateStore.changeState(draft => {
-            emptySeatId = draft.emptySeats.pop();
-        })
-        if(emptySeatId !== undefined){
+        if(emptySeats.includes(requestedSeatId)){
+            this.tableStateStore.changeState(draft => {
+                    draft.emptySeats = emptySeats.filter(seatId => seatId !== requestedSeatId);
+                })
             this.gameStateStore.changeState(draft => {
-                const newClient = this.createClient(clientId, emptySeatId);
+                const client = this.gameStateStore.state.clients.get(clientId);
+
+                if(client){
+                    throw new Error("Client has already joined Table");
+                }
+
+                const newClient = this.createClient(clientId, requestedSeatId);
                 const newHand = this.createClientHand(clientId);
+
                 draft.clients.set(clientId, newClient);
                 draft.hands.set(clientId, newHand);
             })
         }
         else{
-            // throw error
+            throw new Error("Requested seat already taken");
         }
 
         return this.gameStateStore.state;

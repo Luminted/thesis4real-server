@@ -4,12 +4,12 @@ import { IReleaseVerb, ESharedVerbTypes, EEntityTypes } from "../../../../typing
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { SharedVerbHandler } from '../SharedVerbHandler';
-import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1 } from '../../../../mocks/entityMocks';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 describe(`handle ${ESharedVerbTypes.RELEASE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
     const card = {...cardEntityMock1, grabbedBy: clientId};
     const verb: IReleaseVerb = {

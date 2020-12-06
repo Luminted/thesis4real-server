@@ -4,7 +4,6 @@ export enum ECardVerbTypes {
     ADD_CARD = 'ADD_CARD',
     FLIP = 'FLIP',
     PUT_IN_HAND = 'PUT_IN_HAND',
-    PUT_ON_TABLE = 'PUT_ON_TABLE',
     GRAB_FROM_HAND = 'GRAB_FROM_HAND',
     REORDER_HAND = "REORDER_HAND"
 }
@@ -53,17 +52,6 @@ export interface IGrabFromHandVerb extends IGenericVerb {
     grabbedAtY: number,
     grabbedFrom: string
     faceUp: boolean
-}
-
-/**
- * @position where the card will be placed
- * @clientId the client who is grabbing the card
- * @entityId the card being placed on the table
- * @faceUp whether the card is facing up or not
- */
-export interface IPutOnTableVerb extends IGenericVerb {
-    type: ECardVerbTypes.PUT_ON_TABLE
-    faceUp:boolean
 }
 
 /**

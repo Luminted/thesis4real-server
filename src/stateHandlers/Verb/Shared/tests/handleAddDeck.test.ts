@@ -1,13 +1,13 @@
 import assert from "assert";
 import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
-import { TableStateStore } from "../../../../stores/TableStateStore";
+import { GameStateStore } from "../../../../stores/GameStateStore";
 import { EDeckVerbTypes, IAddDeckVerb, IDeckEntity } from "../../../../typings";
 import { DeckVerbHandler } from "../../Deck";
 
 describe(`handle ${EDeckVerbTypes.ADD_DECK}`, () => {
     const deckVerbHandler = new DeckVerbHandler();
-    const {gameStateStore} = Container.get(TableStateStore).state;
+    const gameStateStore = Container.get(GameStateStore);
     const {clientInfo: {clientId}} = mockClient1;
 
     beforeEach(() => {

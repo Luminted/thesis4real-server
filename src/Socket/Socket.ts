@@ -3,7 +3,7 @@ import {Server} from 'http';
 import {Singleton, Inject, InjectValue} from 'typescript-ioc';
 import { TableNamespace } from '../namespaces';
 
-// @Singleton
+@Singleton
 export class Socket {
 
     public socket: SocketIO.Server;

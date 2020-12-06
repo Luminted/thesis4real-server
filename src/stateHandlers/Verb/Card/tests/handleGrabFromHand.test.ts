@@ -3,16 +3,16 @@ import { ECardVerbTypes, IGrabFromHandVerb, EEntityTypes, TGrabbedEntity } from 
 import { extractClientById, extractCardById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';
-import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
 import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../Table';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId: client1Id}}  = mockClient1;
     const {clientInfo: {clientId: client2Id}} = mockClient2;
     const {entityId} = handCardMock1;

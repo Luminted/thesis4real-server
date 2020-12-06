@@ -46,8 +46,6 @@ export class VerbHandler {
                 return this.cardVerbHandler.putInHand(verb);
             case ECardVerbTypes.GRAB_FROM_HAND:
                 return this.cardVerbHandler.grabFromHand(verb);
-            case ECardVerbTypes.PUT_ON_TABLE:
-                return this.cardVerbHandler.putOnTable(verb);
             case ECardVerbTypes.FLIP:
                 return this.cardVerbHandler.flip(verb);
             case ECardVerbTypes.REORDER_HAND:

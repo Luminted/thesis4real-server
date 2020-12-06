@@ -1,15 +1,16 @@
 import assert from 'assert';
+import cloneDeep from "lodash.clonedeep";
 import { EDeckVerbTypes, IDrawFaceUpVerb, IDeckCard } from '../../../../typings';
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { DeckVerbHandler } from '../DeckVerbHandler';
-import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { Container } from 'typescript-ioc';
 import { deckEntityMock1 } from '../../../../mocks/entityMocks';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
     const {entityId, entityType} = deckEntityMock1;
     const rotation = 12;
@@ -56,7 +57,7 @@ describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} verb`, () => {
         assert.equal(spawnedCard.ownerDeck, originalDeck.entityId);
     })
     it('should increase the decks drawIndex by 1', () => {
-        const originalState = {...gameStateStore.state};
+        const originalState = cloneDeep(gameStateStore.state);
         
         const nextGameState = deckVerbHandler.drawCard(verb, true);
 

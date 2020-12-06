@@ -3,13 +3,13 @@ import { Container } from "typescript-ioc";
 import { extractCardById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { cardEntityMock1 } from "../../../../mocks/entityMocks";
-import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
+import { GameStateStore } from "../../../../stores/GameStateStore";
 import { ECardVerbTypes, IFlipVerb } from "../../../../typings";
 import { CardVerbHandler } from "../CardVerbHandler";
 
 describe(`handling ${ECardVerbTypes.FLIP}`, () => {
     const cardVerbHandler = new CardVerbHandler();
-    const {gameStateStore} = Container.get(TableStateStore).state;
+    const gameStateStore = Container.get(GameStateStore);
     const {clientInfo: {clientId}} = mockClient1;
     const verbBase: Omit<IFlipVerb, "entityId"> = {
         type: ECardVerbTypes.FLIP,

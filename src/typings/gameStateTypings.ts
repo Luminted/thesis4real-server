@@ -68,7 +68,6 @@ export type TGameState = {
 }
 
 export type TCardTable = {
-    readonly gameStateStore: GameStateStore,
     defaultPosition: [number, number],
     emptySeats: string[],
 }

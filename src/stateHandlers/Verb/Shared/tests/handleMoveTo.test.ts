@@ -4,12 +4,12 @@ import { IMoveToVerb, ESharedVerbTypes, EEntityTypes } from '../../../../typings
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { SharedVerbHandler } from '../SharedVerbHandler';
-import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, deckEntityMock1 } from '../../../../mocks/entityMocks';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
     const {entityId: cardEntityId} = cardEntityMock1;
     const {entityId: deckEntityId} = deckEntityMock1;

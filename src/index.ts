@@ -4,6 +4,7 @@ import cors from 'cors';
 import { Container } from 'typescript-ioc';
 import { Socket } from './socket';
 
+// TODO: is express needed?
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -13,11 +14,8 @@ Container.bindName("httpServer").to(server);
 
 Container.get(Socket);
 
-const node_env = process.env.NODE_ENV;
-
-const port = process.env.PORT || 8081;
+const port = process.env.PORT || 8083;
 server.listen(port, () => {
-    console.log(`running in ${node_env} mode`);
     console.log(`listening on port ${port}` );
 });
 

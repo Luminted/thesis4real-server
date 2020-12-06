@@ -1,16 +1,16 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
+import cloneDeep from "lodash.clonedeep";
 import { EEntityTypes, ICardEntity, IDeckEntity, TGameState, IMoveVerb, ESharedVerbTypes } from "../../../../typings";
 import { extractClientById, extractCardById, extractDeckById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { SharedVerbHandler } from '../SharedVerbHandler';
-import { TableStateStore } from '../../../../stores/TableStateStore';
 import { cardEntityMock1, cardEntityMock2, deckEntityMock1, deckEntityMock2 } from '../../../../mocks/entityMocks';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
     const sharedVerbHandler = new SharedVerbHandler();
-    const tableStateStore = Container.get(TableStateStore); 
-    const gameStateStore = tableStateStore.state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore); 
     const {clientInfo: {clientId}} = mockClient1;
     const boundCard = { ...cardEntityMock2};
     const boundDeck = { ...deckEntityMock2};
@@ -108,7 +108,7 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
             assert.equal(movedCard.positionY, cardEntityMock1.positionY + verb.positionY - grabbedAt.y);
         })
         it('should ignore input if the entityId in the input is null', () =>{
-            const originalState = {...gameStateStore.state};
+            const originalState = cloneDeep(gameStateStore.state);
             const verb: IMoveVerb = {
                 clientId,
                 type: testedVerbType,
@@ -203,7 +203,7 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
             assert.equal(movedDeck.positionY, deckEntityMock2.positionY + verb.positionY - grabbedAt.y);
         })
         it('should ignore input if the entityId in the input is null', () =>{
-            const originalState = {...gameStateStore.state}
+            const originalState = cloneDeep(gameStateStore.state);
             const verb: IMoveVerb = {
                 clientId,
                 type: testedVerbType,

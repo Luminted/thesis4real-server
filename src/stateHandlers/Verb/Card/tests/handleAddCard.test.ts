@@ -1,13 +1,13 @@
 import assert from "assert";
 import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
-import { TableStateStore } from "../../../../stores/TableStateStore";
+import { GameStateStore } from "../../../../stores/GameStateStore";
 import { ECardVerbTypes, IAddCardVerb, ICardEntity } from "../../../../typings";
 import { CardVerbHandler } from "../CardVerbHandler";
 
 describe(`handling ${ECardVerbTypes.ADD_CARD}`, () => {
     const cardVerbHandler = new CardVerbHandler();
-    const {gameStateStore} = Container.get(TableStateStore).state;
+    const gameStateStore = Container.get(GameStateStore);
     const {clientInfo: {clientId}} = mockClient1;
 
     beforeEach(() => {

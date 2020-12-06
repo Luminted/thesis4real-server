@@ -4,14 +4,14 @@ import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClien
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { Container } from 'typescript-ioc';
 import { CardVerbHandler } from '../CardVerbHandler';
-import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, handCardMock1 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../Table';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 describe(`handle ${ECardVerbTypes.PUT_IN_HAND} verb`, () => {
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const client = {...mockClient1};
     const {entityId, entityType} = cardEntityMock1;
     client.grabbedEntity = {
@@ -51,7 +51,7 @@ describe(`handle ${ECardVerbTypes.PUT_IN_HAND} verb`, () => {
     })
     it('should take out correct card from cards array', () => {
         const nextGameState = cardVerbHandler.putInHand(verb);
-        assert.equal(extractCardById(nextGameState ,entityId), undefined);
+        assert.throws(() => extractCardById(nextGameState ,entityId));
     })
     it('should create hand card with faceUp according to verb', () => {
         const {clientId} = client.clientInfo;

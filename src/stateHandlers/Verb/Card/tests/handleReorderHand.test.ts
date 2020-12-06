@@ -3,7 +3,7 @@ import { Container } from 'typescript-ioc';
 import { extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { handCardMock1 } from '../../../../mocks/entityMocks';
-import { TableStateStore } from '../../../../stores/TableStateStore';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 import { ECardVerbTypes, IReorderHandVerb } from '../../../../typings';
 import { TableHandler } from '../../../Table';
 import { CardVerbHandler } from '../CardVerbHandler';
@@ -12,7 +12,7 @@ describe(`handle ${ECardVerbTypes.REORDER_HAND} verb`, () => {
     
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
     const verb: IReorderHandVerb = {
         type: ECardVerbTypes.REORDER_HAND,

@@ -3,13 +3,13 @@ import { Container } from 'typescript-ioc';
 import { ESharedVerbTypes, IRemoveVerb, TClient, EEntityTypes, TGrabbedEntity } from '../../../../typings';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
-import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { cardEntityMock1, deckEntityMock1 } from '../../../../mocks/entityMocks';
 import { extractClientById } from '../../../../extractors/gameStateExtractors';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 describe(`handle ${ESharedVerbTypes.REMOVE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
     const {entityId: deckEntityId} = deckEntityMock1;
     const {entityId: cardEntityId} = cardEntityMock1;

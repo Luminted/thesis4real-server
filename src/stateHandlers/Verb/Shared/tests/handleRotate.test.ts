@@ -3,14 +3,14 @@ import { Container } from "typescript-ioc";
 import { extractCardById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { cardEntityMock1 } from "../../../../mocks/entityMocks";
-import { TableStateStore } from "../../../../stores/TableStateStore/TableStateStore";
+import { GameStateStore } from "../../../../stores/GameStateStore";
 import { IRotateVerb, ESharedVerbTypes } from "../../../../typings";
 import { SharedVerbHandler } from "../SharedVerbHandler";
 
 
 describe(`handle ${ESharedVerbTypes.ROTATE}`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const {entityId, entityType} = cardEntityMock1;
     const {clientInfo: {clientId}} = mockClient1;
     const verb: IRotateVerb = {

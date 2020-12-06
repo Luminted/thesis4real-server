@@ -13,7 +13,7 @@ export class Store<T> {
     }
 
     public changeState(handler: (draft: T) => void) {
-        this.state = produce(this.state, handler)  || this.state;
+        this.state = produce(this.state, handler) || this.state;
     } 
 
     public resetState() {

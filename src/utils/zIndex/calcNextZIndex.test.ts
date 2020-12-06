@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { calcNextZIndex } from "./calcNextZIndex"
 import { GameStateStore } from '../../stores/GameStateStore';
+import cloneDeep from "lodash.clonedeep";
 import { cardEntityMock1, deckEntityMock1 } from '../../mocks/entityMocks';
 import { ICardEntity, IDeckEntity } from '../../typings';
 
@@ -23,7 +24,7 @@ describe('Testing utility functions', () =>{
         })
         it('should increment topZIndex by one', () =>{
             const zIndexLimit = 10;
-            const originalState = {...gameStateStore.state};
+            const originalState = cloneDeep(gameStateStore.state);
             gameStateStore.changeState(draft => {
                 calcNextZIndex(draft, zIndexLimit);
                 assert.equal(draft.topZIndex, originalState.topZIndex + 1);

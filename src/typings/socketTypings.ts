@@ -8,7 +8,6 @@ export enum ETableClientEvents {
     REJOIN_TABLE = 'REJOIN_TABLE',
     VERB = 'VERB',
     LEAVE_TABLE = 'LEAVE_TABLE',
-    KICK_PLAYER = 'KICK_PLAYER',
 }
 
 export enum ETableServerEvents {

@@ -1,8 +1,7 @@
 import { original } from "immer";
 import { uuid } from "short-uuid";
 import { Singleton, Inject } from "typescript-ioc";
-import { ICardEntity, EEntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IPutOnTableVerb, IReorderHandVerb } from "../../../typings";
-import { TableStateStore } from "../../../stores/TableStateStore/TableStateStore";
+import { ICardEntity, EEntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IReorderHandVerb } from "../../../typings";
 import { GameStateStore } from "../../../stores/GameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
 import { zIndexLimit } from "../../../config";
@@ -12,13 +11,8 @@ import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 export class CardVerbHandler {
 
     @Inject
-    private tableStateStore: TableStateStore;
     private gameStateStore: GameStateStore;
 
-    constructor(){
-        this.gameStateStore = this.tableStateStore.gameStateStore;
-    }
- 
     grabFromHand(verb: IGrabFromHandVerb) {
         this.gameStateStore.changeState(draft => {
             const gameState = original(draft);
@@ -70,32 +64,6 @@ export class CardVerbHandler {
         return this.gameStateStore.state;
     }
 
-    //TODO: this is code for client leaving
-    putOnTable(verb: IPutOnTableVerb){
-        const {clientId, entityId, positionX, positionY, faceUp} = verb;
-
-        this.gameStateStore.changeState(draft => {
-            const gameState = original(draft);
-            const handCard = extractCardFromClientHandById(gameState, clientId, entityId);
-                const { ownerDeck, entityId: handCardId, metadata} = handCard;
-                const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-
-                //creating entity
-                let cardEntity = this.createCardEntity(positionX, positionY, faceUp, handCardId, ownerDeck, nextTopZIndex, 0, null, metadata );
-                draft.cards.set(cardEntity.entityId, cardEntity);
-                
-                //removing from hand
-                let subjectClientHand = extractClientHandById(draft, clientId);
-                if(subjectClientHand){
-                    subjectClientHand.cards.filter(card => card.entityId !== handCardId);
-                }
-                subjectClientHand.ordering.pop();
-        
-                // removing grabbedEntity
-                extractClientById(draft, clientId).grabbedEntity = null;
-        })
-        return this.gameStateStore.state;
-    }
 
     flip(verb: IFlipVerb) {
         const { entityId } = verb;

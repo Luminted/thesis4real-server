@@ -5,14 +5,14 @@ import { EDeckVerbTypes, IResetVerb, IHandCard } from '../../../../typings';
 import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { Container } from 'typescript-ioc';
 import { DeckVerbHandler } from '../DeckVerbHandler';
-import { TableStateStore } from '../../../../stores/TableStateStore/TableStateStore';
 import { TableHandler } from '../../../Table';
+import { GameStateStore } from '../../../../stores/GameStateStore';
 
 
 describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const tableHandler = new TableHandler();
-    const gameStateStore = Container.get(TableStateStore).state.gameStateStore;
+    const gameStateStore = Container.get(GameStateStore)
     const deckToReset = {...deckEntityMock1};
     const client1Card: IHandCard = {...handCardMock1, ownerDeck: deckToReset.entityId}
     const client2Card: IHandCard = {...handCardMock2, ownerDeck: deckToReset.entityId}
