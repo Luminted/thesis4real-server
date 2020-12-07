@@ -35,6 +35,7 @@ export class TableNamespace extends SocketNamespace {
 
                 try{
                     this.tableHandler.rejoin(clientId);
+                    this.syncGameState(this.gameStateStore.state);
                 }
                 catch(e){
                     error = e.message;
@@ -71,29 +72,45 @@ export class TableNamespace extends SocketNamespace {
                     this.tableHandler.joinTable(requestedSeatId, id);
                     const newClientId = this.tableStateStore.state.socketIdMapping[id];
                     newClientInfo = this.gameStateStore.state.clients.get(newClientId).clientInfo;
+                    this.syncGameState(this.gameStateStore.state);
                 }
                 catch(e){
                     console.log(e.message);
                     error = e.message;
                 }
                 
-                this.syncGameState(this.gameStateStore.state);
                 if(typeof acknowledgeFunction === "function"){
                     acknowledgeFunction(error, newClientInfo);
                 }
         })
+
+        this.addEventListener(ETableClientEvents.LEAVE_TABLE, (clientId: string, ackFunction?: (error:string) => void) => {
+                let error;
+
+                try{
+                    this.tableHandler.leaveTable(clientId);
+                    this.syncGameState(this.gameStateStore.state);
+                }
+                catch(e){
+                    error = e.message;
+                }
+
+                if(typeof ackFunction === "function"){
+                    ackFunction(error);
+                }
+            })
 
         this.addEventListenerWithSocket(ETableClientEvents.DISCONNECT, socket => (reason: string) => {
             const {id}  = socket;
             
             try{
                 this.connectionHandler.disconnect(id);
+                this.syncGameState(this.gameStateStore.state);
             }
             catch(e){
                 console.log(e.message)
             }
             
-            this.syncGameState(this.gameStateStore.state);
             console.log(`disconnection reason: ${reason}`);
         })
     }

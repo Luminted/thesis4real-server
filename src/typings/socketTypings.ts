@@ -12,7 +12,6 @@ export enum ETableClientEvents {
 
 export enum ETableServerEvents {
     SYNC = 'SYNC',
-    CUSTOM_ERROR = "CUSTOM_ERROR",
 }
 
 export enum EClientConnectionStatuses {
