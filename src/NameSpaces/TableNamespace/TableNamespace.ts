@@ -1,15 +1,13 @@
 import throttle from "lodash.throttle";
 import { SocketNamespace } from "..";
 import { Singleton, Inject } from "typescript-ioc";
-import { ETableClientEvents, ETableServerEvents, TVerb, TGameState, TClientInfo, TSerializedGameState, TCustomError } from "../../typings";
-import { extractClientById } from "../../extractors/gameStateExtractors";
+import { ETableClientEvents, ETableServerEvents, TVerb, TGameState, TClientInfo, TSerializedGameState } from "../../typings";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
 import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { serverTick } from "../../config";
-import {getVerbError} from "../../utils";
-import { VerbError } from "../../error/VerbError";
-import { uuid } from "short-uuid";
+import {getVerbErrorMessage} from "../../utils";
+import { TableStateStore } from "../../stores/TableStateStore";
  
 @Singleton
 export class TableNamespace extends SocketNamespace {
@@ -22,76 +20,80 @@ export class TableNamespace extends SocketNamespace {
     private connectionHandler: ConnectionHandler;
     @Inject
     private gameStateStore: GameStateStore;
+    @Inject
+    private tableStateStore: TableStateStore;
 
     constructor(){
         super();
 
         this.onConnect = (socket) =>{
-            const { clientId } = socket.handshake.query;
-            const customId = uuid();
-
-            try{
-                this.connectionHandler.connect(clientId);
-                socket.id = clientId ? clientId : customId;
-            }
-            catch(e){
-                console.error(e.message);
-                socket.emit(ETableServerEvents.CUSTOM_ERROR, `Reconnection failed. Reason: ${e.message}`);
-            }
-
             socket.emit(ETableServerEvents.SYNC, this.serializeGameState(this.gameStateStore.state));
         }
 
-        this.addEventListenerWithSocket(ETableClientEvents.VERB, socket => 
-            (verb: TVerb, acknowledgeFunction?: Function) => {
-                let nextGameState: TGameState;
+        this.addEventListener(ETableClientEvents.REJOIN_TABLE, (clientId: string, ackFunction?: (error: string) => void) => {
+                let error;
+
                 try{
-                    nextGameState = this.verbHandler.handleVerb(verb);
+                    this.tableHandler.rejoin(clientId);
                 }
                 catch(e){
-                    if(e instanceof VerbError){
-                        socket.emit(ETableServerEvents.CUSTOM_ERROR, (getVerbError(verb.type, e.message)));
-                    }
+                    error = e.message;
                 }
 
-                if(nextGameState){
-                    this.syncGameState(nextGameState);
-                    if(acknowledgeFunction){
-                        acknowledgeFunction(this.serializeGameState(nextGameState));
-                    }
+                if(typeof ackFunction === 'function'){
+                    ackFunction(error);
+                }
+            })
+
+        this.addEventListener(ETableClientEvents.VERB, (verb: TVerb, acknowledgeFunction?: (error: string, gameState: TSerializedGameState) => void) => {
+                let error: string;
+
+                try{
+                   this.verbHandler.handleVerb(verb);
+                   this.syncGameState(this.gameStateStore.state);
+                }
+                catch(e){
+                    error = getVerbErrorMessage(verb.type, e.message);
                 }
 
+                if(typeof acknowledgeFunction === 'function'){
+                    acknowledgeFunction(error, this.serializeGameState(this.gameStateStore.state));
+                }
         });
 
         this.addEventListenerWithSocket(ETableClientEvents.JOIN_TABLE, socket =>
-            (requestedSeatId: string, acknowledgeFunction?: (clientInfo: TClientInfo, gameState: TSerializedGameState) => void) => {
+            (requestedSeatId: string, acknowledgeFunction?: (error: string, clientInfo: TClientInfo) => void) => {
                 const {id} = socket;
+                let error: string;
+                let newClientInfo: TClientInfo;
                 
                 try{
                     this.tableHandler.joinTable(requestedSeatId, id);
-                    const gameState = this.gameStateStore.state;
-                    const {clientInfo} = extractClientById(gameState, id);
-
-                    if(typeof acknowledgeFunction === 'function'){
-                        const serializedGameState = this.serializeGameState(gameState);
-                        acknowledgeFunction(clientInfo, serializedGameState);
-                    }
-                    
-                    this.syncGameState(gameState);
+                    const newClientId = this.tableStateStore.state.socketIdMapping[id];
+                    newClientInfo = this.gameStateStore.state.clients.get(newClientId).clientInfo;
                 }
                 catch(e){
                     console.log(e.message);
+                    error = e.message;
                 }
                 
-                console.log(id, ' joined table');
+                this.syncGameState(this.gameStateStore.state);
+                if(typeof acknowledgeFunction === "function"){
+                    acknowledgeFunction(error, newClientInfo);
+                }
         })
 
         this.addEventListenerWithSocket(ETableClientEvents.DISCONNECT, socket => (reason: string) => {
             const {id}  = socket;
             
-            const nextGameState = this.connectionHandler.disconnect(id);
+            try{
+                this.connectionHandler.disconnect(id);
+            }
+            catch(e){
+                console.log(e.message)
+            }
             
-            this.syncGameState(nextGameState);
+            this.syncGameState(this.gameStateStore.state);
             console.log(`disconnection reason: ${reason}`);
         })
     }

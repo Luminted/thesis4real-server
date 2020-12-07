@@ -5,22 +5,29 @@ import { extractClientById } from "../../../extractors/gameStateExtractors";
 import { mockClient1 } from '../../../mocks/clientMocks';
 import { ConnectionHandler } from '../ConnectionHandler';
 import { GameStateStore } from '../../../stores/GameStateStore';
+import { TableStateStore } from '../../../stores/TableStateStore';
 
 describe(`Event handler for: ${ETableClientEvents.DISCONNECT}`, () => {
     const connectionHandler = new ConnectionHandler();
     const gameStateStore = Container.get(GameStateStore);
+    const tableStateStore = Container.get(TableStateStore);
     const client = mockClient1;
     const {clientId} = mockClient1.clientInfo;
+    const socketId = 'client-socket1';
 
     beforeEach(() => {
         gameStateStore.resetState();
+        tableStateStore.resetState();
         gameStateStore.changeState(draft => {
             draft.clients.set(client.clientInfo.clientId, client);
+        })
+        tableStateStore.changeState(draft => {
+            draft.socketIdMapping[socketId] = clientId;
         })
     })
 
     it(`should set clients connection status to ${EClientConnectionStatuses.DISCONNECTED}`, () => {
-        connectionHandler.disconnect(client.clientInfo.clientId);
+        connectionHandler.disconnect(socketId);
 
         const disconnectedClinet = extractClientById(gameStateStore.state, clientId);
         assert.equal(disconnectedClinet.status, EClientConnectionStatuses.DISCONNECTED);

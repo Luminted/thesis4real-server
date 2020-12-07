@@ -1,11 +1,13 @@
 import { Inject } from "typescript-ioc";
-import { extractClientHandCardsById, extractClientsSeatById } from "../../extractors/gameStateExtractors";
+import { generate } from "short-uuid";
+import { extractClientById, extractClientHandCardsById, extractClientsSeatById } from "../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../utils";
 import { GameStateStore } from "../../stores/GameStateStore";
 import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
 import { TClientHand, TClient, EClientConnectionStatuses, TMaybeNull } from "../../typings";
 import { CardVerbHandler } from "../Verb/Card";
 import {zIndexLimit} from "../../config";
+import { extractSocketIdByClientId } from "../../extractors/tableStateExtractor";
 
 
 export class TableHandler {
@@ -16,20 +18,23 @@ export class TableHandler {
     @Inject
     private cardVerbHandler: CardVerbHandler;
 
-    joinTable(requestedSeatId: TMaybeNull<string>, clientId: string){
+    joinTable(requestedSeatId: TMaybeNull<string>, socketId: string){
         const {emptySeats} = this.tableStateStore.state;
+        const clientId = generate();
+        const presentClientId = this.tableStateStore.state.socketIdMapping[socketId];
+        console.log(presentClientId, socketId);
+
+        if(presentClientId){
+            console.log("inside")
+            throw new Error("Client already present");
+        }
 
         if(emptySeats.includes(requestedSeatId)){
             this.tableStateStore.changeState(draft => {
                     draft.emptySeats = emptySeats.filter(seatId => seatId !== requestedSeatId);
+                    draft.socketIdMapping[socketId] = clientId;
                 })
             this.gameStateStore.changeState(draft => {
-                const client = this.gameStateStore.state.clients.get(clientId);
-
-                if(client){
-                    throw new Error("Client has already joined Table");
-                }
-
                 const newClient = this.createClient(clientId, requestedSeatId);
                 const newHand = this.createClientHand(clientId);
 
@@ -44,13 +49,30 @@ export class TableHandler {
         return this.gameStateStore.state;
     }
 
+    rejoin(clientId: string) {
+        this.gameStateStore.changeState(draft => {
+            const client = extractClientById(draft, clientId);
+            if(client.status === EClientConnectionStatuses.DISCONNECTED){
+                client.status = EClientConnectionStatuses.CONNECTED;
+            }
+            else{
+                throw new Error("Client with given ID already connected");
+            }
+        })
+
+        return this.gameStateStore.state;
+    }
+
     leaveTable(clientId: string){
         const {defaultPosition} = this.tableStateStore.state;
 
         // putting back seat into pool
         this.tableStateStore.changeState(draft => {
             draft.emptySeats.push(extractClientsSeatById(this.gameStateStore.state, clientId));
-        })
+            // removing socket ID mapping
+            const socketId = extractSocketIdByClientId(draft, clientId);
+            delete draft.socketIdMapping[socketId];
+        });
 
         // removing hand and client
         this.gameStateStore.changeState(draft => {
@@ -64,7 +86,7 @@ export class TableHandler {
         
             draft.hands.delete(clientId);
             draft.clients.delete(clientId);
-        });
+        });        
 
         return this.gameStateStore.state;
     }

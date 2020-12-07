@@ -6,6 +6,7 @@ import { TCardTable } from "../../typings";
 const initialState: TCardTable = {
     defaultPosition: [0,0],
     emptySeats: new Array(numberOfSeats).fill(null).map((_, index) => `${index + 1}`),
+    socketIdMapping: {}
 };
 
 @Singleton

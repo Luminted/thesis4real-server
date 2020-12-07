@@ -1,4 +1,3 @@
-import { VerbError } from '../error/VerbError';
 import {TGameState, EEntityTypes} from '../typings'
 
 export const extractClientById = (state: TGameState, clientId: string)=> {
@@ -7,7 +6,7 @@ export const extractClientById = (state: TGameState, clientId: string)=> {
         return client;
     }
     else{
-        throw new VerbError("Client with given id not found");
+        throw new Error("Client with given id not found");
     }
 }
 
@@ -21,7 +20,7 @@ export const extractCardById = (state: TGameState, entityId: string)=> {
         return card;
     }
     else{
-        throw new VerbError("Card with given id not found");
+        throw new Error("Card with given id not found");
     }
 }
 
@@ -31,7 +30,7 @@ export const extractDeckById = (state: TGameState, entityId: string)=> {
         return deck;
     }
     else{
-        throw new VerbError("Deck with given id not found");
+        throw new Error("Deck with given id not found");
     }
 }
 
@@ -43,7 +42,7 @@ export const extractEntityByTypeAndId = (state: TGameState, entityType: EEntityT
         return extractDeckById(state, entityId);
     }
     else{
-        throw new VerbError("Entity not found");
+        throw new Error("Entity not found");
     }
 }
 
@@ -53,7 +52,7 @@ export const extractClientHandById = (state: TGameState, clientId: string) => {
         return hand;
     }
     else{
-        throw new VerbError("Hand not found for given client");
+        throw new Error("Hand not found for given client");
     }
 }
 
@@ -65,7 +64,7 @@ export const extractCardFromClientHandById = (state: TGameState, clientId:string
         return card;
     }
     else{
-        throw new VerbError("Card not found in given hand");
+        throw new Error("Card not found in given hand");
     }
 }
 

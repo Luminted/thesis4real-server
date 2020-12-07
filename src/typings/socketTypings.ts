@@ -19,8 +19,3 @@ export enum EClientConnectionStatuses {
     CONNECTED = 'CONNECTED',
     DISCONNECTED = 'DISCONNECTED',
 }
-
-export type TCustomError = {
-    code: number,
-    message: string
-}

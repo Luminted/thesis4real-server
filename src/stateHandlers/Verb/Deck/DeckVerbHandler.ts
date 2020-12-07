@@ -8,7 +8,6 @@ import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, E
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 import { zIndexLimit } from "../../../config";
 import { CardVerbHandler } from "../Card";
-import { VerbError } from "../../../error/VerbError";
 
 @Singleton
 export class DeckVerbHandler {
@@ -120,7 +119,7 @@ export class DeckVerbHandler {
         const topCard = cards[deck.drawIndex];
 
         if(!topCard){
-            throw new VerbError("No cards left in deck.");
+            throw new Error("No cards left in deck.");
         }
         
         return topCard;

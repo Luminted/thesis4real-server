@@ -1,30 +1,19 @@
 import { Inject, Singleton } from "typescript-ioc";
 import { extractClientById } from "../../extractors/gameStateExtractors";
+import { extractClientIdBySocketId } from "../../extractors/tableStateExtractor";
 import { GameStateStore } from "../../stores/GameStateStore";
+import { TableStateStore } from "../../stores/TableStateStore";
 import { EClientConnectionStatuses } from "../../typings";
 
 @Singleton
 export class ConnectionHandler {
     @Inject
     private gameStateStore: GameStateStore;
+    @Inject
+    private tableStateStore: TableStateStore;
 
-    connect(clientId?: string) {
-        if(clientId){
-            this.gameStateStore.changeState(draft => {
-                const client = extractClientById(draft, clientId);
-                if(client.status === EClientConnectionStatuses.DISCONNECTED){
-                    client.status = EClientConnectionStatuses.CONNECTED;
-                }
-                else{
-                    throw new Error("Client with given ID already connected");
-                }
-            })
-        }
-
-        return this.gameStateStore.state;
-    }
-
-    disconnect(clientId: string){
+    disconnect(socketId: string){
+        const clientId = extractClientIdBySocketId(this.tableStateStore.state, socketId);
         this.gameStateStore.changeState(draft => {
             const client = draft.clients.get(clientId);
             if(client){

@@ -7,12 +7,14 @@ import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore
 import { ETableClientEvents } from '../../../typings';
 import { cardEntityMock1, handCardMock1, handCardMock2 } from '../../../mocks/entityMocks';
 import { GameStateStore } from '../../../stores/GameStateStore';
+import { extractClientIdBySocketId } from '../../../extractors/tableStateExtractor';
 
 describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore)
     const gameStateStore = Container.get(GameStateStore);
     const {clientInfo: { clientId }} = mockClient1;
+    const socketId = 'client-socket1';
     const cardInClientsHand1 = {...handCardMock1}
     const cardInClientsHand2 = {...handCardMock2};
     const defaultPosition: [number, number] = [15,25];
@@ -28,6 +30,7 @@ describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
         });
         tableStateStore.changeState(draft => {
             draft.defaultPosition = defaultPosition;
+            draft.socketIdMapping[socketId] = clientId;
         })
     })
 
@@ -77,5 +80,11 @@ describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
         tableHandler.leaveTable(clientId);
 
         assert.equal(tableStateStore.state.emptySeats.includes(clientsSeat), true);
+    })
+
+    it("should remove socket ID mapping", () => {
+        tableHandler.leaveTable(clientId);
+        
+        assert.throws(() => extractClientIdBySocketId(tableStateStore.state, socketId));
     })
 })

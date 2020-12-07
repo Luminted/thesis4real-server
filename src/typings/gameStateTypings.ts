@@ -70,6 +70,7 @@ export type TGameState = {
 export type TCardTable = {
     defaultPosition: [number, number],
     emptySeats: string[],
+    socketIdMapping: {[key in string]: string}
 }
 
 export type TSerializedGameState = {
