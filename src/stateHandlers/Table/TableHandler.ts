@@ -49,7 +49,7 @@ export class TableHandler {
         return this.gameStateStore.state;
     }
 
-    rejoin(clientId: string) {
+    rejoin(clientId: string, socketId: string) {
         this.gameStateStore.changeState(draft => {
             const client = extractClientById(draft, clientId);
             if(client.status === EClientConnectionStatuses.DISCONNECTED){
@@ -58,6 +58,12 @@ export class TableHandler {
             else{
                 throw new Error("Client with given ID already connected");
             }
+        })
+
+        this.tableStateStore.changeState(draft => {
+            const oldSocketId = extractSocketIdByClientId(draft, clientId);
+            draft.socketIdMapping[socketId] = clientId;
+            delete draft.socketIdMapping[oldSocketId];
         })
 
         return this.gameStateStore.state;

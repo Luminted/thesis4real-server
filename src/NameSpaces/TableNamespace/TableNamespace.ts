@@ -30,12 +30,17 @@ export class TableNamespace extends SocketNamespace {
             socket.emit(ETableServerEvents.SYNC, this.serializeGameState(this.gameStateStore.state));
         }
 
-        this.addEventListener(ETableClientEvents.REJOIN_TABLE, (clientId: string, ackFunction?: (error: string) => void) => {
+        this.addEventListenerWithSocket(ETableClientEvents.REJOIN_TABLE, socket =>
+             (clientId: string, ackFunction?: (error: string) => void) => {
+                const {id: socketId} = socket;
                 let error;
+                console.log(clientId, " trying to rejoin")
 
                 try{
-                    this.tableHandler.rejoin(clientId);
+                    this.tableHandler.rejoin(clientId, socketId);
                     this.syncGameState(this.gameStateStore.state);
+                    console.log(clientId, " rejoined");
+
                 }
                 catch(e){
                     error = e.message;
@@ -73,6 +78,7 @@ export class TableNamespace extends SocketNamespace {
                     const newClientId = this.tableStateStore.state.socketIdMapping[id];
                     newClientInfo = this.gameStateStore.state.clients.get(newClientId).clientInfo;
                     this.syncGameState(this.gameStateStore.state);
+                    console.log(newClientId, " joined");
                 }
                 catch(e){
                     console.log(e.message);
