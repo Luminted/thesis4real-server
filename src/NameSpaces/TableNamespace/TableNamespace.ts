@@ -68,17 +68,17 @@ export class TableNamespace extends SocketNamespace {
         });
 
         this.addEventListenerWithSocket(ETableClientEvents.JOIN_TABLE, socket =>
-            (requestedSeatId: string, acknowledgeFunction?: (error: string, clientInfo: TClientInfo) => void) => {
+            (requestedSeatId: string, name?: string, acknowledgeFunction?: (error: string, clientInfo: TClientInfo) => void) => {
                 const {id} = socket;
                 let error: string;
                 let newClientInfo: TClientInfo;
                 
                 try{
-                    this.tableHandler.joinTable(requestedSeatId, id);
+                    this.tableHandler.joinTable(requestedSeatId, id, name);
                     const newClientId = this.tableStateStore.state.socketIdMapping[id];
                     newClientInfo = this.gameStateStore.state.clients.get(newClientId).clientInfo;
                     this.syncGameState(this.gameStateStore.state);
-                    console.log(newClientId, " joined");
+                    console.log(newClientId, " joined with name ", name);
                 }
                 catch(e){
                     console.log(e.message);

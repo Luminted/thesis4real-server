@@ -35,12 +35,21 @@ describe(`Socket handler for: ${ETableClientEvents.JOIN_TABLE}`, () => {
         const hand = extractClientHandById(nextGameState, clientId);
         assert.notEqual(hand, undefined);
     })
-    it("should set requested seat ID for created client", () => {
+    it("should assign requested seat ID for created client", () => {
         const nextGameState = tableHandler.joinTable(requestedSeatId, socketId);
 
         const clientId = extractClientIdBySocketId(tableStateStore.state, socketId);
         const {clientInfo: {seatId}} = extractClientById(nextGameState, clientId);
         assert.equal(seatId, requestedSeatId);
+    })
+    it("should create client with given name", () => {
+        const givenName = "Johnny boi";
+
+        tableHandler.joinTable(requestedSeatId, socketId, givenName);
+
+        const clientId = extractClientIdBySocketId(tableStateStore.state, socketId);
+        const {clientInfo: {name}} = extractClientById(gameStateStore.state, clientId);
+        assert(name, givenName);
     })
     it("should throw error if requested seat is not empty", () => {
         tableStateStore.changeState(draft => {

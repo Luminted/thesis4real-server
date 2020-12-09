@@ -18,7 +18,7 @@ export class TableHandler {
     @Inject
     private cardVerbHandler: CardVerbHandler;
 
-    joinTable(requestedSeatId: TMaybeNull<string>, socketId: string){
+    joinTable(requestedSeatId: TMaybeNull<string>, socketId: string, name?: string){
         const {emptySeats} = this.tableStateStore.state;
         const clientId = generate();
         const presentClientId = this.tableStateStore.state.socketIdMapping[socketId];
@@ -35,7 +35,7 @@ export class TableHandler {
                     draft.socketIdMapping[socketId] = clientId;
                 })
             this.gameStateStore.changeState(draft => {
-                const newClient = this.createClient(clientId, requestedSeatId);
+                const newClient = this.createClient(clientId, requestedSeatId, name);
                 const newHand = this.createClientHand(clientId);
 
                 draft.clients.set(clientId, newClient);
@@ -110,7 +110,7 @@ export class TableHandler {
             clientInfo: {
                 seatId,
                 clientId: id,
-                clientName: name,
+                name: name,
             },
             grabbedEntity: null,
             status: EClientConnectionStatuses.CONNECTED
