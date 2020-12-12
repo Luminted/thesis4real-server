@@ -29,14 +29,30 @@ describe(`handle ${EDeckVerbTypes.ADD_DECK}`, () => {
             containedCardsMetadata: [{data: "card_info"}]
         }
 
-        const nextGameState = deckVerbHandler.addDeck(verb);
+        const newDeckEntityId = deckVerbHandler.addDeck(verb);
 
-        const { value } = nextGameState.decks.values().next();
-        const addedEntity = value as IDeckEntity;
-        assert.equal(addedEntity.positionX, verb.positionX);
-        assert.equal(addedEntity.positionY, verb.positionY);
-        assert.equal(addedEntity.rotation, verb.rotation);
-        assert.deepEqual(addedEntity.metadata, verb.metadata);
-        assert.deepEqual(addedEntity.cards.map(({metadata}) => ({...metadata}) ), verb.containedCardsMetadata);
+        const addedDeck = gameStateStore.state.decks.get(newDeckEntityId);
+        assert.equal(addedDeck.positionX, verb.positionX);
+        assert.equal(addedDeck.positionY, verb.positionY);
+        assert.equal(addedDeck.rotation, verb.rotation);
+        assert.deepEqual(addedDeck.metadata, verb.metadata);
+        assert.deepEqual(addedDeck.cards.map(({metadata}) => ({...metadata}) ), verb.containedCardsMetadata);
+    })
+    it("should initialize numberOfCards to number of cards contained", () => {
+        const verb: IAddDeckVerb = {
+            type: EDeckVerbTypes.ADD_DECK,
+            positionX: 14,
+            positionY: 77,
+            rotation: 34,
+            metadata: {
+                data: "info"
+            },
+            containedCardsMetadata: [{data: "card_info"}]
+        }
+
+        const newDeckEntityId = deckVerbHandler.addDeck(verb);
+
+        const {numberOfCards, cards} = gameStateStore.state.decks.get(newDeckEntityId);
+        assert.equal(numberOfCards, cards.length);
     })
 })

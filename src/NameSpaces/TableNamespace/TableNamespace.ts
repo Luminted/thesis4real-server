@@ -133,7 +133,9 @@ export class TableNamespace extends SocketNamespace {
                 status
             })),
             hands: [...gameState.hands.values()],
-            decks: [...gameState.decks.values()],
+            decks: [...gameState.decks.values()].map(({cards: _, ...rest}) => ({
+                ...rest
+            })),
         }
     }
 }

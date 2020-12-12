@@ -50,6 +50,7 @@ export const deckEntityMock1: IDeckEntity = {
     zIndex: 0,
     cards: Array(52).fill(deckCardMock).map((card, index) => ({...card, entityId: `${cardEntityMock1.entityId}-${index}`})),
     drawIndex: 0,
+    numberOfCards: 52
 }
 
 export const deckEntityMock2: IDeckEntity = {
@@ -62,4 +63,5 @@ export const deckEntityMock2: IDeckEntity = {
     zIndex: 0,
     cards: Array(52).fill(deckCardMock).map((card, index) => ({...card, entityId: `${cardEntityMock1.entityId}-${index}`})),
     drawIndex: 0,
+    numberOfCards: 52
 }

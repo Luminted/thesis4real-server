@@ -26,7 +26,8 @@ export interface ICardEntity extends IEntity {
 export interface IDeckEntity extends IEntity {
     entityType: EEntityTypes.DECK
     cards: IDeckCard[],
-    drawIndex: number
+    drawIndex: number,
+    numberOfCards: number
 }
 
 export enum EEntityTypes {
@@ -75,7 +76,7 @@ export type TCardTable = {
 
 export type TSerializedGameState = {
     cards: ICardEntity[],
-    decks: IDeckEntity[],
+    decks: Omit<IDeckEntity, "cards">[],
     clients: Omit<TClient, "grabbedEntity">[],
     hands: TClientHand[],
 }

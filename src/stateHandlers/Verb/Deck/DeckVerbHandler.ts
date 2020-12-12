@@ -88,15 +88,16 @@ export class DeckVerbHandler {
 
     addDeck(verb: IAddDeckVerb) {
         const {positionX, positionY, rotation, metadata, containedCardsMetadata} = verb;
+        const newDeckEntityId =  uuid();
 
         this.gameStateStore.changeState(draft => {
             const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-            const newDeck = this.createDeckEntity(positionX, positionY, nextZIndex, uuid(), rotation, null, metadata, containedCardsMetadata);
+            const newDeck = this.createDeckEntity(positionX, positionY, nextZIndex, newDeckEntityId, rotation, null, metadata, containedCardsMetadata);
 
             draft.decks.set(newDeck.entityId, newDeck);
         })
 
-        return this.gameStateStore.state;
+        return newDeckEntityId;
     }
 
     createDeckEntity(positionX: number, positionY: number, zIndex: number, entityId: string, rotation: number, grabbedBy: string, metadata: object, cardsMetadata: object[] = []): IDeckEntity {
@@ -110,6 +111,7 @@ export class DeckVerbHandler {
             metadata,
             entityType: EEntityTypes.DECK,
             drawIndex: 0,
+            numberOfCards: cardsMetadata.length,
             cards: cardsMetadata.map(metadata => ({ metadata, entityId: uuid()}))
         }
     }
