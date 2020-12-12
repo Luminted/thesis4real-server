@@ -18,19 +18,25 @@ export class DeckVerbHandler {
     private cardVerbHandler: CardVerbHandler;
 
     drawCard(verb: IDrawFaceUpVerb | IDrawFaceDownVerb, drawFaceUp: boolean) {
+        const gameState = this.gameStateStore.state;
+        const {entityId: deckEntityId} = verb;
+        const deck = extractDeckById(gameState, deckEntityId);
+        const topCard = this.getTopCard(deck);
+        const {positionX, positionY, rotation, drawIndex} = deck;
+        
+        if(!topCard) return;
+        
+        const {entityId: topCardEntityId, metadata} = topCard;
         this.gameStateStore.changeState(draft => {
-            const {entityId: deckEntityId} = verb;
+            const draftDeck = extractDeckById(draft, deckEntityId);
             const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-            const deck = extractDeckById(draft, deckEntityId);
-            const {entityId: cardEntityId, metadata} = this.getTopCard(deck);
-            const {positionX, positionY, rotation, drawIndex} = deck;
-            const drawnCardEntity = this.cardVerbHandler.createCardEntity(positionX, positionY, drawFaceUp, cardEntityId, deckEntityId, nextZIndex, rotation, null, metadata);
-            
-            deck.drawIndex = drawIndex + 1;
-            draft.cards.set(cardEntityId, drawnCardEntity);
+            const drawnCardEntity = this.cardVerbHandler.createCardEntity(positionX, positionY, drawFaceUp, topCardEntityId, deckEntityId, nextZIndex, rotation, null, metadata);
+
+            draftDeck.drawIndex = drawIndex + 1;
+            draft.cards.set(topCardEntityId, drawnCardEntity);
         })
 
-        return this.gameStateStore.state;
+        return topCardEntityId;
     }
 
     reset(verb: IResetVerb) {
@@ -93,7 +99,7 @@ export class DeckVerbHandler {
         this.gameStateStore.changeState(draft => {
             const nextZIndex = calcNextZIndex(draft, zIndexLimit);
             const newDeck = this.createDeckEntity(positionX, positionY, nextZIndex, newDeckEntityId, rotation, null, metadata, containedCardsMetadata);
-
+            newDeck.cards.forEach(card => console.log(card.entityId));
             draft.decks.set(newDeck.entityId, newDeck);
         })
 
@@ -118,12 +124,6 @@ export class DeckVerbHandler {
 
     private getTopCard(deck: IDeckEntity) {
         const { cards } = deck;
-        const topCard = cards[deck.drawIndex];
-
-        if(!topCard){
-            throw new Error("No cards left in deck.");
-        }
-        
-        return topCard;
+       return cards[deck.drawIndex];
     }
 }
