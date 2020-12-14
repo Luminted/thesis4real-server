@@ -3,7 +3,7 @@ import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { GameStateStore } from "../../../../stores/GameStateStore";
 import { EDeckVerbTypes, IAddDeckVerb, IDeckEntity } from "../../../../typings";
-import { DeckVerbHandler } from "../../Deck";
+import { DeckVerbHandler } from "..";
 
 describe(`handle ${EDeckVerbTypes.ADD_DECK}`, () => {
     const deckVerbHandler = new DeckVerbHandler();

@@ -22,12 +22,8 @@ export class DeckVerbHandler {
     const deck = extractDeckById(gameState, deckEntityId);
     const topCard = this.getTopCard(deck);
     const { positionX, positionY, rotation, drawIndex } = deck;
-
-    if (!topCard) {
-      return;
-    }
-
     const { entityId: topCardEntityId, metadata } = topCard;
+
     this.gameStateStore.changeState((draft) => {
       const draftDeck = extractDeckById(draft, deckEntityId);
       const nextZIndex = calcNextZIndex(draft, zIndexLimit);
@@ -115,7 +111,7 @@ export class DeckVerbHandler {
     metadata: object,
     cardsMetadata: object[] = [],
   ): IDeckEntity {
-    return {
+   return {
       positionX,
       positionY,
       rotation,
@@ -126,12 +122,18 @@ export class DeckVerbHandler {
       entityType: EEntityTypes.DECK,
       drawIndex: 0,
       numberOfCards: cardsMetadata.length,
-      cards: cardsMetadata.map((cardMetadata) => ({ cardMetadata, entityId: uuid() })),
+      cards: cardsMetadata.map((cardMetadata) => ({ metadata: cardMetadata, entityId: uuid() })),
     };
   }
 
   private getTopCard(deck: IDeckEntity) {
     const { cards } = deck;
-    return cards[deck.drawIndex];
+    const topCard = cards[deck.drawIndex];
+
+    if(!topCard){
+      throw new Error("Deck is empty!");
+    }
+
+    return topCard;
   }
 }

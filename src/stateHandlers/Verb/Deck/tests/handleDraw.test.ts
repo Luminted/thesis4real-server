@@ -8,7 +8,7 @@ import { Container } from 'typescript-ioc';
 import { deckEntityMock1 } from '../../../../mocks/entityMocks';
 import { GameStateStore } from '../../../../stores/GameStateStore';
 
-describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} verb`, () => {
+describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} and ${EDeckVerbTypes.DRAW_FACE_DOWN} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
@@ -76,10 +76,11 @@ describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} verb`, () => {
 
         assert.equal(card.rotation, rotation);
     })
-    it("should do nothing if deck is empty", () => {
-        const originalGameState = cloneDeep(gameStateStore.state);
-        deckVerbHandler.drawCard(verb,true);
+    it("should throw error if deck is empty", () => {
+        gameStateStore.changeState(draft => {
+            draft.decks.set(entityId, {...deckEntityMock1, cards: [], drawIndex: 0, numberOfCards: 0})
+        })
 
-        assert.deepEqual(gameStateStore.state, originalGameState);
+        assert.throws(() => deckVerbHandler.drawCard(verb, true));
     })
 })

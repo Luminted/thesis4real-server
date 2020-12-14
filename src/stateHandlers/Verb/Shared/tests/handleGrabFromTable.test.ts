@@ -1,9 +1,7 @@
 import assert from 'assert'
-import {spy} from 'sinon';
 import cloneDeep from "lodash.clonedeep";
 import { IGrabVerb, ESharedVerbTypes } from "../../../../typings";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors/gameStateExtractors";
-import * as utils from '../../../../utils';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { Container } from 'typescript-ioc';
@@ -14,29 +12,29 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
-    const freeCard = {...cardEntityMock1};
+    const cardOnTable = {...cardEntityMock1};
     const grabbedCard = {...cardEntityMock2};
     const verb: IGrabVerb = {
         clientId,
         type: ESharedVerbTypes.GRAB,
         positionX: 0,
         positionY: 1,
-        entityId: freeCard.entityId,
-        entityType: freeCard.entityType
+        entityId: cardOnTable.entityId,
+        entityType: cardOnTable.entityType
     }
     grabbedCard.grabbedBy = clientId;
 
     beforeEach('Setting up test data...', () => {
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
-            draft.cards.set(freeCard.entityId, freeCard);
+            draft.cards.set(cardOnTable.entityId, cardOnTable);
             draft.cards.set(grabbedCard.entityId, grabbedCard);
             draft.clients.set(clientId, {...mockClient1});
         });
     })
 
     it('Assignes data of clicked card to correct clients grabbedEntity.', () =>{
-        const {entityId} = freeCard;
+        const {entityId} = cardOnTable;
         const {positionX, positionY} = verb;
 
         const nextGameState = sharedVerbHandler.grabFromTable(verb);
@@ -48,7 +46,7 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
     });
 
     it('should set grabbedBy to clients ID', () =>{
-        const {entityId, entityType} = freeCard;
+        const {entityId, entityType} = cardOnTable;
         
         const nextGameState = sharedVerbHandler.grabFromTable(verb);
 
@@ -73,13 +71,14 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
 
         assert.deepEqual(nextGameState, originalState);
     })
-    it('should set zIndex of grabbed card to result of calcNextZIndex', () =>{
-        const calcNextZIndexSpy = spy(utils, 'calcNextZIndex');
+    it('should set highest zIndex and also bump top zIndex', () =>{
+        const originalTopZIndex = gameStateStore.state.topZIndex;
 
-        const nextGameState = sharedVerbHandler.grabFromTable(verb);
+        sharedVerbHandler.grabFromTable(verb);
 
-        const grabbedFreeCard = extractCardById(nextGameState ,freeCard.entityId);
-        assert.equal(grabbedFreeCard.zIndex, calcNextZIndexSpy.returnValues[0]);
-        calcNextZIndexSpy.restore();
+        const grabbedCard = extractCardById(gameStateStore.state ,cardOnTable.entityId);
+        const bumpedZindex = gameStateStore.state.topZIndex;
+        assert.equal(grabbedCard.zIndex, originalTopZIndex + 1);
+        assert.equal(bumpedZindex, originalTopZIndex + 1);
     })
 })
