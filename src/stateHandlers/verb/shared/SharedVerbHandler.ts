@@ -1,4 +1,4 @@
-import { Inject, Singleton } from "../../../socket/node_modules/typescript-ioc";
+import { Inject, Singleton } from "typescript-ioc";
 import { zIndexLimit } from "../../../config";
 import { extractClientById, extractEntityByTypeAndId, extractGrabbedEntityOfClientById } from "../../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../../utils";

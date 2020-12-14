@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Container } from '../../../../socket/node_modules/typescript-ioc';
+import { Container } from 'typescript-ioc';
 import { IReleaseVerb, ESharedVerbTypes, EEntityTypes } from "../../../../typings";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";

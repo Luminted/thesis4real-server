@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Container } from '../../../socket/node_modules/typescript-ioc';
+import { Container } from 'typescript-ioc';
 import { EClientConnectionStatuses, ETableClientEvents } from "../../../typings";
 import { extractClientById } from "../../../extractors/gameStateExtractors";
 import { mockClient1 } from '../../../mocks/clientMocks';

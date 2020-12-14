@@ -1,4 +1,4 @@
-import { Inject } from "../../socket/node_modules/typescript-ioc";
+import { Inject } from "typescript-ioc";
 import { generate } from "short-uuid";
 import { extractClientById, extractClientHandCardsById, extractClientsSeatById } from "../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../utils";

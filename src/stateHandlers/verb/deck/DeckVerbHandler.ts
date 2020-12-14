@@ -1,4 +1,4 @@
-import { Inject, Singleton } from "../../../socket/node_modules/typescript-ioc";
+import { Inject, Singleton } from "typescript-ioc";
 import { shuffle } from "@pacote/shuffle";
 import { original } from "immer";
 import { uuid } from "short-uuid";

@@ -1,6 +1,6 @@
 import throttle from "lodash.throttle";
 import { SocketNamespace } from "..";
-import { Singleton, Inject } from "../../socket/node_modules/typescript-ioc";
+import { Singleton, Inject } from "typescript-ioc";
 import { ETableClientEvents, ETableServerEvents, TVerb, TGameState, TClientInfo, TSerializedGameState } from "../../typings";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
 import { ConnectionHandler } from "../../stateHandlers/connection/ConnectionHandler";

@@ -3,7 +3,7 @@ import {mockClient1, mockClient2} from '../../../../mocks/clientMocks';
 import {deckEntityMock1, cardEntityMock1, cardEntityMock2, handCardMock1, handCardMock2} from '../../../../mocks/entityMocks';
 import { EDeckVerbTypes, IResetVerb, IHandCard } from '../../../../typings';
 import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
-import { Container } from '../../../../socket/node_modules/typescript-ioc';
+import { Container } from 'typescript-ioc';
 import { DeckVerbHandler } from '../DeckVerbHandler';
 import { TableHandler } from '../../../table';
 import { GameStateStore } from '../../../../stores/gameStateStore';

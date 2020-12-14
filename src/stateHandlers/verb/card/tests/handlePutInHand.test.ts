@@ -2,7 +2,7 @@ import assert from 'assert';
 import { ECardVerbTypes, IPutInHandVerb } from '../../../../typings';
 import { extractCardById, extractGrabbedEntityOfClientById, extractCardFromClientHandById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
-import { Container } from '../../../../socket/node_modules/typescript-ioc';
+import { Container } from 'typescript-ioc';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { cardEntityMock1, handCardMock1 } from '../../../../mocks/entityMocks';
 import { TableHandler } from '../../../table';

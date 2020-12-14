@@ -1,4 +1,4 @@
-import { Inject, Singleton } from "../../socket/node_modules/typescript-ioc";
+import { Inject, Singleton } from "typescript-ioc";
 import { ECardVerbTypes, EDeckVerbTypes, ESharedVerbTypes, TVerb } from "../../typings";
 import { CardVerbHandler } from "./card/CardVerbHandler";
 import { SharedVerbHandler } from "./shared/SharedVerbHandler";

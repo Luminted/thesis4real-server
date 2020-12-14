@@ -1,4 +1,4 @@
-import { Socket } from "../socket/node_modules/socket.io";
+import { Socket } from "socket.io";
 
 export type TPlainSocketListener = {
   name: string;
