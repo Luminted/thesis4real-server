@@ -2,10 +2,10 @@ import { Inject } from "typescript-ioc";
 import { generate } from "short-uuid";
 import { extractClientById, extractClientHandCardsById, extractClientsSeatById } from "../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../utils";
-import { GameStateStore } from "../../stores/GameStateStore";
-import { TableStateStore } from "../../stores/TableStateStore/TableStateStore";
+import { GameStateStore } from "../../stores/gameStateStore";
+import { TableStateStore } from "../../stores/tableStateStore/TableStateStore";
 import { TClientHand, TClient, EClientConnectionStatuses, TMaybeNull } from "../../typings";
-import { CardVerbHandler } from "../Verb/Card";
+import { CardVerbHandler } from "../verb/card";
 import { zIndexLimit } from "../../config";
 import { extractSocketIdByClientId } from "../../extractors/tableStateExtractor";
 

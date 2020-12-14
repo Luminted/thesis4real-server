@@ -6,7 +6,7 @@ import { mockClient1 } from '../../../../mocks/clientMocks';
 import { DeckVerbHandler } from '../DeckVerbHandler';
 import { Container } from 'typescript-ioc';
 import { deckEntityMock1 } from '../../../../mocks/entityMocks';
-import { GameStateStore } from '../../../../stores/GameStateStore';
+import { GameStateStore } from '../../../../stores/gameStateStore';
 
 describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} and ${EDeckVerbTypes.DRAW_FACE_DOWN} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();

@@ -3,11 +3,11 @@ import { shuffle } from "@pacote/shuffle";
 import { original } from "immer";
 import { uuid } from "short-uuid";
 import { extractClientHandById, extractDeckById } from "../../../extractors/gameStateExtractors";
-import { GameStateStore } from "../../../stores/GameStateStore";
+import { GameStateStore } from "../../../stores/gameStateStore";
 import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes, IDrawFaceDownVerb, EDeckVerbTypes } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 import { zIndexLimit } from "../../../config";
-import { CardVerbHandler } from "../Card";
+import { CardVerbHandler } from "../card";
 
 @Singleton
 export class DeckVerbHandler {
@@ -111,7 +111,7 @@ export class DeckVerbHandler {
     metadata: object,
     cardsMetadata: object[] = [],
   ): IDeckEntity {
-   return {
+    return {
       positionX,
       positionY,
       rotation,
@@ -130,7 +130,7 @@ export class DeckVerbHandler {
     const { cards } = deck;
     const topCard = cards[deck.drawIndex];
 
-    if(!topCard){
+    if (!topCard) {
       throw new Error("Deck is empty!");
     }
 

@@ -3,7 +3,7 @@ import { Container } from "typescript-ioc";
 import { extractCardById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { cardEntityMock1 } from "../../../../mocks/entityMocks";
-import { GameStateStore } from "../../../../stores/GameStateStore";
+import { GameStateStore } from "../../../../stores/gameStateStore";
 import { ECardVerbTypes, IFlipVerb } from "../../../../typings";
 import { CardVerbHandler } from "../CardVerbHandler";
 

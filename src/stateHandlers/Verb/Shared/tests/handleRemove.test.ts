@@ -5,7 +5,7 @@ import { SharedVerbHandler } from '../SharedVerbHandler';
 import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
 import { cardEntityMock1, deckEntityMock1 } from '../../../../mocks/entityMocks';
 import { extractClientById } from '../../../../extractors/gameStateExtractors';
-import { GameStateStore } from '../../../../stores/GameStateStore';
+import { GameStateStore } from '../../../../stores/gameStateStore';
 
 describe(`handle ${ESharedVerbTypes.REMOVE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { calcNextZIndex } from "./calcNextZIndex"
-import { GameStateStore } from '../../stores/GameStateStore';
+import { GameStateStore } from '../../stores/gameStateStore';
 import cloneDeep from "lodash.clonedeep";
 import { cardEntityMock1, deckEntityMock1 } from '../../mocks/entityMocks';
 import { ICardEntity, IDeckEntity } from '../../typings';

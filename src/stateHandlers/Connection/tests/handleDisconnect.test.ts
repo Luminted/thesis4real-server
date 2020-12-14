@@ -4,8 +4,8 @@ import { EClientConnectionStatuses, ETableClientEvents } from "../../../typings"
 import { extractClientById } from "../../../extractors/gameStateExtractors";
 import { mockClient1 } from '../../../mocks/clientMocks';
 import { ConnectionHandler } from '../ConnectionHandler';
-import { GameStateStore } from '../../../stores/GameStateStore';
-import { TableStateStore } from '../../../stores/TableStateStore';
+import { GameStateStore } from '../../../stores/gameStateStore';
+import { TableStateStore } from '../../../stores/tableStateStore';
 
 describe(`Event handler for: ${ETableClientEvents.DISCONNECT}`, () => {
     const connectionHandler = new ConnectionHandler();

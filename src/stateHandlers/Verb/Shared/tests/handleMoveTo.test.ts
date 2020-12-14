@@ -5,7 +5,7 @@ import { extractCardById, extractDeckById } from '../../../../extractors/gameSta
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { cardEntityMock1, deckEntityMock1 } from '../../../../mocks/entityMocks';
-import { GameStateStore } from '../../../../stores/GameStateStore';
+import { GameStateStore } from '../../../../stores/gameStateStore';
 
 describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
     const sharedVerbHandler = new SharedVerbHandler();

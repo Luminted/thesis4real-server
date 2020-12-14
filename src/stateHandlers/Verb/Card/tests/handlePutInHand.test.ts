@@ -5,8 +5,8 @@ import { mockClient1 } from '../../../../mocks/clientMocks';
 import { Container } from 'typescript-ioc';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { cardEntityMock1, handCardMock1 } from '../../../../mocks/entityMocks';
-import { TableHandler } from '../../../Table';
-import { GameStateStore } from '../../../../stores/GameStateStore';
+import { TableHandler } from '../../../table';
+import { GameStateStore } from '../../../../stores/gameStateStore';
 
 describe(`handle ${ECardVerbTypes.PUT_IN_HAND} verb`, () => {
     const cardVerbHandler = new CardVerbHandler();

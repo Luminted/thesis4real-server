@@ -3,10 +3,10 @@ import { Container } from 'typescript-ioc';
 import { extractClientById, extractClientHandById, extractCardById } from '../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../mocks/clientMocks';
 import { TableHandler } from '../TableHandler';
-import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
+import { TableStateStore } from '../../../stores/tableStateStore/TableStateStore';
 import { ETableClientEvents } from '../../../typings';
 import { cardEntityMock1, handCardMock1, handCardMock2 } from '../../../mocks/entityMocks';
-import { GameStateStore } from '../../../stores/GameStateStore';
+import { GameStateStore } from '../../../stores/gameStateStore';
 import { extractClientIdBySocketId } from '../../../extractors/tableStateExtractor';
 
 describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {

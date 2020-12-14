@@ -5,8 +5,8 @@ import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';
 import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
 import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
-import { TableHandler } from '../../../Table';
-import { GameStateStore } from '../../../../stores/GameStateStore';
+import { TableHandler } from '../../../table';
+import { GameStateStore } from '../../../../stores/gameStateStore';
 
 describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     

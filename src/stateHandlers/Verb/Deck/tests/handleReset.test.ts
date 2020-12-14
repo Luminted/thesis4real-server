@@ -5,8 +5,8 @@ import { EDeckVerbTypes, IResetVerb, IHandCard } from '../../../../typings';
 import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { Container } from 'typescript-ioc';
 import { DeckVerbHandler } from '../DeckVerbHandler';
-import { TableHandler } from '../../../Table';
-import { GameStateStore } from '../../../../stores/GameStateStore';
+import { TableHandler } from '../../../table';
+import { GameStateStore } from '../../../../stores/gameStateStore';
 
 
 describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {

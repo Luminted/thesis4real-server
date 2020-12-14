@@ -3,8 +3,8 @@ import { ETableClientEvents, EClientConnectionStatuses } from "../../../typings"
 import { extractClientById, extractClientHandById } from '../../../extractors/gameStateExtractors';
 import { TableHandler } from '../TableHandler';
 import { Container } from 'typescript-ioc';
-import { TableStateStore } from '../../../stores/TableStateStore/TableStateStore';
-import { GameStateStore } from '../../../stores/GameStateStore';
+import { TableStateStore } from '../../../stores/tableStateStore/TableStateStore';
+import { GameStateStore } from '../../../stores/gameStateStore';
 import { extractClientIdBySocketId } from '../../../extractors/tableStateExtractor';
 
 

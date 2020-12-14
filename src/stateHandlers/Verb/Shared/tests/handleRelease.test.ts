@@ -5,7 +5,7 @@ import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId } from "../.
 import { mockClient1 } from "../../../../mocks/clientMocks";
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { cardEntityMock1 } from '../../../../mocks/entityMocks';
-import { GameStateStore } from '../../../../stores/GameStateStore';
+import { GameStateStore } from '../../../../stores/gameStateStore';
 
 describe(`handle ${ESharedVerbTypes.RELEASE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();

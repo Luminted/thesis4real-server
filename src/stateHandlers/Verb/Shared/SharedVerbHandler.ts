@@ -2,7 +2,7 @@ import { Inject, Singleton } from "typescript-ioc";
 import { zIndexLimit } from "../../../config";
 import { extractClientById, extractEntityByTypeAndId, extractGrabbedEntityOfClientById } from "../../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../../utils";
-import { GameStateStore } from "../../../stores/GameStateStore";
+import { GameStateStore } from "../../../stores/gameStateStore";
 import { EEntityTypes, IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "../../../typings";
 
 @Singleton

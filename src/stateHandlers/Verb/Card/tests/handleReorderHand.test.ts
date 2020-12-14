@@ -3,9 +3,9 @@ import { Container } from 'typescript-ioc';
 import { extractClientHandById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { handCardMock1 } from '../../../../mocks/entityMocks';
-import { GameStateStore } from '../../../../stores/GameStateStore';
+import { GameStateStore } from '../../../../stores/gameStateStore';
 import { ECardVerbTypes, IReorderHandVerb } from '../../../../typings';
-import { TableHandler } from '../../../Table';
+import { TableHandler } from '../../../table';
 import { CardVerbHandler } from '../CardVerbHandler';
 
 describe(`handle ${ECardVerbTypes.REORDER_HAND} verb`, () => {

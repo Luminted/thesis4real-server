@@ -2,7 +2,7 @@ import { original } from "immer";
 import { uuid } from "short-uuid";
 import { Singleton, Inject } from "typescript-ioc";
 import { ICardEntity, EEntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IReorderHandVerb } from "../../../typings";
-import { GameStateStore } from "../../../stores/GameStateStore";
+import { GameStateStore } from "../../../stores/gameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
 import { zIndexLimit } from "../../../config";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";

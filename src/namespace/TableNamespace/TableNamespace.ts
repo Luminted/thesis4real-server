@@ -3,11 +3,11 @@ import { SocketNamespace } from "..";
 import { Singleton, Inject } from "typescript-ioc";
 import { ETableClientEvents, ETableServerEvents, TVerb, TGameState, TClientInfo, TSerializedGameState } from "../../typings";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
-import { ConnectionHandler } from "../../stateHandlers/Connection/ConnectionHandler";
-import { GameStateStore } from "../../stores/GameStateStore";
+import { ConnectionHandler } from "../../stateHandlers/connection/ConnectionHandler";
+import { GameStateStore } from "../../stores/gameStateStore";
 import { serverTick } from "../../config";
 import { getVerbErrorMessage } from "../../utils";
-import { TableStateStore } from "../../stores/TableStateStore";
+import { TableStateStore } from "../../stores/tableStateStore";
 
 @Singleton
 export class TableNamespace extends SocketNamespace {

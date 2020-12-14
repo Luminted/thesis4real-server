@@ -1,9 +1,9 @@
 import { Inject, Singleton } from "typescript-ioc";
 import { ECardVerbTypes, EDeckVerbTypes, ESharedVerbTypes, TVerb } from "../../typings";
-import { CardVerbHandler } from "./Card/CardVerbHandler";
-import { SharedVerbHandler } from "./Shared/SharedVerbHandler";
-import { DeckVerbHandler } from "./Deck/DeckVerbHandler";
-import { GameStateStore } from "../../stores/GameStateStore";
+import { CardVerbHandler } from "./card/CardVerbHandler";
+import { SharedVerbHandler } from "./shared/SharedVerbHandler";
+import { DeckVerbHandler } from "./deck/DeckVerbHandler";
+import { GameStateStore } from "../../stores/gameStateStore";
 
 @Singleton
 export class VerbHandler {

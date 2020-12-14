@@ -1,2 +1,2 @@
-export * from "./Verb";
-export * from "./Table";
+export * from "./verb";
+export * from "./table";

@@ -1,7 +1,7 @@
 import assert from "assert";
 import {Container} from "typescript-ioc";
 import { mockClient1 } from "../../../../mocks/clientMocks";
-import { GameStateStore } from "../../../../stores/GameStateStore";
+import { GameStateStore } from "../../../../stores/gameStateStore";
 import { ECardVerbTypes, IAddCardVerb, ICardEntity } from "../../../../typings";
 import { CardVerbHandler } from "../CardVerbHandler";
 
