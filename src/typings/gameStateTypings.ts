@@ -13,7 +13,8 @@ export interface IEntity {
   metadata?: object;
 }
 
-export interface IHandCard extends Pick<ICardEntity, "entityId" | "metadata" | "ownerDeck" | "faceUp"> {}
+export interface IHandCard
+  extends Pick<ICardEntity, "entityId" | "metadata" | "ownerDeck" | "faceUp"> {}
 
 export interface IDeckCard extends Pick<ICardEntity, "entityId" | "metadata"> {}
 export interface ICardEntity extends IEntity {

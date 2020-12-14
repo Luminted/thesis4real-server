@@ -1,10 +1,19 @@
 import { Inject } from "typescript-ioc";
 import { generate } from "short-uuid";
-import { extractClientById, extractClientHandCardsById, extractClientsSeatById } from "../../extractors/gameStateExtractors";
+import {
+  extractClientById,
+  extractClientHandCardsById,
+  extractClientsSeatById,
+} from "../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../utils";
 import { GameStateStore } from "../../stores/gameStateStore";
 import { TableStateStore } from "../../stores/tableStateStore/TableStateStore";
-import { TClientHand, TClient, EClientConnectionStatuses, TMaybeNull } from "../../typings";
+import {
+  TClientHand,
+  TClient,
+  EClientConnectionStatuses,
+  TMaybeNull,
+} from "../../typings";
 import { CardVerbHandler } from "../verb/card";
 import { zIndexLimit } from "../../config";
 import { extractSocketIdByClientId } from "../../extractors/tableStateExtractor";
@@ -17,10 +26,16 @@ export class TableHandler {
   @Inject
   private cardVerbHandler: CardVerbHandler;
 
-  joinTable(requestedSeatId: TMaybeNull<string>, socketId: string, name?: string) {
+  joinTable(
+    requestedSeatId: TMaybeNull<string>,
+    socketId: string,
+    name?: string
+  ) {
     const { emptySeats } = this.tableStateStore.state;
     const clientId = generate();
-    const presentClientId = this.tableStateStore.state.socketIdMapping[socketId];
+    const presentClientId = this.tableStateStore.state.socketIdMapping[
+      socketId
+    ];
 
     if (presentClientId) {
       throw new Error("Client already present");
@@ -28,7 +43,9 @@ export class TableHandler {
 
     if (emptySeats.includes(requestedSeatId)) {
       this.tableStateStore.changeState((draft) => {
-        draft.emptySeats = emptySeats.filter((seatId) => seatId !== requestedSeatId);
+        draft.emptySeats = emptySeats.filter(
+          (seatId) => seatId !== requestedSeatId
+        );
         draft.socketIdMapping[socketId] = clientId;
       });
       this.gameStateStore.changeState((draft) => {
@@ -69,7 +86,9 @@ export class TableHandler {
 
     // putting back seat into pool
     this.tableStateStore.changeState((draft) => {
-      draft.emptySeats.push(extractClientsSeatById(this.gameStateStore.state, clientId));
+      draft.emptySeats.push(
+        extractClientsSeatById(this.gameStateStore.state, clientId)
+      );
       // removing socket ID mapping
       const socketId = extractSocketIdByClientId(draft, clientId);
       delete draft.socketIdMapping[socketId];
@@ -81,7 +100,17 @@ export class TableHandler {
       extractClientHandCardsById(draft, clientId).forEach((handCard) => {
         const { entityId, ownerDeck, metadata } = handCard;
         const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-        const cardEntity = this.cardVerbHandler.createCardEntity(positionX, positionY, false, entityId, ownerDeck, nextTopZIndex, 0, null, metadata);
+        const cardEntity = this.cardVerbHandler.createCardEntity(
+          positionX,
+          positionY,
+          false,
+          entityId,
+          ownerDeck,
+          nextTopZIndex,
+          0,
+          null,
+          metadata
+        );
         draft.cards.set(cardEntity.entityId, cardEntity);
       });
 

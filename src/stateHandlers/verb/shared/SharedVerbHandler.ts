@@ -1,9 +1,21 @@
 import { Inject, Singleton } from "typescript-ioc";
 import { zIndexLimit } from "../../../config";
-import { extractClientById, extractEntityByTypeAndId, extractGrabbedEntityOfClientById } from "../../../extractors/gameStateExtractors";
+import {
+  extractClientById,
+  extractEntityByTypeAndId,
+  extractGrabbedEntityOfClientById,
+} from "../../../extractors/gameStateExtractors";
 import { calcNextZIndex } from "../../../utils";
 import { GameStateStore } from "../../../stores/gameStateStore";
-import { EEntityTypes, IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "../../../typings";
+import {
+  EEntityTypes,
+  IGrabVerb,
+  IMoveToVerb,
+  IMoveVerb,
+  IReleaseVerb,
+  IRemoveVerb,
+  IRotateVerb,
+} from "../../../typings";
 
 @Singleton
 export class SharedVerbHandler {
@@ -31,11 +43,18 @@ export class SharedVerbHandler {
 
   move(verb: IMoveVerb) {
     this.gameStateStore.changeState((draft) => {
-      const grabbedEntity = extractGrabbedEntityOfClientById(draft, verb.clientId);
+      const grabbedEntity = extractGrabbedEntityOfClientById(
+        draft,
+        verb.clientId
+      );
       if (grabbedEntity) {
         const { entityId, entityType } = grabbedEntity;
         const { positionX, positionY } = verb;
-        const movedEntity = extractEntityByTypeAndId(draft, entityType, entityId);
+        const movedEntity = extractEntityByTypeAndId(
+          draft,
+          entityType,
+          entityId
+        );
         if (movedEntity) {
           const offsetX = positionX - grabbedEntity.grabbedAtX;
           const offsetY = positionY - grabbedEntity.grabbedAtY;
@@ -55,7 +74,11 @@ export class SharedVerbHandler {
   moveTo(verb: IMoveToVerb) {
     this.gameStateStore.changeState((draft) => {
       const { positionX, positionY } = verb;
-      const entityToMove = extractEntityByTypeAndId(draft, verb.entityType, verb.entityId);
+      const entityToMove = extractEntityByTypeAndId(
+        draft,
+        verb.entityType,
+        verb.entityId
+      );
       entityToMove.positionX = positionX;
       entityToMove.positionY = positionY;
     });

@@ -4,7 +4,10 @@ export const extractEmptySeats = (state: TCardTable) => {
   return state.emptySeats;
 };
 
-export const extractClientIdBySocketId = (state: TCardTable, socketId: string) => {
+export const extractClientIdBySocketId = (
+  state: TCardTable,
+  socketId: string
+) => {
   const clientId = state.socketIdMapping[socketId];
   if (clientId) {
     return clientId;
@@ -13,7 +16,10 @@ export const extractClientIdBySocketId = (state: TCardTable, socketId: string) =
   throw new Error("Entry was not found");
 };
 
-export const extractSocketIdByClientId = (state: TCardTable, clientId: string) => {
+export const extractSocketIdByClientId = (
+  state: TCardTable,
+  clientId: string
+) => {
   const { socketIdMapping } = state;
   let socketId;
 

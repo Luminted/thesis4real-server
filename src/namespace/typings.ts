@@ -11,4 +11,6 @@ export type TSocketListenerUsingSocket = {
 };
 
 export type TSocketEventHandler = (...args: any[]) => void;
-export type TSocketEventUsingSocket = (socket: Socket) => (...args: any[]) => void;
+export type TSocketEventUsingSocket = (
+  socket: Socket
+) => (...args: any[]) => void;

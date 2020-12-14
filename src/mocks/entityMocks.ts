@@ -1,4 +1,10 @@
-import { ICardEntity, IDeckEntity, IDeckCard, IHandCard, EEntityTypes } from "../typings";
+import {
+  ICardEntity,
+  IDeckEntity,
+  IDeckCard,
+  IHandCard,
+  EEntityTypes,
+} from "../typings";
 
 export const cardEntityMock1: ICardEntity = {
   entityId: "card-entity-id1",
@@ -50,7 +56,10 @@ export const deckEntityMock1: IDeckEntity = {
   zIndex: 0,
   cards: Array(52)
     .fill(deckCardMock)
-    .map((card, index) => ({ ...card, entityId: `${cardEntityMock1.entityId}-${index}` })),
+    .map((card, index) => ({
+      ...card,
+      entityId: `${cardEntityMock1.entityId}-${index}`,
+    })),
   drawIndex: 0,
   numberOfCards: 52,
 };
@@ -65,7 +74,10 @@ export const deckEntityMock2: IDeckEntity = {
   zIndex: 0,
   cards: Array(52)
     .fill(deckCardMock)
-    .map((card, index) => ({ ...card, entityId: `${cardEntityMock1.entityId}-${index}` })),
+    .map((card, index) => ({
+      ...card,
+      entityId: `${cardEntityMock1.entityId}-${index}`,
+    })),
   drawIndex: 0,
   numberOfCards: 52,
 };

@@ -1,9 +1,22 @@
 import { original } from "immer";
 import { uuid } from "short-uuid";
 import { Singleton, Inject } from "typescript-ioc";
-import { ICardEntity, EEntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IReorderHandVerb } from "../../../typings";
+import {
+  ICardEntity,
+  EEntityTypes,
+  IAddCardVerb,
+  IFlipVerb,
+  IGrabFromHandVerb,
+  IPutInHandVerb,
+  IReorderHandVerb,
+} from "../../../typings";
 import { GameStateStore } from "../../../stores/gameStateStore";
-import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";
+import {
+  extractCardFromClientHandById,
+  extractClientById,
+  extractCardById,
+  extractClientHandById,
+} from "../../../extractors/gameStateExtractors";
 import { zIndexLimit } from "../../../config";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 
@@ -15,15 +28,38 @@ export class CardVerbHandler {
   grabFromHand(verb: IGrabFromHandVerb) {
     this.gameStateStore.changeState((draft) => {
       const gameState = original(draft);
-      const { clientId, entityId, positionX, positionY, grabbedAtX, grabbedAtY, faceUp, grabbedFrom } = verb;
+      const {
+        clientId,
+        entityId,
+        positionX,
+        positionY,
+        grabbedAtX,
+        grabbedAtY,
+        faceUp,
+        grabbedFrom,
+      } = verb;
       const clientHand = extractClientHandById(draft, grabbedFrom);
-      const grabbedCard = extractCardFromClientHandById(gameState, grabbedFrom, entityId);
+      const grabbedCard = extractCardFromClientHandById(
+        gameState,
+        grabbedFrom,
+        entityId
+      );
       const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
       const { ownerDeck, metadata } = grabbedCard;
       const { cards: cardsInHand, ordering } = clientHand;
 
       // create entity from hand card
-      const grabbedCardEntity = this.createCardEntity(positionX, positionY, faceUp, entityId, ownerDeck, nextTopZIndex, 0, clientId, metadata);
+      const grabbedCardEntity = this.createCardEntity(
+        positionX,
+        positionY,
+        faceUp,
+        entityId,
+        ownerDeck,
+        nextTopZIndex,
+        0,
+        clientId,
+        metadata
+      );
 
       // add to card entities
       draft.cards.set(grabbedCardEntity.entityId, grabbedCardEntity);
@@ -37,10 +73,16 @@ export class CardVerbHandler {
       };
 
       // remove card from hand & update ordering
-      const indexOfGrabbedCard = cardsInHand.map((card) => card.entityId).indexOf(entityId);
-      const updatedOrdering = removeAndUpdateOrderings(ordering, [indexOfGrabbedCard]);
+      const indexOfGrabbedCard = cardsInHand
+        .map((card) => card.entityId)
+        .indexOf(entityId);
+      const updatedOrdering = removeAndUpdateOrderings(ordering, [
+        indexOfGrabbedCard,
+      ]);
       clientHand.ordering = updatedOrdering;
-      clientHand.cards = cardsInHand.filter((_, index) => index !== indexOfGrabbedCard);
+      clientHand.cards = cardsInHand.filter(
+        (_, index) => index !== indexOfGrabbedCard
+      );
     });
 
     return this.gameStateStore.state;
@@ -49,8 +91,16 @@ export class CardVerbHandler {
   putInHand(verb: IPutInHandVerb) {
     this.gameStateStore.changeState((draft) => {
       const { clientId, entityId, faceUp } = verb;
-      const { metadata, ownerDeck } = extractCardById(original(draft), entityId);
-      const handCard = this.createHandCard(entityId, faceUp, ownerDeck, metadata);
+      const { metadata, ownerDeck } = extractCardById(
+        original(draft),
+        entityId
+      );
+      const handCard = this.createHandCard(
+        entityId,
+        faceUp,
+        ownerDeck,
+        metadata
+      );
       const client = extractClientById(draft, clientId);
       const clientHand = extractClientHandById(draft, clientId);
 
@@ -79,7 +129,17 @@ export class CardVerbHandler {
 
     this.gameStateStore.changeState((draft) => {
       const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-      const newCard = this.createCardEntity(positionX, positionY, faceUp, uuid(), null, nextZIndex, rotation, null, metadata);
+      const newCard = this.createCardEntity(
+        positionX,
+        positionY,
+        faceUp,
+        uuid(),
+        null,
+        nextZIndex,
+        rotation,
+        null,
+        metadata
+      );
 
       draft.cards.set(newCard.entityId, newCard);
     });
@@ -105,7 +165,7 @@ export class CardVerbHandler {
     zIndex: number,
     rotation: number,
     grabbedBy: string,
-    metadata: object,
+    metadata: object
   ): ICardEntity {
     return {
       positionX,
