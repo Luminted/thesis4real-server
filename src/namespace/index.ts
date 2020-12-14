@@ -1,2 +1,2 @@
 export { SocketNamespace } from "./SocketNamespace";
-export { TableNamespace } from "./TableNamespace/TableNamespace";
+export { TableNamespace } from "./tableNamespace/TableNamespace";
