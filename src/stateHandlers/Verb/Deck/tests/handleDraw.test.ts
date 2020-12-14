@@ -4,7 +4,7 @@ import { EDeckVerbTypes, IDrawFaceUpVerb, IDeckCard } from '../../../../typings'
 import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { DeckVerbHandler } from '../DeckVerbHandler';
-import { Container } from 'typescript-ioc';
+import { Container } from '../../../../socket/node_modules/typescript-ioc';
 import { deckEntityMock1 } from '../../../../mocks/entityMocks';
 import { GameStateStore } from '../../../../stores/gameStateStore';
 

@@ -2,7 +2,7 @@ import assert from 'assert'
 import { ETableClientEvents, EClientConnectionStatuses } from "../../../typings";
 import { extractClientById, extractClientHandById } from '../../../extractors/gameStateExtractors';
 import { TableHandler } from '../TableHandler';
-import { Container } from 'typescript-ioc';
+import { Container } from '../../../socket/node_modules/typescript-ioc';
 import { TableStateStore } from '../../../stores/tableStateStore/TableStateStore';
 import { GameStateStore } from '../../../stores/gameStateStore';
 import { extractClientIdBySocketId } from '../../../extractors/tableStateExtractor';

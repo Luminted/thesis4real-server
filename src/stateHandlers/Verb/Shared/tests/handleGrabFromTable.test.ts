@@ -4,7 +4,7 @@ import { IGrabVerb, ESharedVerbTypes } from "../../../../typings";
 import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors/gameStateExtractors";
 import { mockClient1 } from '../../../../mocks/clientMocks';
 import { SharedVerbHandler } from '../SharedVerbHandler';
-import { Container } from 'typescript-ioc';
+import { Container } from '../../../../socket/node_modules/typescript-ioc';
 import { cardEntityMock1, cardEntityMock2 } from '../../../../mocks/entityMocks';
 import { GameStateStore } from '../../../../stores/gameStateStore';
 

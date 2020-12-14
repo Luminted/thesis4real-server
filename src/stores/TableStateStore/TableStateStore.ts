@@ -1,4 +1,4 @@
-import { Singleton } from "typescript-ioc";
+import { Singleton } from "../../socket/node_modules/typescript-ioc";
 import { Store } from "../Store";
 import { numberOfSeats } from "../../config";
 import { TCardTable } from "../../typings";

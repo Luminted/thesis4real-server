@@ -1,6 +1,6 @@
 import { Store } from "../Store";
 import { TGameState, ICardEntity, TClient, IDeckEntity, TClientHand } from "../../typings";
-import { Singleton } from "typescript-ioc";
+import { Singleton } from "../../socket/node_modules/typescript-ioc";
 
 const initialState: TGameState = {
   cards: new Map<string, ICardEntity>(),

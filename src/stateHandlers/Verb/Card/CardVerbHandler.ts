@@ -1,6 +1,6 @@
 import { original } from "immer";
 import { uuid } from "short-uuid";
-import { Singleton, Inject } from "typescript-ioc";
+import { Singleton, Inject } from "../../../socket/node_modules/typescript-ioc";
 import { ICardEntity, EEntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IReorderHandVerb } from "../../../typings";
 import { GameStateStore } from "../../../stores/gameStateStore";
 import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors/gameStateExtractors";

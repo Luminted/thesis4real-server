@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Container } from 'typescript-ioc';
+import { Container } from '../../../../socket/node_modules/typescript-ioc';
 import cloneDeep from "lodash.clonedeep";
 import { EEntityTypes, ICardEntity, IDeckEntity, TGameState, IMoveVerb, ESharedVerbTypes } from "../../../../typings";
 import { extractClientById, extractCardById, extractDeckById } from "../../../../extractors/gameStateExtractors";

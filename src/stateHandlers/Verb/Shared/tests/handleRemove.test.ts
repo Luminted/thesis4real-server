@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Container } from 'typescript-ioc';
+import { Container } from '../../../../socket/node_modules/typescript-ioc';
 import { ESharedVerbTypes, IRemoveVerb, TClient, EEntityTypes, TGrabbedEntity } from '../../../../typings';
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
