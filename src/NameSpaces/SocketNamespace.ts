@@ -1,49 +1,46 @@
-import { Socket } from '../socket'
-import { TSocketListenerUsingSocket, TPlainSocketListener, TSocketEventHandler, TSocketEventUsingSocket } from './typings';
-import { Namespace } from 'socket.io';
+import { Socket } from "../socket";
+import { TSocketListenerUsingSocket, TPlainSocketListener, TSocketEventHandler, TSocketEventUsingSocket } from "./typings";
+import { Namespace } from "socket.io";
 
 export class SocketNamespace {
-    public plainListeners: TPlainSocketListener[] = [];
-    public listenersUsingSocket: TSocketListenerUsingSocket[] = [];
-    public onConnect: (socket: SocketIO.Socket) => void | null = null;
-    public nameSpace: Namespace;
+  public plainListeners: TPlainSocketListener[] = [];
+  public listenersUsingSocket: TSocketListenerUsingSocket[] = [];
+  public onConnect: (socket: SocketIO.Socket) => void | null = null;
+  public nameSpace: Namespace;
 
-    public init(route: string, socket: Socket) {
-        const nameSpace = socket.addNamespace(route);
+  public init(route: string, socket: Socket) {
+    const nameSpace = socket.addNamespace(route);
 
-        nameSpace.on("connection", (socket: SocketIO.Socket) => {
-            if(this.onConnect !== null){
-                this.onConnect(socket);
-            }
-            this.plainListeners.forEach(({name, handler}) => socket.on(name, handler));
-            this.listenersUsingSocket.forEach(({name, handler}) => socket.on(name, handler(socket)));
+    nameSpace.on("connection", (clientSocket: SocketIO.Socket) => {
+      if (this.onConnect !== null) {
+        this.onConnect(clientSocket);
+      }
+      this.plainListeners.forEach(({ name, handler }) => clientSocket.on(name, handler));
+      this.listenersUsingSocket.forEach(({ name, handler }) => clientSocket.on(name, handler(clientSocket)));
 
-            console.log(socket.id, " connected");
-        });
+      console.log(clientSocket.id, " connected");
+    });
 
-        this.nameSpace = nameSpace;
+    this.nameSpace = nameSpace;
 
-        console.log(`socket namespace ${route} initiated`);
+    console.log(`socket namespace ${route} initiated`);
+  }
 
+  public addEventListener(name: string, handler: TSocketEventHandler) {
+    this.plainListeners.push({
+      name,
+      handler,
+    });
+  }
 
-    }
+  public addEventListenerWithSocket(name: string, handler: TSocketEventUsingSocket) {
+    this.listenersUsingSocket.push({
+      name,
+      handler,
+    });
+  }
 
-    public addEventListener(name: string, handler: TSocketEventHandler) {
-        this.plainListeners.push({
-            name,
-            handler
-        })
-    }
-
-    public addEventListenerWithSocket(name: string, handler: TSocketEventUsingSocket) {
-        this.listenersUsingSocket.push({
-            name,
-            handler
-        })
-    }
-
-    public emit(event: string, payload: any){
-        this.nameSpace.emit(event, payload);
-    }
-    
+  public emit(event: string, payload: any) {
+    this.nameSpace.emit(event, payload);
+  }
 }

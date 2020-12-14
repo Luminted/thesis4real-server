@@ -1,1 +1,1 @@
-export {CardVerbHandler} from './CardVerbHandler';
+export { CardVerbHandler } from "./CardVerbHandler";

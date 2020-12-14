@@ -1,14 +1,8 @@
 import SocketIOClient from 'socket.io-client';
 import {fullTable1000Cards} from "./scenarios/fullTable1000Cards";
-import { ClientInfo } from '../src/types/dataModelDefinitions';
 import { CardVerbTypes, IAddCardVerb } from '../src/types/verb';
 import {Mover, ToHandAdder} from "./clients";
 import { EClientType, TScenario } from './typings';
-
-const typeMapping = {
-    mover: Mover,
-    toHandAdder: ToHandAdder,
-}
 
 const url = "http://localhost:8081/table"
 const scenario: TScenario = fullTable1000Cards
@@ -28,8 +22,6 @@ socket.on("connect", () => {
             metadata: {name:"sk",type:"french"}
         }
 
-        console.log(scenario.numberOfCards)
-        console.log(scenario)
         for(let i = 0; i < scenario.numberOfCards; i++){
             socket.emit("VERB", addCardVerb);
         }

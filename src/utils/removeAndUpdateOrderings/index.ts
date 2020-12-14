@@ -1,1 +1,1 @@
-export {removeAndUpdateOrderings} from "./removeAndUpdateOrderings";
+export { removeAndUpdateOrderings } from "./removeAndUpdateOrderings";

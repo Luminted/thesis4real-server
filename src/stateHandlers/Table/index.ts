@@ -1,1 +1,1 @@
-export {TableHandler} from "./TableHandler";
+export { TableHandler } from "./TableHandler";

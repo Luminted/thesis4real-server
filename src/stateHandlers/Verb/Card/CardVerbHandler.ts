@@ -9,126 +9,124 @@ import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 
 @Singleton
 export class CardVerbHandler {
+  @Inject
+  private gameStateStore: GameStateStore;
 
-    @Inject
-    private gameStateStore: GameStateStore;
+  grabFromHand(verb: IGrabFromHandVerb) {
+    this.gameStateStore.changeState((draft) => {
+      const gameState = original(draft);
+      const { clientId, entityId, positionX, positionY, grabbedAtX, grabbedAtY, faceUp, grabbedFrom } = verb;
+      const clientHand = extractClientHandById(draft, grabbedFrom);
+      const grabbedCard = extractCardFromClientHandById(gameState, grabbedFrom, entityId);
+      const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
+      const { ownerDeck, metadata } = grabbedCard;
+      const { cards: cardsInHand, ordering } = clientHand;
 
-    grabFromHand(verb: IGrabFromHandVerb) {
-        this.gameStateStore.changeState(draft => {
-            const gameState = original(draft);
-            const {clientId, entityId, positionX,positionY, grabbedAtX, grabbedAtY, faceUp, grabbedFrom} = verb;
-            const clientHand = extractClientHandById(draft, grabbedFrom);
-            const grabbedCard = extractCardFromClientHandById(gameState, grabbedFrom, entityId); 
-            const nextTopZIndex = calcNextZIndex(draft, zIndexLimit);
-            const {ownerDeck, metadata} = grabbedCard;
-            const {cards: cardsInHand, ordering} = clientHand;
+      // create entity from hand card
+      const grabbedCardEntity = this.createCardEntity(positionX, positionY, faceUp, entityId, ownerDeck, nextTopZIndex, 0, clientId, metadata);
 
-            // create entity from hand card
-            const grabbedCardEntity = this.createCardEntity(positionX, positionY, faceUp, entityId, ownerDeck, nextTopZIndex, 0, clientId, metadata);
+      // add to card entities
+      draft.cards.set(grabbedCardEntity.entityId, grabbedCardEntity);
 
-            // add to card entities
-            draft.cards.set(grabbedCardEntity.entityId, grabbedCardEntity);
+      // set grabbed info
+      extractClientById(draft, clientId).grabbedEntity = {
+        entityId,
+        grabbedAtX,
+        grabbedAtY,
+        entityType: EEntityTypes.CARD,
+      };
 
-            // set grabbed info
-            extractClientById(draft, clientId).grabbedEntity = {
-                entityId,
-                grabbedAtX,
-                grabbedAtY,
-                entityType: EEntityTypes.CARD,
-            }
+      // remove card from hand & update ordering
+      const indexOfGrabbedCard = cardsInHand.map((card) => card.entityId).indexOf(entityId);
+      const updatedOrdering = removeAndUpdateOrderings(ordering, [indexOfGrabbedCard]);
+      clientHand.ordering = updatedOrdering;
+      clientHand.cards = cardsInHand.filter((_, index) => index !== indexOfGrabbedCard);
+    });
 
-            // remove card from hand & update ordering
-            const indexOfGrabbedCard = cardsInHand.map(card => card.entityId).indexOf(entityId);
-            const updatedOrdering = removeAndUpdateOrderings(ordering, [indexOfGrabbedCard]);
-            clientHand.ordering = updatedOrdering;
-            clientHand.cards = cardsInHand.filter((_, index) => index !== indexOfGrabbedCard);
-        })
-        
-        return this.gameStateStore.state;
-    }
+    return this.gameStateStore.state;
+  }
 
-    putInHand(verb: IPutInHandVerb) {
-        this.gameStateStore.changeState(draft => {
-            const {clientId, entityId, faceUp} = verb;
-            const { metadata, ownerDeck} = extractCardById(original(draft), entityId);
-            const handCard = this.createHandCard(entityId, faceUp, ownerDeck, metadata);
-            const client = extractClientById(draft, clientId);
-            const clientHand = extractClientHandById(draft, clientId);
+  putInHand(verb: IPutInHandVerb) {
+    this.gameStateStore.changeState((draft) => {
+      const { clientId, entityId, faceUp } = verb;
+      const { metadata, ownerDeck } = extractCardById(original(draft), entityId);
+      const handCard = this.createHandCard(entityId, faceUp, ownerDeck, metadata);
+      const client = extractClientById(draft, clientId);
+      const clientHand = extractClientHandById(draft, clientId);
 
-            clientHand.cards.push(handCard);
-            clientHand.ordering.push(clientHand.ordering.length);
-            client.grabbedEntity = null;
-            draft.cards.delete(entityId);
-        })
+      clientHand.cards.push(handCard);
+      clientHand.ordering.push(clientHand.ordering.length);
+      client.grabbedEntity = null;
+      draft.cards.delete(entityId);
+    });
 
-        return this.gameStateStore.state;
-    }
+    return this.gameStateStore.state;
+  }
 
+  flip(verb: IFlipVerb) {
+    const { entityId } = verb;
+    const entity = extractCardById(this.gameStateStore.state, entityId);
 
-    flip(verb: IFlipVerb) {
-        const { entityId } = verb;
-        const entity = extractCardById(this.gameStateStore.state, entityId);
+    this.gameStateStore.changeState((draft) => {
+      extractCardById(draft, entityId).faceUp = !entity.faceUp;
+    });
 
-        this.gameStateStore.changeState(draft => {
-            extractCardById(draft, entityId).faceUp = !entity.faceUp;
-        })
+    return this.gameStateStore.state;
+  }
 
-        return this.gameStateStore.state;
-    }
+  addCard(verb: IAddCardVerb) {
+    const { faceUp, positionX, positionY, rotation, metadata } = verb;
 
-    addCard(verb: IAddCardVerb) {
-        const {faceUp, positionX, positionY, rotation, metadata} = verb;
+    this.gameStateStore.changeState((draft) => {
+      const nextZIndex = calcNextZIndex(draft, zIndexLimit);
+      const newCard = this.createCardEntity(positionX, positionY, faceUp, uuid(), null, nextZIndex, rotation, null, metadata);
 
-        this.gameStateStore.changeState(draft => {
-            const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-            const newCard = this.createCardEntity(positionX, positionY, faceUp, uuid(), null, nextZIndex, rotation, null, metadata);
+      draft.cards.set(newCard.entityId, newCard);
+    });
 
-            draft.cards.set(newCard.entityId, newCard);
-        })
+    return this.gameStateStore.state;
+  }
 
-        return this.gameStateStore.state;
-    }
+  reorderHand(verb: IReorderHandVerb) {
+    const { clientId, order } = verb;
+    this.gameStateStore.changeState((draft) => {
+      extractClientHandById(draft, clientId).ordering = order;
+    });
 
-    reorderHand(verb: IReorderHandVerb) {
-        const {clientId, order} = verb;
-        this.gameStateStore.changeState(draft => {
-            extractClientHandById(draft, clientId).ordering = order;
-        })
+    return this.gameStateStore.state;
+  }
 
-        return this.gameStateStore.state;
-    }
+  createCardEntity(
+    positionX: number,
+    positionY: number,
+    faceUp: boolean,
+    entityId: string,
+    ownerDeck: string,
+    zIndex: number,
+    rotation: number,
+    grabbedBy: string,
+    metadata: object,
+  ): ICardEntity {
+    return {
+      positionX,
+      positionY,
+      ownerDeck,
+      rotation,
+      faceUp,
+      entityId,
+      zIndex,
+      grabbedBy,
+      metadata,
+      entityType: EEntityTypes.CARD,
+    };
+  }
 
-    createCardEntity(
-        positionX: number,
-        positionY: number,
-        faceUp: boolean,
-        entityId: string,
-        ownerDeck: string,
-        zIndex: number,
-        rotation: number,
-        grabbedBy: string,
-        metadata: object): ICardEntity 
-       {
-           return {
-               positionX,
-               positionY,
-               ownerDeck,
-               rotation,
-               faceUp,
-               entityId,
-               zIndex,
-               grabbedBy,
-               metadata,
-               entityType: EEntityTypes.CARD,
-           }
-   }
-
-   createHandCard(entityId, faceUp, ownerDeck, metadata) {
-       return {
-           entityId,
-           faceUp,
-           ownerDeck,
-           metadata
-       }
-    }
+  createHandCard(entityId, faceUp, ownerDeck, metadata) {
+    return {
+      entityId,
+      faceUp,
+      ownerDeck,
+      metadata,
+    };
+  }
 }

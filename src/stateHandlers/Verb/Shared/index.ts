@@ -1,1 +1,1 @@
-export {SharedVerbHandler} from './SharedVerbHandler';
+export { SharedVerbHandler } from "./SharedVerbHandler";

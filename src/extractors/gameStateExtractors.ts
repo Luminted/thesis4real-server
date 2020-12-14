@@ -1,79 +1,72 @@
-import {TGameState, EEntityTypes} from '../typings'
+import { TGameState, EEntityTypes } from "../typings";
 
-export const extractClientById = (state: TGameState, clientId: string)=> {
-    const client = state.clients.get(clientId);
-    if(client){
-        return client;
-    }
-    else{
-        throw new Error("Client with given id not found");
-    }
-}
+export const extractClientById = (state: TGameState, clientId: string) => {
+  const client = state.clients.get(clientId);
+  if (client) {
+    return client;
+  }
 
-export const extractGrabbedEntityOfClientById = (state: TGameState, clientId)=> {
+  throw new Error("Client with given id not found");
+};
+
+export const extractGrabbedEntityOfClientById = (state: TGameState, clientId) => {
   return extractClientById(state, clientId).grabbedEntity;
-}
+};
 
-export const extractCardById = (state: TGameState, entityId: string)=> {
-    const card = state.cards.get(entityId);
-    if(card){
-        return card;
-    }
-    else{
-        throw new Error("Card with given id not found");
-    }
-}
+export const extractCardById = (state: TGameState, entityId: string) => {
+  const card = state.cards.get(entityId);
+  if (card) {
+    return card;
+  }
 
-export const extractDeckById = (state: TGameState, entityId: string)=> {
-    const deck = state.decks.get(entityId);
-    if(deck){
-        return deck;
-    }
-    else{
-        throw new Error("Deck with given id not found");
-    }
-}
+  throw new Error("Card with given id not found");
+};
 
-export const extractEntityByTypeAndId = (state: TGameState, entityType: EEntityTypes, entityId: string)=> {
-    if(entityType === EEntityTypes.CARD){
-        return extractCardById(state, entityId);
-    }
-    else if(entityType === EEntityTypes.DECK){
-        return extractDeckById(state, entityId);
-    }
-    else{
-        throw new Error("Entity not found");
-    }
-}
+export const extractDeckById = (state: TGameState, entityId: string) => {
+  const deck = state.decks.get(entityId);
+  if (deck) {
+    return deck;
+  }
+
+  throw new Error("Deck with given id not found");
+};
+
+export const extractEntityByTypeAndId = (state: TGameState, entityType: EEntityTypes, entityId: string) => {
+  if (entityType === EEntityTypes.CARD) {
+    return extractCardById(state, entityId);
+  }
+  if (entityType === EEntityTypes.DECK) {
+    return extractDeckById(state, entityId);
+  }
+  throw new Error("Entity not found");
+};
 
 export const extractClientHandById = (state: TGameState, clientId: string) => {
-    const hand = state.hands.get(clientId);
-    if(hand){
-        return hand;
-    }
-    else{
-        throw new Error("Hand not found for given client");
-    }
-}
+  const hand = state.hands.get(clientId);
+  if (hand) {
+    return hand;
+  }
 
-export const extractCardFromClientHandById = (state: TGameState, clientId:string, entityId: string) => {
-    const hand = extractClientHandById(state, clientId);
-    const card = hand.cards.find(card => card.entityId === entityId);
+  throw new Error("Hand not found for given client");
+};
 
-    if(card){
-        return card;
-    }
-    else{
-        throw new Error("Card not found in given hand");
-    }
-}
+export const extractCardFromClientHandById = (state: TGameState, clientId: string, entityId: string) => {
+  const hand = extractClientHandById(state, clientId);
+  const extractedCard = hand.cards.find((card) => card.entityId === entityId);
 
-export const extractClientHandCardsById = (state: TGameState, clientId: string)=> {
-    const hand = extractClientHandById(state, clientId);
-    return hand.cards;
-}
+  if (extractedCard) {
+    return extractedCard;
+  }
 
-export const extractClientsSeatById = (state: TGameState, clientId: string)=> {
-    const client = extractClientById(state, clientId);
-    return client.clientInfo.seatId;
-}
+  throw new Error("Card not found in given hand");
+};
+
+export const extractClientHandCardsById = (state: TGameState, clientId: string) => {
+  const hand = extractClientHandById(state, clientId);
+  return hand.cards;
+};
+
+export const extractClientsSeatById = (state: TGameState, clientId: string) => {
+  const client = extractClientById(state, clientId);
+  return client.clientInfo.seatId;
+};

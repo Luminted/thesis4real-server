@@ -52,7 +52,7 @@
                 "--colors",
                 "-r",
                 "ts-node/register",
-                "${workspaceFolder}/src/handlers/Verb/Card/tests/handleGrabFromHand.test.ts"
+                "${workspaceFolder}/src/stateHandlers/Table/tests/handleJoinTable.test.ts"
             ],
             "internalConsoleOptions": "openOnSessionStart",
             "skipFiles": [

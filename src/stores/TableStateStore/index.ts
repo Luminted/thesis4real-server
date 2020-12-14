@@ -1,1 +1,1 @@
-export {TableStateStore} from "./TableStateStore";
+export { TableStateStore } from "./TableStateStore";

@@ -1,11 +1,11 @@
-import {IGenericVerb} from "./index";
+import { IGenericVerb } from "./index";
 
 export enum ECardVerbTypes {
-    ADD_CARD = 'ADD_CARD',
-    FLIP = 'FLIP',
-    PUT_IN_HAND = 'PUT_IN_HAND',
-    GRAB_FROM_HAND = 'GRAB_FROM_HAND',
-    REORDER_HAND = "REORDER_HAND"
+  ADD_CARD = "ADD_CARD",
+  FLIP = "FLIP",
+  PUT_IN_HAND = "PUT_IN_HAND",
+  GRAB_FROM_HAND = "GRAB_FROM_HAND",
+  REORDER_HAND = "REORDER_HAND",
 }
 
 /**
@@ -14,18 +14,18 @@ export enum ECardVerbTypes {
  * @rotation card will be placed at this rotation
  * @metadata client specific info of card
  */
-export interface IAddCardVerb extends Omit<IGenericVerb, "clientId" | "entityId" > {
-    type: ECardVerbTypes.ADD_CARD
-    faceUp: boolean
-    rotation: number
-    metadata?: object
+export interface IAddCardVerb extends Omit<IGenericVerb, "clientId" | "entityId"> {
+  type: ECardVerbTypes.ADD_CARD;
+  faceUp: boolean;
+  rotation: number;
+  metadata?: object;
 }
 
 /**
  * @entityId card being flipped
  */
-export interface IFlipVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY" > {
-    type: ECardVerbTypes.FLIP
+export interface IFlipVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+  type: ECardVerbTypes.FLIP;
 }
 
 /**
@@ -33,9 +33,9 @@ export interface IFlipVerb extends Omit<IGenericVerb, "clientId" | "positionX" |
  * @entityId the card being put in hand
  * @faceUp whether the card is facing up or not
  */
-export interface IPutInHandVerb extends Omit<IGenericVerb, "positionX" | "positionY"  > {
-    type: ECardVerbTypes.PUT_IN_HAND
-    faceUp: boolean
+export interface IPutInHandVerb extends Omit<IGenericVerb, "positionX" | "positionY"> {
+  type: ECardVerbTypes.PUT_IN_HAND;
+  faceUp: boolean;
 }
 
 /**
@@ -47,11 +47,11 @@ export interface IPutInHandVerb extends Omit<IGenericVerb, "positionX" | "positi
  * @faceUp whether the card is facing up or not
  */
 export interface IGrabFromHandVerb extends IGenericVerb {
-    type: ECardVerbTypes.GRAB_FROM_HAND
-    grabbedAtX: number,
-    grabbedAtY: number,
-    grabbedFrom: string
-    faceUp: boolean
+  type: ECardVerbTypes.GRAB_FROM_HAND;
+  grabbedAtX: number;
+  grabbedAtY: number;
+  grabbedFrom: string;
+  faceUp: boolean;
 }
 
 /**
@@ -59,6 +59,6 @@ export interface IGrabFromHandVerb extends IGenericVerb {
  * @order the new ordering of the hand
  */
 export interface IReorderHandVerb extends Omit<IGenericVerb, "entityId" | "positionX" | "positionY"> {
-    type: ECardVerbTypes.REORDER_HAND
-    order: number[]
+  type: ECardVerbTypes.REORDER_HAND;
+  order: number[];
 }

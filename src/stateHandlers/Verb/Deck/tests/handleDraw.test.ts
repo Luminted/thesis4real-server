@@ -12,7 +12,7 @@ describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
-    const {entityId, entityType} = deckEntityMock1;
+    const {entityId} = deckEntityMock1;
     const rotation = 12;
     const deck = {...deckEntityMock1, positionX: 10, positionY: 12, rotation};
     const verb: IDrawFaceUpVerb = {
@@ -29,19 +29,19 @@ describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} verb`, () => {
     })
 
     it("should spawn a card with faceUp true", () => {
-        const nextGameState = deckVerbHandler.drawCard(verb, true);
+        deckVerbHandler.drawCard(verb, true);
 
-        const {faceUp} = extractCardById(nextGameState, deck.cards[deck.drawIndex].entityId);
+        const {faceUp} = extractCardById(gameStateStore.state, deck.cards[deck.drawIndex].entityId);
         assert.equal(faceUp, true);
     })
 
     it('should spawn a card directly on top of the deck', () => {
         const originalDrawIndex = deck.drawIndex;
         
-        const nextGameState = deckVerbHandler.drawCard(verb, true);
+        deckVerbHandler.drawCard(verb, true);
 
         const drawnCard: IDeckCard = deck.cards[originalDrawIndex];
-        const spawnedCard = extractCardById(nextGameState, drawnCard.entityId);
+        const spawnedCard = extractCardById(gameStateStore.state, drawnCard.entityId);
         assert.equal(spawnedCard.positionX, deck.positionX);
         assert.equal(spawnedCard.positionY, deck.positionY);
     })
@@ -49,30 +49,37 @@ describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} verb`, () => {
     it('should spawn a card entity with the decks ID as ownerDeck', () => {
         const originalDeck = deck;
         
-        const nextGameState = deckVerbHandler.drawCard(verb, true);
+        deckVerbHandler.drawCard(verb, true);
 
         const poppedCard: IDeckCard = originalDeck.cards[0];
-        const spawnedCard = extractCardById(nextGameState, poppedCard.entityId);
+        const spawnedCard = extractCardById(gameStateStore.state, poppedCard.entityId);
 
         assert.equal(spawnedCard.ownerDeck, originalDeck.entityId);
     })
     it('should increase the decks drawIndex by 1', () => {
         const originalState = cloneDeep(gameStateStore.state);
         
-        const nextGameState = deckVerbHandler.drawCard(verb, true);
+        deckVerbHandler.drawCard(verb, true);
 
-        const nextDeck = extractDeckById(nextGameState, deck.entityId);
-        assert.notDeepEqual(originalState, nextGameState)
+        const gameState = gameStateStore.state;
+        const nextDeck = extractDeckById(gameState, deck.entityId);
+        assert.notDeepEqual(originalState, gameState)
         assert.equal(nextDeck.drawIndex, deck.drawIndex + 1);
     })
     it('should spawn card with same rotation as deck', ()=>{
-        const nextGameState = deckVerbHandler.drawCard(verb, true);
+        deckVerbHandler.drawCard(verb, true);
         
-        const {drawIndex, cards} = extractDeckById(nextGameState, entityId); 
+        const gameState = gameStateStore.state;
+        const {drawIndex, cards} = extractDeckById(gameState, entityId); 
         const {entityId: drawnCardId} = cards[drawIndex - 1];
-        const card = extractCardById(nextGameState, drawnCardId);
+        const card = extractCardById(gameState, drawnCardId);
 
         assert.equal(card.rotation, rotation);
     })
+    it("should do nothing if deck is empty", () => {
+        const originalGameState = cloneDeep(gameStateStore.state);
+        deckVerbHandler.drawCard(verb,true);
 
+        assert.deepEqual(gameStateStore.state, originalGameState);
+    })
 })

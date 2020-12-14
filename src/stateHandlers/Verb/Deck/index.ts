@@ -1,1 +1,1 @@
-export {DeckVerbHandler} from './DeckVerbHandler';
+export { DeckVerbHandler } from "./DeckVerbHandler";

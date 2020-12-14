@@ -1,1 +1,1 @@
-export {calcNextZIndex} from "./calcNextZIndex";
+export { calcNextZIndex } from "./calcNextZIndex";

@@ -1,1 +1,1 @@
-export { GameStateStore } from './GameStateStore';
+export { GameStateStore } from "./GameStateStore";

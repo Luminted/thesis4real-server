@@ -1,1 +1,1 @@
-export {Socket} from './Socket';
+export { Socket } from "./Socket";
