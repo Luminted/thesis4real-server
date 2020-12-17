@@ -1,12 +1,11 @@
 import assert from 'assert';
-import {mockClient1, mockClient2} from '../../../../mocks/clientMocks';
-import {deckEntityMock1, cardEntityMock1, cardEntityMock2, handCardMock1, handCardMock2} from '../../../../mocks/entityMocks';
+import {deckEntityMock1, cardEntityMock1, cardEntityMock2, handCardMock1, handCardMock2, mockClient1, mockClient2} from '../../../../mocks';
 import { EDeckVerbTypes, IResetVerb, IHandCard } from '../../../../typings';
-import { extractDeckById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
+import { extractDeckById, extractClientHandById } from '../../../../extractors';
 import { Container } from 'typescript-ioc';
 import { DeckVerbHandler } from '../DeckVerbHandler';
 import { TableHandler } from '../../../table';
-import { GameStateStore } from '../../../../stores/gameStateStore';
+import { GameStateStore } from '../../../../stores';
 
 
 describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {

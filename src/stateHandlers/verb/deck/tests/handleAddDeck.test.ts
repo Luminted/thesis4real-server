@@ -1,8 +1,8 @@
 import assert from "assert";
 import {Container} from "typescript-ioc";
-import { mockClient1 } from "../../../../mocks/clientMocks";
-import { GameStateStore } from "../../../../stores/gameStateStore";
-import { EDeckVerbTypes, IAddDeckVerb, IDeckEntity } from "../../../../typings";
+import { mockClient1 } from "../../../../mocks";
+import { GameStateStore } from "../../../../stores";
+import { EDeckVerbTypes, IAddDeckVerb } from "../../../../typings";
 import { DeckVerbHandler } from "..";
 
 describe(`handle ${EDeckVerbTypes.ADD_DECK}`, () => {

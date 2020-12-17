@@ -1,13 +1,10 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { extractClientById, extractClientHandById, extractCardById } from '../../../extractors/gameStateExtractors';
-import { mockClient1 } from '../../../mocks/clientMocks';
+import { extractCardById, extractClientIdBySocketId } from '../../../extractors';
+import { mockClient1, cardEntityMock1, handCardMock1, handCardMock2 } from '../../../mocks';
 import { TableHandler } from '../TableHandler';
-import { TableStateStore } from '../../../stores/tableStateStore/TableStateStore';
+import { TableStateStore, GameStateStore } from '../../../stores';
 import { ETableClientEvents } from '../../../typings';
-import { cardEntityMock1, handCardMock1, handCardMock2 } from '../../../mocks/entityMocks';
-import { GameStateStore } from '../../../stores/gameStateStore';
-import { extractClientIdBySocketId } from '../../../extractors/tableStateExtractor';
 
 describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
     const tableHandler = new TableHandler();

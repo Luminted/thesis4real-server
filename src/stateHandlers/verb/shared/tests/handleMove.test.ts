@@ -2,11 +2,10 @@ import assert from 'assert';
 import { Container } from 'typescript-ioc';
 import cloneDeep from "lodash.clonedeep";
 import { EEntityTypes, ICardEntity, IDeckEntity, TGameState, IMoveVerb, ESharedVerbTypes } from "../../../../typings";
-import { extractClientById, extractCardById, extractDeckById } from "../../../../extractors/gameStateExtractors";
-import { mockClient1 } from "../../../../mocks/clientMocks";
+import { extractClientById, extractCardById, extractDeckById } from "../../../../extractors";
 import { SharedVerbHandler } from '../SharedVerbHandler';
-import { cardEntityMock1, cardEntityMock2, deckEntityMock1, deckEntityMock2 } from '../../../../mocks/entityMocks';
-import { GameStateStore } from '../../../../stores/gameStateStore';
+import { mockClient1, cardEntityMock1, cardEntityMock2, deckEntityMock1, deckEntityMock2 } from '../../../../mocks';
+import { GameStateStore } from '../../../../stores';
 
 describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
     const sharedVerbHandler = new SharedVerbHandler();

@@ -11,10 +11,9 @@ import {
 } from "../../typings";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
 import { ConnectionHandler } from "../../stateHandlers/connection/ConnectionHandler";
-import { GameStateStore } from "../../stores/gameStateStore";
+import { GameStateStore, TableStateStore } from "../../stores";
 import { serverTick } from "../../config";
 import { getVerbErrorMessage } from "../../utils";
-import { TableStateStore } from "../../stores/tableStateStore";
 
 @Singleton
 export class TableNamespace extends SocketNamespace {

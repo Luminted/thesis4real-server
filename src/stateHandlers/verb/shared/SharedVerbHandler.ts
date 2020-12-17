@@ -4,9 +4,9 @@ import {
   extractClientById,
   extractEntityByTypeAndId,
   extractGrabbedEntityOfClientById,
-} from "../../../extractors/gameStateExtractors";
+} from "../../../extractors";
 import { calcNextZIndex } from "../../../utils";
-import { GameStateStore } from "../../../stores/gameStateStore";
+import { GameStateStore } from "../../../stores";
 import {
   EEntityTypes,
   IGrabVerb,

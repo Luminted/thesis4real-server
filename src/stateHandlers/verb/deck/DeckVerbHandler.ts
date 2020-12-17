@@ -5,8 +5,8 @@ import { uuid } from "short-uuid";
 import {
   extractClientHandById,
   extractDeckById,
-} from "../../../extractors/gameStateExtractors";
-import { GameStateStore } from "../../../stores/gameStateStore";
+} from "../../../extractors";
+import { GameStateStore } from "../../../stores";
 import {
   IAddDeckVerb,
   IDrawFaceUpVerb,

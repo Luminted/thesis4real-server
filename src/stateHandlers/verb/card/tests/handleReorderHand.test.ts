@@ -1,9 +1,8 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
-import { extractClientHandById } from '../../../../extractors/gameStateExtractors';
-import { mockClient1 } from '../../../../mocks/clientMocks';
-import { handCardMock1 } from '../../../../mocks/entityMocks';
-import { GameStateStore } from '../../../../stores/gameStateStore';
+import { extractClientHandById } from '../../../../extractors';
+import { mockClient1, handCardMock1 } from '../../../../mocks';
+import { GameStateStore } from '../../../../stores';
 import { ECardVerbTypes, IReorderHandVerb } from '../../../../typings';
 import { TableHandler } from '../../../table';
 import { CardVerbHandler } from '../CardVerbHandler';

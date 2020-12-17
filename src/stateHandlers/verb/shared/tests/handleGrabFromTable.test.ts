@@ -1,12 +1,11 @@
 import assert from 'assert'
 import cloneDeep from "lodash.clonedeep";
 import { IGrabVerb, ESharedVerbTypes } from "../../../../typings";
-import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors/gameStateExtractors";
-import { mockClient1 } from '../../../../mocks/clientMocks';
+import { extractGrabbedEntityOfClientById, extractEntityByTypeAndId, extractCardById } from "../../../../extractors";
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { Container } from 'typescript-ioc';
-import { cardEntityMock1, cardEntityMock2 } from '../../../../mocks/entityMocks';
-import { GameStateStore } from '../../../../stores/gameStateStore';
+import { cardEntityMock1, cardEntityMock2, mockClient1 } from '../../../../mocks';
+import { GameStateStore } from '../../../../stores';
 
 describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();

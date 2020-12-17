@@ -8,7 +8,7 @@ import {
 import { CardVerbHandler } from "./card/CardVerbHandler";
 import { SharedVerbHandler } from "./shared/SharedVerbHandler";
 import { DeckVerbHandler } from "./deck/DeckVerbHandler";
-import { GameStateStore } from "../../stores/gameStateStore";
+import { GameStateStore } from "../../stores";
 
 @Singleton
 export class VerbHandler {

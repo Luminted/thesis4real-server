@@ -1,11 +1,10 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
 import { IMoveToVerb, ESharedVerbTypes, EEntityTypes } from '../../../../typings';
-import { extractCardById, extractDeckById } from '../../../../extractors/gameStateExtractors';
-import { mockClient1 } from '../../../../mocks/clientMocks';
+import { extractCardById, extractDeckById } from '../../../../extractors';
 import { SharedVerbHandler } from '../SharedVerbHandler';
-import { cardEntityMock1, deckEntityMock1 } from '../../../../mocks/entityMocks';
-import { GameStateStore } from '../../../../stores/gameStateStore';
+import { cardEntityMock1, deckEntityMock1, mockClient1 } from '../../../../mocks';
+import { GameStateStore } from '../../../../stores';
 
 describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
     const sharedVerbHandler = new SharedVerbHandler();

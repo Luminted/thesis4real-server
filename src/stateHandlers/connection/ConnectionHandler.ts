@@ -1,8 +1,6 @@
 import { Inject, Singleton } from "typescript-ioc";
-import { extractClientById } from "../../extractors/gameStateExtractors";
-import { extractClientIdBySocketId } from "../../extractors/tableStateExtractor";
-import { GameStateStore } from "../../stores/gameStateStore";
-import { TableStateStore } from "../../stores/tableStateStore";
+import { extractClientIdBySocketId } from "../../extractors";
+import { GameStateStore, TableStateStore } from "../../stores";
 import { EClientConnectionStatuses } from "../../typings";
 
 @Singleton

@@ -1,8 +1,8 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
-import { extractDeckById } from "../../../../extractors/gameStateExtractors";
-import { deckEntityMock1 } from "../../../../mocks/entityMocks";
-import { GameStateStore } from "../../../../stores/gameStateStore";
+import { extractDeckById } from "../../../../extractors";
+import { deckEntityMock1 } from "../../../../mocks";
+import { GameStateStore } from "../../../../stores";
 import { EDeckVerbTypes, IShuffleVerb } from "../../../../typings";
 import { DeckVerbHandler } from "../DeckVerbHandler";
 

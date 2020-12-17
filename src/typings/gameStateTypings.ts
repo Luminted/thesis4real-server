@@ -1,6 +1,6 @@
 import { TMaybeNull } from "./utilityTypings";
 import { EClientConnectionStatuses } from "./socketTypings";
-import { GameStateStore } from "../stores/gameStateStore";
+import { GameStateStore } from "../stores";
 
 export interface IEntity {
   readonly entityType: EEntityTypes;

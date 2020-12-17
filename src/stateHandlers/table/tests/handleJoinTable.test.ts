@@ -1,11 +1,9 @@
 import assert from 'assert'
 import { ETableClientEvents, EClientConnectionStatuses } from "../../../typings";
-import { extractClientById, extractClientHandById } from '../../../extractors/gameStateExtractors';
+import { extractClientById, extractClientHandById, extractClientIdBySocketId } from '../../../extractors';
 import { TableHandler } from '../TableHandler';
 import { Container } from 'typescript-ioc';
-import { TableStateStore } from '../../../stores/tableStateStore/TableStateStore';
-import { GameStateStore } from '../../../stores/gameStateStore';
-import { extractClientIdBySocketId } from '../../../extractors/tableStateExtractor';
+import { TableStateStore, GameStateStore } from '../../../stores';
 
 
 describe(`Socket handler for: ${ETableClientEvents.JOIN_TABLE}`, () => {

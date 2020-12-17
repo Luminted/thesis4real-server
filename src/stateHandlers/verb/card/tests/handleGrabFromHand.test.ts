@@ -1,12 +1,11 @@
 import assert from 'assert';
 import { ECardVerbTypes, IGrabFromHandVerb, EEntityTypes, TGrabbedEntity } from "../../../../typings";
-import { extractClientById, extractCardById, extractClientHandById } from '../../../../extractors/gameStateExtractors';
+import { extractClientById, extractCardById, extractClientHandById } from '../../../../extractors';
 import { CardVerbHandler } from '../CardVerbHandler';
 import { Container } from 'typescript-ioc';
-import { mockClient1, mockClient2 } from '../../../../mocks/clientMocks';
-import { handCardMock1, handCardMock2 } from '../../../../mocks/entityMocks';
+import { mockClient1, mockClient2, handCardMock1, handCardMock2 } from '../../../../mocks';
 import { TableHandler } from '../../../table';
-import { GameStateStore } from '../../../../stores/gameStateStore';
+import { GameStateStore } from '../../../../stores';
 
 describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     

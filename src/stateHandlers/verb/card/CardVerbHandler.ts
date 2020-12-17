@@ -10,13 +10,13 @@ import {
   IPutInHandVerb,
   IReorderHandVerb,
 } from "../../../typings";
-import { GameStateStore } from "../../../stores/gameStateStore";
+import { GameStateStore } from "../../../stores";
 import {
   extractCardFromClientHandById,
   extractClientById,
   extractCardById,
   extractClientHandById,
-} from "../../../extractors/gameStateExtractors";
+} from "../../../extractors";
 import { zIndexLimit } from "../../../config";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 

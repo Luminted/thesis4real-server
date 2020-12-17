@@ -1,8 +1,8 @@
 import assert from 'assert';
 import { calcNextZIndex } from "./calcNextZIndex"
-import { GameStateStore } from '../../stores/gameStateStore';
+import { GameStateStore } from '../../stores';
 import cloneDeep from "lodash.clonedeep";
-import { cardEntityMock1, deckEntityMock1 } from '../../mocks/entityMocks';
+import { cardEntityMock1, deckEntityMock1 } from '../../mocks';
 import { ICardEntity, IDeckEntity } from '../../typings';
 
 describe('Testing utility functions', () =>{

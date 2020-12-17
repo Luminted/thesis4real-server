@@ -1,11 +1,10 @@
 import assert from 'assert';
 import { Container } from 'typescript-ioc';
 import { EClientConnectionStatuses, ETableClientEvents } from "../../../typings";
-import { extractClientById } from "../../../extractors/gameStateExtractors";
-import { mockClient1 } from '../../../mocks/clientMocks';
+import { extractClientById } from "../../../extractors";
+import { mockClient1 } from '../../../mocks';
 import { ConnectionHandler } from '../ConnectionHandler';
-import { GameStateStore } from '../../../stores/gameStateStore';
-import { TableStateStore } from '../../../stores/tableStateStore';
+import { GameStateStore, TableStateStore } from '../../../stores';
 
 describe(`Event handler for: ${ETableClientEvents.DISCONNECT}`, () => {
     const connectionHandler = new ConnectionHandler();

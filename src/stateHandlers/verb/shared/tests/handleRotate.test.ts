@@ -1,9 +1,8 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
-import { extractCardById } from "../../../../extractors/gameStateExtractors";
-import { mockClient1 } from "../../../../mocks/clientMocks";
-import { cardEntityMock1 } from "../../../../mocks/entityMocks";
-import { GameStateStore } from "../../../../stores/gameStateStore";
+import { extractCardById } from "../../../../extractors";
+import { cardEntityMock1, mockClient1 } from "../../../../mocks";
+import { GameStateStore } from "../../../../stores";
 import { IRotateVerb, ESharedVerbTypes } from "../../../../typings";
 import { SharedVerbHandler } from "../SharedVerbHandler";
 

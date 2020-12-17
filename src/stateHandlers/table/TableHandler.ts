@@ -4,10 +4,9 @@ import {
   extractClientById,
   extractClientHandCardsById,
   extractClientsSeatById,
-} from "../../extractors/gameStateExtractors";
+} from "../../extractors";
 import { calcNextZIndex } from "../../utils";
-import { GameStateStore } from "../../stores/gameStateStore";
-import { TableStateStore } from "../../stores/tableStateStore/TableStateStore";
+import { GameStateStore, TableStateStore } from "../../stores";
 import {
   TClientHand,
   TClient,
@@ -16,7 +15,7 @@ import {
 } from "../../typings";
 import { CardVerbHandler } from "../verb/card";
 import { zIndexLimit } from "../../config";
-import { extractSocketIdByClientId } from "../../extractors/tableStateExtractor";
+import { extractSocketIdByClientId } from "../../extractors";
 
 export class TableHandler {
   @Inject
