@@ -28,9 +28,9 @@ describe(`handle ${ESharedVerbTypes.ROTATE}`, () => {
     }));
 
     it('should should add angle from verb to entities rotation', () => {
-        const nextGameState = sharedVerbHandler.rotate(verb);
+       sharedVerbHandler.rotate(verb);
 
-        const card = extractCardById(nextGameState ,entityId);
+        const card = extractCardById(gameStateStore.state ,entityId);
 
         assert.equal(card.rotation, cardEntityMock1.rotation + verb.angle);
     })

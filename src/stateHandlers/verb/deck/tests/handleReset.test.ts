@@ -46,9 +46,9 @@ describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
     })
 
     it('should remove all cards off the table belonging to the reset deck', () => {
-        const nextGameState = deckVerbHandler.reset(verb);
+        deckVerbHandler.reset(verb);
         for(const card of cardsBelongingToDeck){
-            assert.equal(nextGameState.cards.has(card.entityId), false);
+            assert.equal(gameStateStore.state.cards.has(card.entityId), false);
         }
     })
 
@@ -63,9 +63,9 @@ describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
                 grabbedAtY: 0
             };
         })
-        const nextGameState = deckVerbHandler.reset(verb);
+        deckVerbHandler.reset(verb);
         let isRemoved = true;
-        nextGameState.clients.forEach(client => {
+        gameStateStore.state.clients.forEach(client => {
             const {grabbedEntity: grabbedEntity} = client;
             if(grabbedEntity){
                 isRemoved = isRemoved && grabbedEntity.entityId !== deckToReset.entityId
@@ -75,13 +75,15 @@ describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
     })
 
     it('should remove all cards out of player hands belonging to the reset deck', () =>{
-        const nextGameState = deckVerbHandler.reset(verb);
-        assert.equal(extractClientHandById(nextGameState, mockClient1.clientInfo.clientId).cards.some(card => card.entityId === client1Card.entityId), false);
-        assert.equal(extractClientHandById(nextGameState, mockClient2.clientInfo.clientId).cards.some(card => card.entityId === client2Card.entityId), false);
+        deckVerbHandler.reset(verb);
+
+        const gameState = gameStateStore.state;
+        assert.equal(extractClientHandById(gameState, mockClient1.clientInfo.clientId).cards.some(card => card.entityId === client1Card.entityId), false);
+        assert.equal(extractClientHandById(gameState, mockClient2.clientInfo.clientId).cards.some(card => card.entityId === client2Card.entityId), false);
     })
     it('should set drawIndex to 0', () =>{
-        const nextGameState = deckVerbHandler.reset(verb);
-        const resetDeck = extractDeckById(nextGameState, deckToReset.entityId);
+        deckVerbHandler.reset(verb);
+        const resetDeck = extractDeckById(gameStateStore.state, deckToReset.entityId);
         assert.equal(resetDeck.drawIndex, 0);
     })
     it("should update hand ordering accordingly", () => {
@@ -91,10 +93,10 @@ describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
             client1Hand.ordering = [0,3,1,2];
         });
 
-        const nextGameState = deckVerbHandler.reset(verb);
+        deckVerbHandler.reset(verb);
 
         const expectedOrdering = [1,0];
-        const {ordering} = extractClientHandById(nextGameState, client1Id);
+        const {ordering} = extractClientHandById(gameStateStore.state, client1Id);
         assert.deepEqual(ordering, expectedOrdering);
     })
 

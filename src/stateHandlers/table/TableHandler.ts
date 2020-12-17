@@ -40,7 +40,7 @@ export class TableHandler {
       throw new Error("Requested seat already taken");
     }
 
-    return this.gameStateStore.state;
+    
   }
 
   rejoin(clientId: string, socketId: string) {
@@ -59,7 +59,7 @@ export class TableHandler {
       delete draft.socketIdMapping[oldSocketId];
     });
 
-    return this.gameStateStore.state;
+    
   }
 
   leaveTable(clientId: string) {
@@ -87,7 +87,7 @@ export class TableHandler {
       draft.clients.delete(clientId);
     });
 
-    return this.gameStateStore.state;
+    
   }
 
   createClientHand(clientId: string): TClientHand {

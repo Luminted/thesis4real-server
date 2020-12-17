@@ -32,22 +32,23 @@ describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
     })
 
     it('should remove client from clients', () => {
-        const nextGameState = tableHandler.leaveTable(clientId);
+        tableHandler.leaveTable(clientId);
 
-        const removedClient = nextGameState.clients.get(clientId);
+        const removedClient = gameStateStore.state.clients.get(clientId);
         assert.equal(removedClient, undefined);
     });
     it('should remove clients hand', () => {
-        const nextGameState = tableHandler.leaveTable(clientId);
+        tableHandler.leaveTable(clientId);
 
-        const removedHand = nextGameState.hands.get(clientId);
+        const removedHand = gameStateStore.state.hands.get(clientId);
         assert.equal(removedHand, undefined);
     })
     it('should put cards in clients hand on table at default point', () => {
-        const nextGameState = tableHandler.leaveTable(clientId);
+        tableHandler.leaveTable(clientId);
 
-        const cardPutBackOnTable1 = extractCardById(nextGameState, cardInClientsHand1.entityId);
-        const cardPutBackOnTable2 = extractCardById(nextGameState, cardInClientsHand2.entityId);
+        const gameState = gameStateStore.state;
+        const cardPutBackOnTable1 = extractCardById(gameState, cardInClientsHand1.entityId);
+        const cardPutBackOnTable2 = extractCardById(gameState, cardInClientsHand2.entityId);
         assert.equal(cardPutBackOnTable1.positionX, defaultPosition[0]);
         assert.equal(cardPutBackOnTable1.positionY, defaultPosition[1]);
         assert.equal(cardPutBackOnTable2.positionX, defaultPosition[0]);
@@ -60,11 +61,12 @@ describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
             entityOnTable.zIndex = draft.topZIndex;
             draft.cards.set(entityOnTable.entityId, entityOnTable);
         })
-        const nextGameState = tableHandler.leaveTable(clientId);
+        tableHandler.leaveTable(clientId);
 
-        const nextEntityOnTable = extractCardById(nextGameState, entityOnTable.entityId);
-        const cardPutBackOnTable1 = extractCardById(nextGameState, cardInClientsHand1.entityId);
-        const cardPutBackOnTable2 = extractCardById(nextGameState, cardInClientsHand2.entityId);
+        const gameState = gameStateStore.state;
+        const nextEntityOnTable = extractCardById(gameState, entityOnTable.entityId);
+        const cardPutBackOnTable1 = extractCardById(gameState, cardInClientsHand1.entityId);
+        const cardPutBackOnTable2 = extractCardById(gameState, cardInClientsHand2.entityId);
         assert.equal(cardPutBackOnTable1.zIndex > nextEntityOnTable.zIndex, true);
         assert.equal(cardPutBackOnTable2.zIndex > nextEntityOnTable.zIndex, true);
     })

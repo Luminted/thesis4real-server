@@ -38,24 +38,24 @@ describe(`handle ${ECardVerbTypes.PUT_IN_HAND} verb`, () => {
 
     it('should add the grabbed card to the correct hand', () =>{
         const {clientId} = client.clientInfo;
-        const nextGameState = cardVerbHandler.putInHand(verb);
-        const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId, entityId);
+        cardVerbHandler.putInHand(verb);
+        const cardPutInHand = extractCardFromClientHandById(gameStateStore.state, clientId, entityId);
         assert.notEqual(cardPutInHand, undefined);
     })
 
     it('should set clients grabbed card to null', () => {  
-        const nextGameState = cardVerbHandler.putInHand(verb);
-        const grabbedEntity = extractGrabbedEntityOfClientById(nextGameState, client.clientInfo.clientId);
+        cardVerbHandler.putInHand(verb);
+        const grabbedEntity = extractGrabbedEntityOfClientById(gameStateStore.state, client.clientInfo.clientId);
         assert.equal(grabbedEntity, null);
     })
     it('should take out correct card from cards array', () => {
-        const nextGameState = cardVerbHandler.putInHand(verb);
-        assert.throws(() => extractCardById(nextGameState ,entityId));
+        cardVerbHandler.putInHand(verb);
+        assert.throws(() => extractCardById(gameStateStore.state ,entityId));
     })
     it('should create hand card with faceUp according to verb', () => {
         const {clientId} = client.clientInfo;
-        const nextGameState = cardVerbHandler.putInHand(verb);
-        const cardPutInHand = extractCardFromClientHandById(nextGameState, clientId, entityId);
+        cardVerbHandler.putInHand(verb);
+        const cardPutInHand = extractCardFromClientHandById(gameStateStore.state, clientId, entityId);
         assert.equal(cardPutInHand.faceUp, verb.faceUp);
     })
 
@@ -67,9 +67,9 @@ describe(`handle ${ECardVerbTypes.PUT_IN_HAND} verb`, () => {
             hand.ordering = [1, 0];
         })
 
-        const nextGameState = cardVerbHandler.putInHand(verb);
+        cardVerbHandler.putInHand(verb);
 
-        const {ordering} = extractClientHandById(nextGameState, clientId);
+        const {ordering} = extractClientHandById(gameStateStore.state, clientId);
         const expectedOrdering = [1, 0, 2];
         assert.deepEqual(ordering, expectedOrdering);
     })

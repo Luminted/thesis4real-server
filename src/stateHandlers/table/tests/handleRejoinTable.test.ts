@@ -24,9 +24,9 @@ describe(`Event handler for: ${ETableClientEvents.CONNECT}`, () => {
     })
 
     it(`should set clinets connection status to ${EClientConnectionStatuses.CONNECTED} if client exists and it's connection status is ${EClientConnectionStatuses.DISCONNECTED}`, () =>{
-        const nextState = tableHandler.rejoin(clientId, socketId);
+         tableHandler.rejoin(clientId, socketId);
 
-        const {status} = extractClientById(nextState, clientId);
+        const {status} = extractClientById(gameStateStore.state, clientId);
         assert.equal(status, EClientConnectionStatuses.CONNECTED);
     })
     it('should update socket-client ID mapping', () => {

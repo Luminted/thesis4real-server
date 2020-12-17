@@ -19,25 +19,25 @@ describe(`Socket handler for: ${ETableClientEvents.JOIN_TABLE}`, () => {
     })
 
     it('should create new client', () => {
-        const nextGameState = tableHandler.joinTable(requestedSeatId, socketId);
+        tableHandler.joinTable(requestedSeatId, socketId);
 
         const clientId = extractClientIdBySocketId(tableStateStore.state, socketId);
-        const client = extractClientById(nextGameState, clientId);
+        const client = extractClientById(gameStateStore.state, clientId);
         assert.notEqual(client, undefined);
     })
 
     it('should create hand for client', () => {
-        const nextGameState = tableHandler.joinTable(requestedSeatId, socketId);
+        tableHandler.joinTable(requestedSeatId, socketId);
 
         const clientId = extractClientIdBySocketId(tableStateStore.state, socketId);
-        const hand = extractClientHandById(nextGameState, clientId);
+        const hand = extractClientHandById(gameStateStore.state, clientId);
         assert.notEqual(hand, undefined);
     })
     it("should assign requested seat ID for created client", () => {
-        const nextGameState = tableHandler.joinTable(requestedSeatId, socketId);
+        tableHandler.joinTable(requestedSeatId, socketId);
 
         const clientId = extractClientIdBySocketId(tableStateStore.state, socketId);
-        const {clientInfo: {seatId}} = extractClientById(nextGameState, clientId);
+        const {clientInfo: {seatId}} = extractClientById(gameStateStore.state, clientId);
         assert.equal(seatId, requestedSeatId);
     })
     it("should create client with given name", () => {
@@ -63,10 +63,10 @@ describe(`Socket handler for: ${ETableClientEvents.JOIN_TABLE}`, () => {
         assert.equal(emptySeats.some(seatId => seatId === requestedSeatId), false);
     })
     it(`should create client with status ${EClientConnectionStatuses.CONNECTED}`, () => {
-        const nextGameState = tableHandler.joinTable(requestedSeatId, socketId);
+        tableHandler.joinTable(requestedSeatId, socketId);
 
         const clientId = extractClientIdBySocketId(tableStateStore.state, socketId);
-        const createdClient = extractClientById(nextGameState, clientId);
+        const createdClient = extractClientById(gameStateStore.state, clientId);
         assert.equal(createdClient.status, EClientConnectionStatuses.CONNECTED);
     })
     it("should throw error if cient is already present", () => {

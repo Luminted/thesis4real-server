@@ -26,7 +26,7 @@ export class SharedVerbHandler {
         entity.zIndex = nextTopZIndex;
       }
     });
-    return this.gameStateStore.state;
+    
   }
 
   move(verb: IMoveVerb) {
@@ -49,7 +49,7 @@ export class SharedVerbHandler {
         }
       }
     });
-    return this.gameStateStore.state;
+    
   }
 
   moveTo(verb: IMoveToVerb) {
@@ -60,7 +60,7 @@ export class SharedVerbHandler {
       entityToMove.positionY = positionY;
     });
 
-    return this.gameStateStore.state;
+    
   }
 
   release(verb: IReleaseVerb) {
@@ -70,7 +70,7 @@ export class SharedVerbHandler {
       extractEntityByTypeAndId(draft, entityType, entityId).grabbedBy = null;
     });
 
-    return this.gameStateStore.state;
+    
   }
 
   remove(verb: IRemoveVerb) {
@@ -93,7 +93,7 @@ export class SharedVerbHandler {
       });
     });
 
-    return this.gameStateStore.state;
+    
   }
 
   rotate(verb: IRotateVerb) {
@@ -103,6 +103,6 @@ export class SharedVerbHandler {
       entity.rotation = (entity.rotation + angle) % 360;
     });
 
-    return this.gameStateStore.state;
+    
   }
 }

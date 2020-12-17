@@ -29,17 +29,17 @@ describe(`handle ${ESharedVerbTypes.RELEASE} verb`, () => {
 
     describe(`EntityType: ${EEntityTypes.CARD}`, () =>{
         it('should set grabbedEntity to null for correct client.', () =>{     
-            const nextGameState = sharedVerbHandler.release(verb);
+            sharedVerbHandler.release(verb);
 
-            const grabbedEntity =extractGrabbedEntityOfClientById(nextGameState, verb.clientId);
+            const grabbedEntity =extractGrabbedEntityOfClientById(gameStateStore.state, verb.clientId);
             assert.equal(grabbedEntity, null);
         })
         it('should set the grabbedBy to null on released entity', () =>{
             const {entityId, entityType} = verb;
             
-            const nextGameState = sharedVerbHandler.release(verb);
+            sharedVerbHandler.release(verb);
 
-            const releasedEntity = extractEntityByTypeAndId(nextGameState, entityType, entityId);
+            const releasedEntity = extractEntityByTypeAndId(gameStateStore.state, entityType, entityId);
             assert.equal(releasedEntity.grabbedBy, null);
         })
     })

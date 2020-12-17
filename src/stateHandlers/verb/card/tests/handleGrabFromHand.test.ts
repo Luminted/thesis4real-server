@@ -40,8 +40,8 @@ describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     })
 
     it('should set grabbed entity of correct client with the cards data', () =>{
-        const nextGameState = cardVerbHandler.grabFromHand(verb);
-        const nextClient = extractClientById(nextGameState, verb.clientId);
+        cardVerbHandler.grabFromHand(verb);
+        const nextClient = extractClientById(gameStateStore.state, verb.clientId);
         const expectedGrabbedEntity: TGrabbedEntity = {
             entityId: verb.entityId,
             entityType: EEntityTypes.CARD,
@@ -52,15 +52,15 @@ describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     })
 
     it('should add grabbed card to cards', () =>{
-        const nextGameState = cardVerbHandler.grabFromHand(verb);
-        const grabbedCard = extractCardById(nextGameState, verb.entityId);
+        cardVerbHandler.grabFromHand(verb);
+        const grabbedCard = extractCardById(gameStateStore.state, verb.entityId);
 
         assert.notEqual(grabbedCard, undefined);
     });
 
     it('should put the card at the position according to the verb', () =>{ 
-        const nextGameState = cardVerbHandler.grabFromHand(verb);
-        const grabbedCard = extractCardById(nextGameState, verb.entityId);
+        cardVerbHandler.grabFromHand(verb);
+        const grabbedCard = extractCardById(gameStateStore.state, verb.entityId);
         const expectedPositionX = verb.positionX;
         const expectedPositionY = verb.positionY;
 
@@ -69,14 +69,14 @@ describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     })
 
     it('should remove card from hand it was grabbed from', () =>{
-        const nextGameState = cardVerbHandler.grabFromHand(verb);
-        const nextHand = extractClientHandById(nextGameState, verb.grabbedFrom);
+        cardVerbHandler.grabFromHand(verb);
+        const nextHand = extractClientHandById(gameStateStore.state, verb.grabbedFrom);
 
         assert.equal(nextHand.cards.some(card => card.entityId === verb.entityId), false);
     })
     it('should set faceUp of grabbed card according to verb', () => {
-        const nextGameState = cardVerbHandler.grabFromHand(verb);
-        const grabbedCard = extractCardById(nextGameState, entityId);
+        cardVerbHandler.grabFromHand(verb);
+        const grabbedCard = extractCardById(gameStateStore.state, entityId);
 
         assert.equal(grabbedCard.faceUp, verb.faceUp);
     })
@@ -88,22 +88,22 @@ describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
             handDraft.ordering.push(1,2);
         })
 
-        const nextGameState = cardVerbHandler.grabFromHand({...verb, entityId});
+        cardVerbHandler.grabFromHand({...verb, entityId});
         
-        const {ordering} = extractClientHandById(nextGameState, client1Id);
+        const {ordering} = extractClientHandById(gameStateStore.state, client1Id);
         assert.deepEqual(ordering, [0,1]);
     })
 
     it('should set grabbedBy of grabbed card to client ID', () =>{
-        const nextGameState = cardVerbHandler.grabFromHand(verb);
-        const grabbedCard = extractCardById(nextGameState, entityId);
+        cardVerbHandler.grabFromHand(verb);
+        const grabbedCard = extractCardById(gameStateStore.state, entityId);
 
         assert.equal(grabbedCard.grabbedBy, client2Id);
     })
 
     it('should set z-index of grabbed card to next one in line', () =>{
-        const nextGameState = cardVerbHandler.grabFromHand(verb);
-        const grabbedCard = extractCardById(nextGameState, verb.entityId);
+        cardVerbHandler.grabFromHand(verb);
+        const grabbedCard = extractCardById(gameStateStore.state, verb.entityId);
 
         assert.equal(grabbedCard.zIndex, 1);
     })

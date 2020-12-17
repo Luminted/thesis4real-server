@@ -30,9 +30,9 @@ describe(`handling ${EDeckVerbTypes.SHUFFLE}`, () => {
             extractDeckById(draft, entityId).drawIndex = drawIndex;
         });
 
-        const nextGameState = deckVerbHandler.shuffle(verb);
+        deckVerbHandler.shuffle(verb);
 
-        const shuffledDeck = extractDeckById(nextGameState, entityId);
+        const shuffledDeck = extractDeckById(gameStateStore.state, entityId);
         intactPart.forEach((card, index) => {
             assert.equal(card.entityId, shuffledDeck.cards[index].entityId);
         })

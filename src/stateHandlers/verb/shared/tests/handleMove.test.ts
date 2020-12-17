@@ -36,7 +36,6 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
             let entityType = EEntityTypes.CARD;
             let movedCard: ICardEntity;
             let { entityId } =  cardEntityMock1;
-            let nextGameState: TGameState;
             
             gameStateStore.changeState(draft => {
                 extractClientById(draft, clientId).grabbedEntity = {
@@ -55,9 +54,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
                 clientId
             }
            
-            nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            movedCard = extractCardById(nextGameState, entityId);
+            movedCard = extractCardById(gameStateStore.state, entityId);
             assert.equal(movedCard.positionX, cardEntityMock1.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedCard.positionY, cardEntityMock1.positionY + verb.positionY - grabbedAt.y);
 
@@ -70,9 +69,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
 
             }
            
-            nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            movedCard = extractCardById(nextGameState, cardEntityMock1.entityId);
+            movedCard = extractCardById(gameStateStore.state, cardEntityMock1.entityId);
             assert.equal(movedCard.positionX, cardEntityMock1.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedCard.positionY, cardEntityMock1.positionY + verb.positionY - grabbedAt.y);
 
@@ -85,9 +84,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
 
             }
           
-            nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            movedCard = extractCardById(nextGameState, cardEntityMock1.entityId);
+            movedCard = extractCardById(gameStateStore.state, cardEntityMock1.entityId);
             assert.equal(movedCard.positionX, cardEntityMock1.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedCard.positionY, cardEntityMock1.positionY + verb.positionY - grabbedAt.y);
 
@@ -100,9 +99,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
 
             }
            
-            nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            movedCard = extractCardById(nextGameState, cardEntityMock1.entityId);
+            movedCard = extractCardById(gameStateStore.state, cardEntityMock1.entityId);
             assert.equal(movedCard.positionX, cardEntityMock1.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedCard.positionY, cardEntityMock1.positionY + verb.positionY - grabbedAt.y);
         })
@@ -115,9 +114,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
                 positionY: 2,
             }
            
-            const nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            assert.deepEqual(nextGameState.cards, originalState.cards);
+            assert.deepEqual(gameStateStore.state.cards, originalState.cards);
         })
     })
 
@@ -131,7 +130,6 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
             const {entityId} = deckEntityMock2;
             let verb: IMoveVerb;
             let movedDeck: IDeckEntity;
-            let nextGameState: TGameState;
             
             gameStateStore.changeState(draft => {
             extractClientById(draft, clientId).grabbedEntity = {
@@ -150,9 +148,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
                 clientId
             }
            
-            nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            movedDeck = extractDeckById(nextGameState, entityId);
+            movedDeck = extractDeckById(gameStateStore.state, entityId);
             assert.equal(movedDeck.positionX, deckEntityMock2.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedDeck.positionY, deckEntityMock2.positionY + verb.positionY - grabbedAt.y);
 
@@ -165,9 +163,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
 
             }
            
-            nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            movedDeck = extractDeckById(nextGameState, deckEntityMock2.entityId);
+            movedDeck = extractDeckById(gameStateStore.state, deckEntityMock2.entityId);
             assert.equal(movedDeck.positionX, deckEntityMock2.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedDeck.positionY, deckEntityMock2.positionY + verb.positionY - grabbedAt.y);
 
@@ -180,9 +178,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
 
             }
            
-            nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            movedDeck = extractDeckById(nextGameState, deckEntityMock2.entityId);
+            movedDeck = extractDeckById(gameStateStore.state, deckEntityMock2.entityId);
             assert.equal(movedDeck.positionX, deckEntityMock2.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedDeck.positionY, deckEntityMock2.positionY + verb.positionY - grabbedAt.y);
 
@@ -195,9 +193,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
 
             }
            
-            nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            movedDeck = extractDeckById(nextGameState, deckEntityMock2.entityId);
+            movedDeck = extractDeckById(gameStateStore.state, deckEntityMock2.entityId);
             assert.equal(movedDeck.positionX, deckEntityMock2.positionX + verb.positionX - grabbedAt.x);
             assert.equal(movedDeck.positionY, deckEntityMock2.positionY + verb.positionY - grabbedAt.y);
         })
@@ -210,9 +208,9 @@ describe(`handle ${ESharedVerbTypes.MOVE}`, () =>{
                 positionY: 1,
             }
            
-            const nextGameState = sharedVerbHandler.move(verb);
+            sharedVerbHandler.move(verb);
 
-            assert.deepEqual(nextGameState.cards, originalState.cards);
+            assert.deepEqual(gameStateStore.state.cards, originalState.cards);
         })
     })
 })

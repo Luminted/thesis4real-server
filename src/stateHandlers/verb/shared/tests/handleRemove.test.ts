@@ -29,9 +29,9 @@ describe(`handle ${ESharedVerbTypes.REMOVE} verb`, () => {
             entityType: EEntityTypes.DECK
         }
 
-        const nextGameState = sharedVerbHandler.remove(verb);
+        sharedVerbHandler.remove(verb);
 
-        assert.equal(nextGameState.decks.has(deckEntityId), false);
+        assert.equal(gameStateStore.state.decks.has(deckEntityId), false);
     })
 
     it('should remove correct card from game state', () => {
@@ -41,9 +41,9 @@ describe(`handle ${ESharedVerbTypes.REMOVE} verb`, () => {
             entityType: EEntityTypes.CARD
         }
 
-        const nextGameState = sharedVerbHandler.remove(verb);
+        sharedVerbHandler.remove(verb);
 
-        assert.equal(nextGameState.cards.has(cardEntityId), false);
+        assert.equal(gameStateStore.state.cards.has(cardEntityId), false);
     })
     it('should set grabbEntity to null if grabbed', () => {
         const verb: IRemoveVerb = {

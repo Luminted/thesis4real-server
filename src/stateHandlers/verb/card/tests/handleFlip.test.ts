@@ -27,9 +27,9 @@ describe(`handling ${ECardVerbTypes.FLIP}`, () => {
         }
         gameStateStore.changeState(draft => {draft.cards.set(entityId, {...cardEntityMock1})});
 
-        const nextGameState = cardVerbHandler.flip(verb);
+        cardVerbHandler.flip(verb);
 
-        const flippedCard = extractCardById(nextGameState, entityId);
+        const flippedCard = extractCardById(gameStateStore.state, entityId);
         assert.equal(flippedCard.faceUp, !cardEntityMock1.faceUp);
     })
 })

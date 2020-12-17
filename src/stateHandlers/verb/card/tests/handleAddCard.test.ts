@@ -29,9 +29,9 @@ describe(`handling ${ECardVerbTypes.ADD_CARD}`, () => {
             }
         }
 
-        const nextGameState = cardVerbHandler.addCard(verb);
+        cardVerbHandler.addCard(verb);
 
-        const { value } = nextGameState.cards.values().next();
+        const { value } = gameStateStore.state.cards.values().next();
         const addedEntity = value as ICardEntity;
         assert.equal(addedEntity.positionX, verb.positionX);
         assert.equal(addedEntity.positionY, verb.positionY);

@@ -19,6 +19,6 @@ export class ConnectionHandler {
       }
     });
 
-    return this.gameStateStore.state;
+    
   }
 }

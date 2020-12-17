@@ -73,7 +73,7 @@ export class DeckVerbHandler {
       });
     });
 
-    return this.gameStateStore.state;
+    
   }
 
   shuffle(verb: IShuffleVerb) {
@@ -85,7 +85,7 @@ export class DeckVerbHandler {
       draftDeck.cards = [...cards.slice(0, drawIndex), ...shuffledCards];
     });
 
-    return this.gameStateStore.state;
+    
   }
 
   addDeck(verb: IAddDeckVerb) {

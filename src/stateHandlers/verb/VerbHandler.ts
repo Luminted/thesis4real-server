@@ -54,7 +54,7 @@ export class VerbHandler {
         return this.cardVerbHandler.addCard(verb);
 
       default:
-        return this.gameStateStore.state;
+        
     }
   }
 }

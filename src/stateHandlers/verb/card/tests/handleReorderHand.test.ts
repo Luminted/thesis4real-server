@@ -33,9 +33,9 @@ describe(`handle ${ECardVerbTypes.REORDER_HAND} verb`, () => {
     })
 
     it("should set the ordering of clients hand to the one in the verb", () => {
-        const nextState = cardVerbHandler.reorderHand(verb);
+        cardVerbHandler.reorderHand(verb);
 
-        const {ordering} = extractClientHandById(nextState ,clientId);
+        const {ordering} = extractClientHandById(gameStateStore.state ,clientId);
         assert.deepEqual(ordering, verb.order);
     })
 

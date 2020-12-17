@@ -31,9 +31,9 @@ describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
             positionY: 777,
         }
 
-        const nextGameState = sharedVerbHandler.moveTo(verb);
+        sharedVerbHandler.moveTo(verb);
 
-        let movedCard = extractCardById(nextGameState, cardEntityId);
+        let movedCard = extractCardById(gameStateStore.state, cardEntityId);
         assert.equal(movedCard.positionX, verb.positionX);
         assert.equal(movedCard.positionY, verb.positionY);
     })
@@ -47,9 +47,9 @@ describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
             positionY: 999,
         }
 
-        const nextGameState = sharedVerbHandler.moveTo(verb);
+        sharedVerbHandler.moveTo(verb);
 
-        let movedDeck = extractDeckById(nextGameState, deckEntityId);
+        let movedDeck = extractDeckById(gameStateStore.state, deckEntityId);
         assert.equal(movedDeck.positionX, verb.positionX);
         assert.equal(movedDeck.positionY, verb.positionY);
     })

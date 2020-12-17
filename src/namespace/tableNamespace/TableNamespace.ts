@@ -47,7 +47,7 @@ export class TableNamespace extends SocketNamespace {
       }
     });
 
-    this.addEventListener(ETableClientEvents.VERB, (verb: TVerb, acknowledgeFunction?: (error: string, gameState: TSerializedGameState, handlerReturnValue: any) => void) => {
+    this.addEventListener(ETableClientEvents.VERB, (verb: TVerb, ackFunction?: (error: string, gameState: TSerializedGameState, handlerReturnValue: any) => void) => {
       let error: string;
       let handlerReturnValue;
 
@@ -59,14 +59,14 @@ export class TableNamespace extends SocketNamespace {
         error = getVerbErrorMessage(verb.type, e.message);
       }
 
-      if (typeof acknowledgeFunction === "function") {
-        acknowledgeFunction(error, this.serializeGameState(this.gameStateStore.state), handlerReturnValue);
+      if (typeof ackFunction === "function") {
+        ackFunction(error, this.serializeGameState(this.gameStateStore.state), handlerReturnValue);
       }
     });
 
     this.addEventListenerWithSocket(
       ETableClientEvents.JOIN_TABLE,
-      (socket) => (requestedSeatId: string, name?: string, acknowledgeFunction?: (error: string, clientInfo: TClientInfo) => void) => {
+      (socket) => (requestedSeatId: string, name?: string, ackFunction?: (error: string, clientInfo: TClientInfo) => void) => {
         const { id } = socket;
         let error: string;
         let newClientInfo: TClientInfo;
@@ -83,8 +83,8 @@ export class TableNamespace extends SocketNamespace {
           error = e.message;
         }
 
-        if (typeof acknowledgeFunction === "function") {
-          acknowledgeFunction(error, newClientInfo);
+        if (typeof ackFunction === "function") {
+          ackFunction(error, newClientInfo);
         }
       },
     );

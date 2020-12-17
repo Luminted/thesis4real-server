@@ -36,9 +36,9 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
         const {entityId} = cardOnTable;
         const {positionX, positionY} = verb;
 
-        const nextGameState = sharedVerbHandler.grabFromTable(verb);
+       sharedVerbHandler.grabFromTable(verb);
 
-        const grabbedEntity = extractGrabbedEntityOfClientById(nextGameState, verb.clientId);
+        const grabbedEntity = extractGrabbedEntityOfClientById(gameStateStore.state, verb.clientId);
         assert.equal(grabbedEntity.entityId, entityId);
         assert.equal(grabbedEntity.grabbedAtX, positionX);
         assert.equal(grabbedEntity.grabbedAtY, positionY);
@@ -47,9 +47,9 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
     it('should set grabbedBy to clients ID', () =>{
         const {entityId, entityType} = cardOnTable;
         
-        const nextGameState = sharedVerbHandler.grabFromTable(verb);
+       sharedVerbHandler.grabFromTable(verb);
 
-        const nextCard = extractEntityByTypeAndId(nextGameState ,entityType, entityId);
+        const nextCard = extractEntityByTypeAndId(gameStateStore.state ,entityType, entityId);
         assert.equal(nextCard.grabbedBy, clientId);
     })
     it('should do nothing if card is already grabbed', () =>{
@@ -66,9 +66,9 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
             entityType
         }
 
-        const nextGameState = sharedVerbHandler.grabFromTable(verb);
+       sharedVerbHandler.grabFromTable(verb);
 
-        assert.deepEqual(nextGameState, originalState);
+        assert.deepEqual(gameStateStore.state, originalState);
     })
     it('should set highest zIndex and also bump top zIndex', () =>{
         const originalTopZIndex = gameStateStore.state.topZIndex;
