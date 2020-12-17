@@ -14,8 +14,7 @@ export enum EDeckVerbTypes {
  * @metadata client side info of deck
  * @containedCardsMetadata client side info of cards in deck
  */
-export interface IAddDeckVerb
-  extends Omit<IGenericVerb, "entityId" | "clientId"> {
+export interface IAddDeckVerb extends Omit<IGenericVerb, "entityId" | "clientId"> {
   type: EDeckVerbTypes.ADD_DECK;
   rotation: number;
   metadata: object;
@@ -25,31 +24,27 @@ export interface IAddDeckVerb
 /**
  * @entityId deck to draw from
  */
-export interface IDrawFaceUpVerb
-  extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+export interface IDrawFaceUpVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
   type: EDeckVerbTypes.DRAW_FACE_UP;
 }
 
 /**
  * @entityId deck to draw from
  */
-export interface IDrawFaceDownVerb
-  extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+export interface IDrawFaceDownVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
   type: EDeckVerbTypes.DRAW_FACE_DOWN;
 }
 
 /**
  * @entityId deck being reset
  */
-export interface IResetVerb
-  extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+export interface IResetVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
   type: EDeckVerbTypes.RESET;
 }
 
 /**
  * @entityId deck being shuffled
  */
-export interface IShuffleVerb
-  extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+export interface IShuffleVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
   type: EDeckVerbTypes.SHUFFLE;
 }

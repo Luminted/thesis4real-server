@@ -1,10 +1,5 @@
 import { Socket } from "../socket";
-import {
-  TSocketListenerUsingSocket,
-  TPlainSocketListener,
-  TSocketEventHandler,
-  TSocketEventUsingSocket,
-} from "./typings";
+import { TSocketListenerUsingSocket, TPlainSocketListener, TSocketEventHandler, TSocketEventUsingSocket } from "./typings";
 import { Namespace } from "socket.io";
 
 export class SocketNamespace {
@@ -20,12 +15,8 @@ export class SocketNamespace {
       if (this.onConnect !== null) {
         this.onConnect(clientSocket);
       }
-      this.plainListeners.forEach(({ name, handler }) =>
-        clientSocket.on(name, handler)
-      );
-      this.listenersUsingSocket.forEach(({ name, handler }) =>
-        clientSocket.on(name, handler(clientSocket))
-      );
+      this.plainListeners.forEach(({ name, handler }) => clientSocket.on(name, handler));
+      this.listenersUsingSocket.forEach(({ name, handler }) => clientSocket.on(name, handler(clientSocket)));
 
       console.log(clientSocket.id, " connected");
     });
@@ -42,10 +33,7 @@ export class SocketNamespace {
     });
   }
 
-  public addEventListenerWithSocket(
-    name: string,
-    handler: TSocketEventUsingSocket
-  ) {
+  public addEventListenerWithSocket(name: string, handler: TSocketEventUsingSocket) {
     this.listenersUsingSocket.push({
       name,
       handler,

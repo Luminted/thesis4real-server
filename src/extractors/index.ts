@@ -1,2 +1,2 @@
-export * from "./gameStateExtractors"
-export * from "./tableStateExtractor"
+export * from "./gameStateExtractors";
+export * from "./tableStateExtractor";

@@ -9,10 +9,7 @@ export const extractClientById = (state: TGameState, clientId: string) => {
   throw new Error("Client with given id not found");
 };
 
-export const extractGrabbedEntityOfClientById = (
-  state: TGameState,
-  clientId
-) => {
+export const extractGrabbedEntityOfClientById = (state: TGameState, clientId) => {
   return extractClientById(state, clientId).grabbedEntity;
 };
 
@@ -34,11 +31,7 @@ export const extractDeckById = (state: TGameState, entityId: string) => {
   throw new Error("Deck with given id not found");
 };
 
-export const extractEntityByTypeAndId = (
-  state: TGameState,
-  entityType: EEntityTypes,
-  entityId: string
-) => {
+export const extractEntityByTypeAndId = (state: TGameState, entityType: EEntityTypes, entityId: string) => {
   if (entityType === EEntityTypes.CARD) {
     return extractCardById(state, entityId);
   }
@@ -57,11 +50,7 @@ export const extractClientHandById = (state: TGameState, clientId: string) => {
   throw new Error("Hand not found for given client");
 };
 
-export const extractCardFromClientHandById = (
-  state: TGameState,
-  clientId: string,
-  entityId: string
-) => {
+export const extractCardFromClientHandById = (state: TGameState, clientId: string, entityId: string) => {
   const hand = extractClientHandById(state, clientId);
   const extractedCard = hand.cards.find((card) => card.entityId === entityId);
 
@@ -72,10 +61,7 @@ export const extractCardFromClientHandById = (
   throw new Error("Card not found in given hand");
 };
 
-export const extractClientHandCardsById = (
-  state: TGameState,
-  clientId: string
-) => {
+export const extractClientHandCardsById = (state: TGameState, clientId: string) => {
   const hand = extractClientHandById(state, clientId);
   return hand.cards;
 };

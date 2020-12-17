@@ -11,10 +11,7 @@ export class ConnectionHandler {
   private tableStateStore: TableStateStore;
 
   disconnect(socketId: string) {
-    const clientId = extractClientIdBySocketId(
-      this.tableStateStore.state,
-      socketId
-    );
+    const clientId = extractClientIdBySocketId(this.tableStateStore.state, socketId);
     this.gameStateStore.changeState((draft) => {
       const client = draft.clients.get(clientId);
       if (client) {

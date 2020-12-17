@@ -14,8 +14,7 @@ export enum ECardVerbTypes {
  * @rotation card will be placed at this rotation
  * @metadata client specific info of card
  */
-export interface IAddCardVerb
-  extends Omit<IGenericVerb, "clientId" | "entityId"> {
+export interface IAddCardVerb extends Omit<IGenericVerb, "clientId" | "entityId"> {
   type: ECardVerbTypes.ADD_CARD;
   faceUp: boolean;
   rotation: number;
@@ -25,8 +24,7 @@ export interface IAddCardVerb
 /**
  * @entityId card being flipped
  */
-export interface IFlipVerb
-  extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
+export interface IFlipVerb extends Omit<IGenericVerb, "clientId" | "positionX" | "positionY"> {
   type: ECardVerbTypes.FLIP;
 }
 
@@ -35,8 +33,7 @@ export interface IFlipVerb
  * @entityId the card being put in hand
  * @faceUp whether the card is facing up or not
  */
-export interface IPutInHandVerb
-  extends Omit<IGenericVerb, "positionX" | "positionY"> {
+export interface IPutInHandVerb extends Omit<IGenericVerb, "positionX" | "positionY"> {
   type: ECardVerbTypes.PUT_IN_HAND;
   faceUp: boolean;
 }
@@ -61,8 +58,7 @@ export interface IGrabFromHandVerb extends IGenericVerb {
  * @clientId the client that's hand is going to be reordered
  * @order the new ordering of the hand
  */
-export interface IReorderHandVerb
-  extends Omit<IGenericVerb, "entityId" | "positionX" | "positionY"> {
+export interface IReorderHandVerb extends Omit<IGenericVerb, "entityId" | "positionX" | "positionY"> {
   type: ECardVerbTypes.REORDER_HAND;
   order: number[];
 }

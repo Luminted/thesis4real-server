@@ -1,11 +1,5 @@
 import { Store } from "./Store";
-import {
-  TGameState,
-  ICardEntity,
-  TClient,
-  IDeckEntity,
-  TClientHand,
-} from "../typings";
+import { TGameState, ICardEntity, TClient, IDeckEntity, TClientHand } from "../typings";
 import { Singleton } from "typescript-ioc";
 
 const initialState: TGameState = {

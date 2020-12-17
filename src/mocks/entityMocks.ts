@@ -1,10 +1,4 @@
-import {
-  ICardEntity,
-  IDeckEntity,
-  IDeckCard,
-  IHandCard,
-  EEntityTypes,
-} from "../typings";
+import { ICardEntity, IDeckEntity, IDeckCard, IHandCard, EEntityTypes } from "../typings";
 
 export const cardEntityMock1: ICardEntity = {
   entityId: "card-entity-id1",

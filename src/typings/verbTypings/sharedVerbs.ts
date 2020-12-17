@@ -30,24 +30,21 @@ export interface IGrabVerb extends ISharedVerb {
  * @position where the cursor is currently
  * @clientId client who is moving entity
  */
-export interface IMoveVerb
-  extends Omit<ISharedVerb, "entityType" | "entityId"> {
+export interface IMoveVerb extends Omit<ISharedVerb, "entityType" | "entityId"> {
   type: ESharedVerbTypes.MOVE;
 }
 
 /**
  * @clientId client who is releasing the entity
  */
-export interface IReleaseVerb
-  extends Omit<ISharedVerb, "positionX" | "positionY"> {
+export interface IReleaseVerb extends Omit<ISharedVerb, "positionX" | "positionY"> {
   type: ESharedVerbTypes.RELEASE;
 }
 
 /**
  * @entityId entity being removed
  */
-export interface IRemoveVerb
-  extends Omit<ISharedVerb, "positionX" | "positionY" | "clientId"> {
+export interface IRemoveVerb extends Omit<ISharedVerb, "positionX" | "positionY" | "clientId"> {
   type: ESharedVerbTypes.REMOVE;
 }
 
@@ -63,8 +60,7 @@ export interface IMoveToVerb extends Omit<ISharedVerb, "clientId"> {
  * @entityId the entity being rotated
  * @angle the amount it is rotated by
  */
-export interface IRotateVerb
-  extends Omit<ISharedVerb, "positionX" | "positionY" | "clientId"> {
+export interface IRotateVerb extends Omit<ISharedVerb, "positionX" | "positionY" | "clientId"> {
   type: ESharedVerbTypes.ROTATE;
   angle: number;
 }

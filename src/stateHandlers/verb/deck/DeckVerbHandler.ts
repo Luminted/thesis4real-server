@@ -2,21 +2,9 @@ import { Inject, Singleton } from "typescript-ioc";
 import { shuffle } from "@pacote/shuffle";
 import { original } from "immer";
 import { uuid } from "short-uuid";
-import {
-  extractClientHandById,
-  extractDeckById,
-} from "../../../extractors";
+import { extractClientHandById, extractDeckById } from "../../../extractors";
 import { GameStateStore } from "../../../stores";
-import {
-  IAddDeckVerb,
-  IDrawFaceUpVerb,
-  IResetVerb,
-  IShuffleVerb,
-  IDeckEntity,
-  EEntityTypes,
-  IDrawFaceDownVerb,
-  EDeckVerbTypes,
-} from "../../../typings";
+import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes, IDrawFaceDownVerb, EDeckVerbTypes } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 import { zIndexLimit } from "../../../config";
 import { CardVerbHandler } from "../card";
@@ -39,17 +27,7 @@ export class DeckVerbHandler {
     this.gameStateStore.changeState((draft) => {
       const draftDeck = extractDeckById(draft, deckEntityId);
       const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-      const drawnCardEntity = this.cardVerbHandler.createCardEntity(
-        positionX,
-        positionY,
-        drawFaceUp,
-        topCardEntityId,
-        deckEntityId,
-        nextZIndex,
-        rotation,
-        null,
-        metadata
-      );
+      const drawnCardEntity = this.cardVerbHandler.createCardEntity(positionX, positionY, drawFaceUp, topCardEntityId, deckEntityId, nextZIndex, rotation, null, metadata);
 
       draftDeck.drawIndex = drawIndex + 1;
       draft.cards.set(topCardEntityId, drawnCardEntity);
@@ -75,21 +53,15 @@ export class DeckVerbHandler {
       draft.hands.forEach((hand) => {
         const { clientId } = hand;
         const { cards, ordering } = extractClientHandById(draft, clientId);
-        const cardsBelongingToResetDeckIndexes = cards.reduce(
-          (acc, { ownerDeck }, index) => {
-            if (ownerDeck === entityId) {
-              return [...acc, index];
-            }
+        const cardsBelongingToResetDeckIndexes = cards.reduce((acc, { ownerDeck }, index) => {
+          if (ownerDeck === entityId) {
+            return [...acc, index];
+          }
 
-            return acc;
-          },
-          []
-        );
+          return acc;
+        }, []);
         hand.cards = cards.filter(({ ownerDeck }) => ownerDeck !== entityId);
-        hand.ordering = removeAndUpdateOrderings(
-          ordering,
-          cardsBelongingToResetDeckIndexes
-        );
+        hand.ordering = removeAndUpdateOrderings(ordering, cardsBelongingToResetDeckIndexes);
       });
 
       // removing grabbed cards
@@ -117,27 +89,12 @@ export class DeckVerbHandler {
   }
 
   addDeck(verb: IAddDeckVerb) {
-    const {
-      positionX,
-      positionY,
-      rotation,
-      metadata,
-      containedCardsMetadata,
-    } = verb;
+    const { positionX, positionY, rotation, metadata, containedCardsMetadata } = verb;
     const newDeckEntityId = uuid();
 
     this.gameStateStore.changeState((draft) => {
       const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-      const newDeck = this.createDeckEntity(
-        positionX,
-        positionY,
-        nextZIndex,
-        newDeckEntityId,
-        rotation,
-        null,
-        metadata,
-        containedCardsMetadata
-      );
+      const newDeck = this.createDeckEntity(positionX, positionY, nextZIndex, newDeckEntityId, rotation, null, metadata, containedCardsMetadata);
       draft.decks.set(newDeck.entityId, newDeck);
     });
 
@@ -152,7 +109,7 @@ export class DeckVerbHandler {
     rotation: number,
     grabbedBy: string,
     metadata: object,
-    cardsMetadata: object[] = []
+    cardsMetadata: object[] = [],
   ): IDeckEntity {
     return {
       positionX,

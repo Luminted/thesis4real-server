@@ -12,7 +12,6 @@
     "no-empty": false,
     "curly": true,
     "import-name": false,
-    "prefer-array-literal": false,
-    "allowImplicit": true
+    "prefer-array-literal": false
   }
 }
