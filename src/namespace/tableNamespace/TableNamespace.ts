@@ -2,9 +2,9 @@ import throttle from "lodash.throttle";
 import { Inject, Singleton } from "typescript-ioc";
 import { SocketNamespace } from "..";
 import { serverTick } from "../../config";
-import { TableHandler, VerbHandler } from "../../stateHandlers";
-import { ConnectionHandler } from "../../stateHandlers/connection/ConnectionHandler";
-import { GameStateStore, TableStateStore } from "../../stores";
+import { TableHandler, VerbHandler } from "../../stateHandler";
+import { ConnectionHandler } from "../../stateHandler";
+import { GameStateStore, TableStateStore } from "../../store";
 import { ETableClientEvents, ETableServerEvents, TClientInfo, TGameState, TSerializedGameState, TVerb } from "../../typings";
 import { getVerbErrorMessage } from "../../utils";
 

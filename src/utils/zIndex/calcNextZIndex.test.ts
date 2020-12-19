@@ -1,7 +1,7 @@
 import assert from "assert";
 import cloneDeep from "lodash.clonedeep";
 import { cardEntityMock1, deckEntityMock1 } from "../../mocks";
-import { GameStateStore } from "../../stores";
+import { GameStateStore } from "../../store";
 import { ICardEntity, IDeckEntity } from "../../typings";
 import { calcNextZIndex } from "./calcNextZIndex";
 
