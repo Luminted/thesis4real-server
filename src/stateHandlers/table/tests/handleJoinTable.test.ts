@@ -6,7 +6,7 @@ import { Container } from 'typescript-ioc';
 import { TableStateStore, GameStateStore } from '../../../stores';
 
 
-describe(`Socket handler for: ${ETableClientEvents.JOIN_TABLE}`, () => {
+describe(`Handler for ${ETableClientEvents.JOIN_TABLE}`, () => {
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore);
     const gameStateStore = Container.get(GameStateStore);

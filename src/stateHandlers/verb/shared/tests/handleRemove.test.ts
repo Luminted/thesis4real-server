@@ -6,23 +6,21 @@ import { cardEntityMock1, deckEntityMock1, mockClient1, mockClient2 } from '../.
 import { extractClientById } from '../../../../extractors';
 import { GameStateStore } from '../../../../stores';
 
-describe(`handle ${ESharedVerbTypes.REMOVE} verb`, () => {
+describe(`Handler for ${ESharedVerbTypes.REMOVE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
     const {entityId: deckEntityId} = deckEntityMock1;
-    const {entityId: cardEntityId} = cardEntityMock1;
 
     beforeEach('Setting up test data...', () => {
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
-            draft.cards.set(cardEntityId, {...cardEntityMock1}); 
             draft.decks.set(deckEntityId, {...deckEntityMock1});
             draft.clients.set(clientId , {...mockClient1});
         })
     })
 
-    it('should remove correct deck from game state', () => {
+    it('should remove entity described in verb from game state', () => {
         const verb: IRemoveVerb = {
             type: ESharedVerbTypes.REMOVE,
             entityId: deckEntityId,
@@ -34,27 +32,16 @@ describe(`handle ${ESharedVerbTypes.REMOVE} verb`, () => {
         assert.equal(gameStateStore.state.decks.has(deckEntityId), false);
     })
 
-    it('should remove correct card from game state', () => {
+    it('should set grabbEntity for client that is grabbing entity being removed', () => {
         const verb: IRemoveVerb = {
             type: ESharedVerbTypes.REMOVE,
-            entityId: cardEntityId,
-            entityType: EEntityTypes.CARD
-        }
-
-        sharedVerbHandler.remove(verb);
-
-        assert.equal(gameStateStore.state.cards.has(cardEntityId), false);
-    })
-    it('should set grabbEntity to null if grabbed', () => {
-        const verb: IRemoveVerb = {
-            type: ESharedVerbTypes.REMOVE,
-            entityId: cardEntityId,
+            entityId: deckEntityId,
             entityType: EEntityTypes.CARD
         };
 
         gameStateStore.changeState(draft => {
             const grabbedEntity: TGrabbedEntity = {
-                entityId: cardEntityId,
+                entityId: deckEntityId,
                 entityType: EEntityTypes.CARD,
                 grabbedAtX: 0,
                 grabbedAtY: 0

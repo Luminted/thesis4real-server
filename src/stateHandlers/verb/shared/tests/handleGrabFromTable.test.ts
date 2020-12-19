@@ -7,7 +7,7 @@ import { Container } from 'typescript-ioc';
 import { cardEntityMock1, cardEntityMock2, mockClient1 } from '../../../../mocks';
 import { GameStateStore } from '../../../../stores';
 
-describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
+describe(`Hander for ${ESharedVerbTypes.GRAB} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
@@ -32,7 +32,7 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
         });
     })
 
-    it('Assignes data of clicked card to correct clients grabbedEntity.', () =>{
+    it('should set grabbed cards info as grabbing clients grabbedEntity', () =>{
         const {entityId} = cardOnTable;
         const {positionX, positionY} = verb;
 
@@ -44,7 +44,7 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
         assert.equal(grabbedEntity.grabbedAtY, positionY);
     });
 
-    it('should set grabbedBy to clients ID', () =>{
+    it('should set grabbedBy of grabbed card to grabbing clients ID', () =>{
         const {entityId, entityType} = cardOnTable;
         
        sharedVerbHandler.grabFromTable(verb);
@@ -70,7 +70,7 @@ describe(`handle ${ESharedVerbTypes.GRAB} verb`, () => {
 
         assert.deepEqual(gameStateStore.state, originalState);
     })
-    it('should set highest zIndex and also bump top zIndex', () =>{
+    it('should increase top Z index by one and assign it to grabbed card', () =>{
         const originalTopZIndex = gameStateStore.state.topZIndex;
 
         sharedVerbHandler.grabFromTable(verb);

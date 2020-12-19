@@ -6,7 +6,7 @@ import { GameStateStore, TableStateStore } from "../../../stores";
 import { EClientConnectionStatuses, ETableClientEvents } from "../../../typings";
 import { TableHandler } from "../TableHandler";
 
-describe(`Event handler for: ${ETableClientEvents.CONNECT}`, () => {
+describe(`Handler for ${ETableClientEvents.CONNECT}`, () => {
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(GameStateStore);
     const tableStateStore = Container.get(TableStateStore);

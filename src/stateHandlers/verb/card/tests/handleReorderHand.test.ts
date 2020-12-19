@@ -7,7 +7,7 @@ import { ECardVerbTypes, IReorderHandVerb } from '../../../../typings';
 import { TableHandler } from '../../../table';
 import { CardVerbHandler } from '../CardVerbHandler';
 
-describe(`handle ${ECardVerbTypes.REORDER_HAND} verb`, () => {
+describe(`Handler for ${ECardVerbTypes.REORDER_HAND} verb`, () => {
     
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
@@ -32,7 +32,7 @@ describe(`handle ${ECardVerbTypes.REORDER_HAND} verb`, () => {
         })
     })
 
-    it("should set the ordering of clients hand to the one in the verb", () => {
+    it("should set the ordering of clients hand to the one in verb", () => {
         cardVerbHandler.reorderHand(verb);
 
         const {ordering} = extractClientHandById(gameStateStore.state ,clientId);

@@ -6,7 +6,7 @@ import { SharedVerbHandler } from '../SharedVerbHandler';
 import { cardEntityMock1, deckEntityMock1, mockClient1 } from '../../../../mocks';
 import { GameStateStore } from '../../../../stores';
 
-describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
+describe(`Handler for ${ESharedVerbTypes.MOVE_TO} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
@@ -22,7 +22,7 @@ describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
         })
     })
 
-    it('should move the correct card to given position', () => {
+    it('should move the card to given position', () => {
         const verb: IMoveToVerb = {
             type: ESharedVerbTypes.MOVE_TO,
             entityId: cardEntityId,
@@ -38,7 +38,7 @@ describe(`handle ${ESharedVerbTypes.MOVE_TO}`, () => {
         assert.equal(movedCard.positionY, verb.positionY);
     })
 
-    it('should move the correct deck to given position', () => {
+    it('should move the deck to given position', () => {
         const verb: IMoveToVerb = {
             type: ESharedVerbTypes.MOVE_TO,
             entityId: deckEntityId,

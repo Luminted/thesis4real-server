@@ -29,12 +29,14 @@ export interface IFlipVerb extends Omit<IGenericVerb, "clientId" | "positionX" |
 }
 
 /**
- * @clientId the client whoes hand the card is placed in
+ * @clientId the client who is issuing the verb
+ * @toHandOf the client whos hand the card is placed in
  * @entityId the card being put in hand
  * @faceUp whether the card is facing up or not
  */
 export interface IPutInHandVerb extends Omit<IGenericVerb, "positionX" | "positionY"> {
   type: ECardVerbTypes.PUT_IN_HAND;
+  toHandOf: string;
   faceUp: boolean;
 }
 

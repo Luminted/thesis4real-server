@@ -5,10 +5,20 @@ import { GameStateStore } from "../../../../stores";
 import { EDeckVerbTypes, IAddDeckVerb } from "../../../../typings";
 import { DeckVerbHandler } from "..";
 
-describe(`handle ${EDeckVerbTypes.ADD_DECK}`, () => {
+describe(`Hander for ${EDeckVerbTypes.ADD_DECK} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(GameStateStore);
     const {clientInfo: {clientId}} = mockClient1;
+    const verb: IAddDeckVerb = {
+        type: EDeckVerbTypes.ADD_DECK,
+        positionX: 14,
+        positionY: 77,
+        rotation: 34,
+        metadata: {
+            data: "info"
+        },
+        containedCardsMetadata: [{data: "card_info"}]
+    }
 
     beforeEach(() => {
         gameStateStore.resetState();
@@ -17,18 +27,7 @@ describe(`handle ${EDeckVerbTypes.ADD_DECK}`, () => {
         })
     })
 
-    it("should add a deck entity with verb parameters", () => {
-        const verb: IAddDeckVerb = {
-            type: EDeckVerbTypes.ADD_DECK,
-            positionX: 14,
-            positionY: 77,
-            rotation: 34,
-            metadata: {
-                data: "info"
-            },
-            containedCardsMetadata: [{data: "card_info"}]
-        }
-
+    it("should add a deck entity with parameters described in verb", () => {
         const newDeckEntityId = deckVerbHandler.addDeck(verb);
 
         const addedDeck = gameStateStore.state.decks.get(newDeckEntityId);
@@ -38,18 +37,22 @@ describe(`handle ${EDeckVerbTypes.ADD_DECK}`, () => {
         assert.deepEqual(addedDeck.metadata, verb.metadata);
         assert.deepEqual(addedDeck.cards.map(({metadata}) => ({...metadata}) ), verb.containedCardsMetadata);
     })
-    it("should initialize numberOfCards to number of cards contained", () => {
-        const verb: IAddDeckVerb = {
-            type: EDeckVerbTypes.ADD_DECK,
-            positionX: 14,
-            positionY: 77,
-            rotation: 34,
-            metadata: {
-                data: "info"
-            },
-            containedCardsMetadata: [{data: "card_info"}]
-        }
 
+    it("should add deck entity with top z index", () => {
+        const newDeckEntityId = deckVerbHandler.addDeck(verb);
+        
+        const addedDeck = gameStateStore.state.decks.get(newDeckEntityId);
+        assert.equal(addedDeck.zIndex, gameStateStore.state.topZIndex);
+    })
+
+    it("should add card entity with grabbedBy as null", () => {
+        const newDeckEntityId = deckVerbHandler.addDeck(verb);
+
+        const addedDeck = gameStateStore.state.decks.get(newDeckEntityId);
+        assert.equal(addedDeck.grabbedBy, null);
+    })
+
+    it("should initialize numberOfCards to number of cards contained", () => {
         const newDeckEntityId = deckVerbHandler.addDeck(verb);
 
         const {numberOfCards, cards} = gameStateStore.state.decks.get(newDeckEntityId);

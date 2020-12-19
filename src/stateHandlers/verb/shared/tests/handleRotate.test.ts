@@ -7,7 +7,7 @@ import { IRotateVerb, ESharedVerbTypes } from "../../../../typings";
 import { SharedVerbHandler } from "../SharedVerbHandler";
 
 
-describe(`handle ${ESharedVerbTypes.ROTATE}`, () => {
+describe(`Handler for ${ESharedVerbTypes.ROTATE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {entityId, entityType} = cardEntityMock1;

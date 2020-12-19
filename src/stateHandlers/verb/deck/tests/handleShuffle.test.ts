@@ -6,7 +6,7 @@ import { GameStateStore } from "../../../../stores";
 import { EDeckVerbTypes, IShuffleVerb } from "../../../../typings";
 import { DeckVerbHandler } from "../DeckVerbHandler";
 
-describe(`handling ${EDeckVerbTypes.SHUFFLE}`, () => {
+describe(`Handler for ${EDeckVerbTypes.SHUFFLE} verb`, () => {
 
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(GameStateStore)

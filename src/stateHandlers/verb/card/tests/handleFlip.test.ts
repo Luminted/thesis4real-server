@@ -6,7 +6,7 @@ import { GameStateStore } from "../../../../stores";
 import { ECardVerbTypes, IFlipVerb } from "../../../../typings";
 import { CardVerbHandler } from "../CardVerbHandler";
 
-describe(`handling ${ECardVerbTypes.FLIP}`, () => {
+describe(`Handler for ${ECardVerbTypes.FLIP} verb`, () => {
     const cardVerbHandler = new CardVerbHandler();
     const gameStateStore = Container.get(GameStateStore);
     const {clientInfo: {clientId}} = mockClient1;

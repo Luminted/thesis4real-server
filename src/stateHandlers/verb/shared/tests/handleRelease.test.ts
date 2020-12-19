@@ -6,7 +6,7 @@ import { mockClient1, cardEntityMock1 } from "../../../../mocks";
 import { SharedVerbHandler } from '../SharedVerbHandler';
 import { GameStateStore } from '../../../../stores';
 
-describe(`handle ${ESharedVerbTypes.RELEASE} verb`, () => {
+describe(`Handler for ${ESharedVerbTypes.RELEASE} verb`, () => {
     const sharedVerbHandler = new SharedVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;
@@ -27,20 +27,18 @@ describe(`handle ${ESharedVerbTypes.RELEASE} verb`, () => {
         })
     })
 
-    describe(`EntityType: ${EEntityTypes.CARD}`, () =>{
-        it('should set grabbedEntity to null for correct client.', () =>{     
-            sharedVerbHandler.release(verb);
+    it('should set grabbedEntity to null for issuing client.', () =>{     
+        sharedVerbHandler.release(verb);
 
-            const grabbedEntity =extractGrabbedEntityOfClientById(gameStateStore.state, verb.clientId);
-            assert.equal(grabbedEntity, null);
-        })
-        it('should set the grabbedBy to null on released entity', () =>{
-            const {entityId, entityType} = verb;
-            
-            sharedVerbHandler.release(verb);
+        const grabbedEntity =extractGrabbedEntityOfClientById(gameStateStore.state, verb.clientId);
+        assert.equal(grabbedEntity, null);
+    })
+    it('should set grabbedBy to null on released entity', () =>{
+        const {entityId, entityType} = verb;
+        
+        sharedVerbHandler.release(verb);
 
-            const releasedEntity = extractEntityByTypeAndId(gameStateStore.state, entityType, entityId);
-            assert.equal(releasedEntity.grabbedBy, null);
-        })
+        const releasedEntity = extractEntityByTypeAndId(gameStateStore.state, entityType, entityId);
+        assert.equal(releasedEntity.grabbedBy, null);
     })
 })

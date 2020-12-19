@@ -6,7 +6,7 @@ import { TableHandler } from '../TableHandler';
 import { TableStateStore, GameStateStore } from '../../../stores';
 import { ETableClientEvents } from '../../../typings';
 
-describe(`Testing ${ETableClientEvents.LEAVE_TABLE}`, () => {
+describe(`Handler for ${ETableClientEvents.LEAVE_TABLE}`, () => {
     const tableHandler = new TableHandler();
     const tableStateStore = Container.get(TableStateStore)
     const gameStateStore = Container.get(GameStateStore);

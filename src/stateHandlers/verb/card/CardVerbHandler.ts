@@ -46,11 +46,11 @@ export class CardVerbHandler {
 
   putInHand(verb: IPutInHandVerb) {
     this.gameStateStore.changeState((draft) => {
-      const { clientId, entityId, faceUp } = verb;
-      const { metadata, ownerDeck } = extractCardById(original(draft), entityId);
+      const { clientId, entityId, faceUp, toHandOf } = verb;
+      const { metadata, ownerDeck } = extractCardById(draft, entityId);
       const handCard = this.createHandCard(entityId, faceUp, ownerDeck, metadata);
       const client = extractClientById(draft, clientId);
-      const clientHand = extractClientHandById(draft, clientId);
+      const clientHand = extractClientHandById(draft, toHandOf);
 
       clientHand.cards.push(handCard);
       clientHand.ordering.push(clientHand.ordering.length);

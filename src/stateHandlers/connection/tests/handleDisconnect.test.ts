@@ -6,7 +6,7 @@ import { mockClient1 } from '../../../mocks';
 import { ConnectionHandler } from '../ConnectionHandler';
 import { GameStateStore, TableStateStore } from '../../../stores';
 
-describe(`Event handler for: ${ETableClientEvents.DISCONNECT}`, () => {
+describe(`Handler for ${ETableClientEvents.DISCONNECT}`, () => {
     const connectionHandler = new ConnectionHandler();
     const gameStateStore = Container.get(GameStateStore);
     const tableStateStore = Container.get(TableStateStore);

@@ -8,7 +8,7 @@ import { TableHandler } from '../../../table';
 import { GameStateStore } from '../../../../stores';
 
 
-describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
+describe(`Handler for ${EDeckVerbTypes.RESET} verb`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const tableHandler = new TableHandler();
     const gameStateStore = Container.get(GameStateStore)
@@ -25,7 +25,6 @@ describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
     }
 
     beforeEach('Setting up test data...', () => {
-        
         gameStateStore.resetState();
         gameStateStore.changeState(draft => {
             const client1Hand = tableHandler.createClientHand(client1Id);
@@ -45,14 +44,14 @@ describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
         })
     })
 
-    it('should remove all cards off the table belonging to the reset deck', () => {
+    it('should remove all cards off the table belonging to the deck being reset', () => {
         deckVerbHandler.reset(verb);
         for(const card of cardsBelongingToDeck){
             assert.equal(gameStateStore.state.cards.has(card.entityId), false);
         }
     })
 
-    it('should remove grabbed cards belonging to the reset deck', () =>{
+    it('should remove grabbed cards belonging to the deck being reset', () =>{
         const grabbedCard = {...cardEntityMock1, entityId: "grabbedCard-id"}
        gameStateStore.changeState(draft => {
             const {entityId, entityType} = grabbedCard; 
@@ -74,7 +73,7 @@ describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
         assert.equal(isRemoved, true);
     })
 
-    it('should remove all cards out of player hands belonging to the reset deck', () =>{
+    it('should remove all cards out of player hands belonging to the deck being reset', () =>{
         deckVerbHandler.reset(verb);
 
         const gameState = gameStateStore.state;
@@ -86,7 +85,7 @@ describe(`handle ${EDeckVerbTypes.RESET} verb`, () => {
         const resetDeck = extractDeckById(gameStateStore.state, deckToReset.entityId);
         assert.equal(resetDeck.drawIndex, 0);
     })
-    it("should update hand ordering accordingly", () => {
+    it("should update hand orderings accordingly", () => {
         gameStateStore.changeState(draft => {
             const client1Hand =  extractClientHandById(draft, client1Id);
             client1Hand.cards = [{...handCardMock1, ownerDeck: deckToReset.entityId}, {...handCardMock1}, {...handCardMock1, ownerDeck: deckToReset.entityId}, {...handCardMock1}];

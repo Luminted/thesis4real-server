@@ -7,7 +7,7 @@ import { DeckVerbHandler } from '../DeckVerbHandler';
 import { Container } from "typescript-ioc";
 import { GameStateStore } from '../../../../stores';
 
-describe(`handle ${EDeckVerbTypes.DRAW_FACE_UP} and ${EDeckVerbTypes.DRAW_FACE_DOWN} verb`, () => {
+describe(`Handlers for ${EDeckVerbTypes.DRAW_FACE_UP} and ${EDeckVerbTypes.DRAW_FACE_DOWN} verbs`, () => {
     const deckVerbHandler = new DeckVerbHandler();
     const gameStateStore = Container.get(GameStateStore)
     const {clientInfo: {clientId}} = mockClient1;

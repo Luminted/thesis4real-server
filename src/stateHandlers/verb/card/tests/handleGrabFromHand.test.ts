@@ -7,7 +7,7 @@ import { mockClient1, mockClient2, handCardMock1, handCardMock2 } from '../../..
 import { TableHandler } from '../../../table';
 import { GameStateStore } from '../../../../stores';
 
-describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
+describe(`Handler for ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     
     const cardVerbHandler = new CardVerbHandler();
     const tableHandler = new TableHandler();
@@ -39,7 +39,7 @@ describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
         })
     })
 
-    it('should set grabbed entity of correct client with the cards data', () =>{
+    it('should set cards as grabbing clients grabbedEntity', () =>{
         cardVerbHandler.grabFromHand(verb);
         const nextClient = extractClientById(gameStateStore.state, verb.clientId);
         const expectedGrabbedEntity: TGrabbedEntity = {
@@ -58,7 +58,7 @@ describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
         assert.notEqual(grabbedCard, undefined);
     });
 
-    it('should put the card at the position according to the verb', () =>{ 
+    it('should put the card at the position described in verb', () =>{ 
         cardVerbHandler.grabFromHand(verb);
         const grabbedCard = extractCardById(gameStateStore.state, verb.entityId);
         const expectedPositionX = verb.positionX;
@@ -94,7 +94,7 @@ describe(`handle ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
         assert.deepEqual(ordering, [0,1]);
     })
 
-    it('should set grabbedBy of grabbed card to client ID', () =>{
+    it('should set grabbedBy of grabbed card to grabbing clients ID', () =>{
         cardVerbHandler.grabFromHand(verb);
         const grabbedCard = extractCardById(gameStateStore.state, entityId);
 

@@ -5,7 +5,7 @@ import cloneDeep from "lodash.clonedeep";
 import { cardEntityMock1, deckEntityMock1 } from '../../mocks';
 import { ICardEntity, IDeckEntity } from '../../typings';
 
-describe('Testing utility functions', () =>{
+describe('utility functions', () =>{
     describe('calcNextZIndex', () =>{
         let gameStateStore = new GameStateStore();
         
@@ -45,7 +45,7 @@ describe('Testing utility functions', () =>{
                 assert.equal(nextZIndex, numberOfEntities);
             })
         })
-        it('should reset z-indexes of all entities to start from 0 in order if topZIndex reaches limit', () =>{
+        it('should reset z-indexes of all entities to start from 0 while keeping order if topZIndex reaches limit', () =>{
             const zIndexLimit = 50;
             const numberOfCards = 6;
             const numberOfDecks = 4;
