@@ -2,7 +2,7 @@ import assert from "assert";
 import cloneDeep from "lodash.clonedeep";
 import { Container } from "typescript-ioc";
 import { extractCardById, extractClientById } from "../../../../extractors";
-import { cardEntityMock1, cardEntityMock2, deckEntityMock1, deckEntityMock2, mockClient1 } from "../../../../mocks";
+import { cardEntityMock1, mockClient1 } from "../../../../mocks";
 import { GameStateStore } from "../../../../stores";
 import { EEntityTypes, ESharedVerbTypes, ICardEntity, IMoveVerb } from "../../../../typings";
 import { SharedVerbHandler } from "../SharedVerbHandler";

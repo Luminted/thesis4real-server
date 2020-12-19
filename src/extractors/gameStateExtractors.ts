@@ -10,7 +10,7 @@ export const extractClientById = (state: TGameState, clientId: string) => {
   throw new Error(clientNotFoundMessage);
 };
 
-export const extractGrabbedEntityOfClientById = (state: TGameState, clientId) => {
+export const extractGrabbedEntityOfClientById = (state: TGameState, clientId: string) => {
   return extractClientById(state, clientId).grabbedEntity;
 };
 

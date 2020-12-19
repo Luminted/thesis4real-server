@@ -7,7 +7,10 @@
         "sourceMap": true,
         "esModuleInterop": true,
         "outDir": "./build",
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "noImplicitAny": true,
+        "noUnusedParameters": true,
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", ".vscode"]

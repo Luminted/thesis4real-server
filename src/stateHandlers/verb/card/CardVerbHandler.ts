@@ -111,7 +111,7 @@ export class CardVerbHandler {
     };
   }
 
-  public createHandCard(entityId, faceUp, ownerDeck, metadata) {
+  public createHandCard(entityId: string, faceUp: boolean, ownerDeck: string, metadata: object) {
     return {
       entityId,
       faceUp,

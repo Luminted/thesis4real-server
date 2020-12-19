@@ -5,7 +5,7 @@ import { Inject, Singleton } from "typescript-ioc";
 import { emptyDeckMessage, zIndexLimit } from "../../../config";
 import { extractClientHandById, extractDeckById } from "../../../extractors";
 import { GameStateStore } from "../../../stores";
-import { EDeckVerbTypes, EEntityTypes, IAddDeckVerb, IDeckEntity, IDrawFaceDownVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb } from "../../../typings";
+import { EEntityTypes, IAddDeckVerb, IDeckEntity, IDrawFaceDownVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 import { CardVerbHandler } from "../card";
 

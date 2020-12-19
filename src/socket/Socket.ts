@@ -13,7 +13,7 @@ export class Socket {
     console.log("Socket initiated");
   }
 
-  public emit(name: string, ...args) {
+  public emit(name: string, ...args: any) {
     this.socket.emit(name, ...args);
   }
 

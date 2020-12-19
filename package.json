@@ -12,7 +12,7 @@
     "test": "mocha './src/**/*.test.ts' -r ts-node/register",
     "test:debug": "mocha ./src/handlers/Table/tests/handleJoinTable.test.ts --inspect=5859 -r ts-node/register",
     "clean": "rimraf ./build",
-    "lint": "tslint --fix -c tslint.json -p ./tsconfig.lint.json"
+    "lint": "tslint --fix -c tslint.json -p ./tsconfig.json"
   },
   "author": "",
   "license": "ISC",

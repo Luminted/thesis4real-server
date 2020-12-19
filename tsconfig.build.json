@@ -1,5 +1,5 @@
 {
-    "extends": "./tsconfig.lint.json",
+    "extends": "./tsconfig.json",
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", ".vscode", "src/**/*.test.*"]
 }
