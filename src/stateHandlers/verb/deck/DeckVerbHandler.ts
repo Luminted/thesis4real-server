@@ -6,7 +6,7 @@ import { extractClientHandById, extractDeckById } from "../../../extractors";
 import { GameStateStore } from "../../../stores";
 import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes, IDrawFaceDownVerb, EDeckVerbTypes } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
-import { zIndexLimit } from "../../../config";
+import { emptyDeckMessage, zIndexLimit } from "../../../config";
 import { CardVerbHandler } from "../card";
 
 @Singleton
@@ -72,8 +72,6 @@ export class DeckVerbHandler {
         }
       });
     });
-
-    
   }
 
   shuffle(verb: IShuffleVerb) {
@@ -84,8 +82,6 @@ export class DeckVerbHandler {
       const shuffledCards = shuffle(cards.slice(drawIndex));
       draftDeck.cards = [...cards.slice(0, drawIndex), ...shuffledCards];
     });
-
-    
   }
 
   addDeck(verb: IAddDeckVerb) {
@@ -134,7 +130,7 @@ export class DeckVerbHandler {
     const topCard = cards[deck.drawIndex];
 
     if (!topCard) {
-      throw new Error("Deck is empty!");
+      throw new Error(emptyDeckMessage);
     }
 
     return topCard;

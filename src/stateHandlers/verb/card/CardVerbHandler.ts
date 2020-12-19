@@ -42,8 +42,6 @@ export class CardVerbHandler {
       clientHand.ordering = updatedOrdering;
       clientHand.cards = cardsInHand.filter((_, index) => index !== indexOfGrabbedCard);
     });
-
-    
   }
 
   putInHand(verb: IPutInHandVerb) {
@@ -59,8 +57,6 @@ export class CardVerbHandler {
       client.grabbedEntity = null;
       draft.cards.delete(entityId);
     });
-
-    
   }
 
   flip(verb: IFlipVerb) {
@@ -70,8 +66,6 @@ export class CardVerbHandler {
     this.gameStateStore.changeState((draft) => {
       extractCardById(draft, entityId).faceUp = !entity.faceUp;
     });
-
-    
   }
 
   addCard(verb: IAddCardVerb) {
@@ -83,8 +77,6 @@ export class CardVerbHandler {
 
       draft.cards.set(newCard.entityId, newCard);
     });
-
-    
   }
 
   reorderHand(verb: IReorderHandVerb) {
@@ -92,8 +84,6 @@ export class CardVerbHandler {
     this.gameStateStore.changeState((draft) => {
       extractClientHandById(draft, clientId).ordering = order;
     });
-
-    
   }
 
   createCardEntity(

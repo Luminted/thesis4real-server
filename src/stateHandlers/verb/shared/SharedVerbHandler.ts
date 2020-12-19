@@ -26,7 +26,6 @@ export class SharedVerbHandler {
         entity.zIndex = nextTopZIndex;
       }
     });
-    
   }
 
   move(verb: IMoveVerb) {
@@ -49,7 +48,6 @@ export class SharedVerbHandler {
         }
       }
     });
-    
   }
 
   moveTo(verb: IMoveToVerb) {
@@ -59,8 +57,6 @@ export class SharedVerbHandler {
       entityToMove.positionX = positionX;
       entityToMove.positionY = positionY;
     });
-
-    
   }
 
   release(verb: IReleaseVerb) {
@@ -69,8 +65,6 @@ export class SharedVerbHandler {
       extractClientById(draft, clientId).grabbedEntity = null;
       extractEntityByTypeAndId(draft, entityType, entityId).grabbedBy = null;
     });
-
-    
   }
 
   remove(verb: IRemoveVerb) {
@@ -92,8 +86,6 @@ export class SharedVerbHandler {
         }
       });
     });
-
-    
   }
 
   rotate(verb: IRotateVerb) {
@@ -102,7 +94,5 @@ export class SharedVerbHandler {
       const entity = extractEntityByTypeAndId(draft, entityType, entityId);
       entity.rotation = (entity.rotation + angle) % 360;
     });
-
-    
   }
 }

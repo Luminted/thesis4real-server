@@ -1,9 +1,8 @@
 import { Inject, Singleton } from "typescript-ioc";
 import { ECardVerbTypes, EDeckVerbTypes, ESharedVerbTypes, TVerb } from "../../typings";
-import { CardVerbHandler } from "./card/CardVerbHandler";
-import { SharedVerbHandler } from "./shared/SharedVerbHandler";
-import { DeckVerbHandler } from "./deck/DeckVerbHandler";
-import { GameStateStore } from "../../stores";
+import { CardVerbHandler } from "./card";
+import { SharedVerbHandler } from "./shared";
+import { DeckVerbHandler } from "./deck";
 
 @Singleton
 export class VerbHandler {
@@ -13,8 +12,6 @@ export class VerbHandler {
   private cardVerbHandler: CardVerbHandler;
   @Inject
   private deckVerbHandler: DeckVerbHandler;
-  @Inject
-  private gameStateStore: GameStateStore;
 
   handleVerb(verb: TVerb) {
     switch (verb.type) {
@@ -52,9 +49,6 @@ export class VerbHandler {
         return this.cardVerbHandler.reorderHand(verb);
       case ECardVerbTypes.ADD_CARD:
         return this.cardVerbHandler.addCard(verb);
-
-      default:
-        
     }
   }
 }

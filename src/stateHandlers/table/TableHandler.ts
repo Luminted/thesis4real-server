@@ -5,7 +5,7 @@ import { calcNextZIndex } from "../../utils";
 import { GameStateStore, TableStateStore } from "../../stores";
 import { TClientHand, TClient, EClientConnectionStatuses, TMaybeNull } from "../../typings";
 import { CardVerbHandler } from "../verb/card";
-import { zIndexLimit } from "../../config";
+import { clientAlreadyConnectedMessage, clientAlreadyPresentMessage, seatTakenMessage, zIndexLimit } from "../../config";
 
 export class TableHandler {
   @Inject
@@ -21,7 +21,7 @@ export class TableHandler {
     const presentClientId = this.tableStateStore.state.socketIdMapping[socketId];
 
     if (presentClientId) {
-      throw new Error("Client already present");
+      throw new Error(clientAlreadyPresentMessage);
     }
 
     if (emptySeats.includes(requestedSeatId)) {
@@ -37,10 +37,8 @@ export class TableHandler {
         draft.hands.set(clientId, newHand);
       });
     } else {
-      throw new Error("Requested seat already taken");
+      throw new Error(seatTakenMessage);
     }
-
-    
   }
 
   rejoin(clientId: string, socketId: string) {
@@ -49,7 +47,7 @@ export class TableHandler {
       if (client.status === EClientConnectionStatuses.DISCONNECTED) {
         client.status = EClientConnectionStatuses.CONNECTED;
       } else {
-        throw new Error("Client with given ID already connected");
+        throw new Error(clientAlreadyConnectedMessage);
       }
     });
 
@@ -58,8 +56,6 @@ export class TableHandler {
       draft.socketIdMapping[socketId] = clientId;
       delete draft.socketIdMapping[oldSocketId];
     });
-
-    
   }
 
   leaveTable(clientId: string) {
@@ -86,8 +82,6 @@ export class TableHandler {
       draft.hands.delete(clientId);
       draft.clients.delete(clientId);
     });
-
-    
   }
 
   createClientHand(clientId: string): TClientHand {

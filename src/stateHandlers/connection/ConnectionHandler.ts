@@ -18,7 +18,5 @@ export class ConnectionHandler {
         client.status = EClientConnectionStatuses.DISCONNECTED;
       }
     });
-
-    
   }
 }
