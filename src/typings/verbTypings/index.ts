@@ -1,6 +1,6 @@
 import { IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IReorderHandVerb } from "./cardVerbs";
-import { IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "./sharedVerbs";
 import { IAddDeckVerb, IDrawFaceDownVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb } from "./deckVerbs";
+import { IGrabVerb, IMoveToVerb, IMoveVerb, IReleaseVerb, IRemoveVerb, IRotateVerb } from "./sharedVerbs";
 
 export interface IGenericVerb {
   type: string;

@@ -1,6 +1,5 @@
-import { TMaybeNull } from "./utilityTypings";
 import { EClientConnectionStatuses } from "./socketTypings";
-import { GameStateStore } from "../stores";
+import { TMaybeNull } from "./utilityTypings";
 
 export interface IEntity {
   readonly entityType: EEntityTypes;
@@ -76,7 +75,7 @@ export type TCardTable = {
 
 export type TSerializedGameState = {
   cards: ICardEntity[];
-  decks: Omit<IDeckEntity, "cards">[];
-  clients: Omit<TClient, "grabbedEntity">[];
+  decks: Array<Omit<IDeckEntity, "cards">>;
+  clients: Array<Omit<TClient, "grabbedEntity">>;
   hands: TClientHand[];
 };

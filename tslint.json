@@ -12,6 +12,7 @@
     "no-empty": false,
     "curly": true,
     "import-name": false,
+    "interface-over-type-literal": false,
     "prefer-array-literal": false
   }
 }

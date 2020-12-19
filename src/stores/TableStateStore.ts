@@ -1,7 +1,7 @@
 import { Singleton } from "typescript-ioc";
-import { Store } from "./Store";
 import { numberOfSeats } from "../config";
 import { TCardTable } from "../typings";
+import { Store } from "./Store";
 
 const initialState: TCardTable = {
   defaultPosition: [0, 0],

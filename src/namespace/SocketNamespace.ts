@@ -1,6 +1,6 @@
-import { Socket } from "../socket";
-import { TSocketListenerUsingSocket, TPlainSocketListener, TSocketEventHandler, TSocketEventUsingSocket } from "./typings";
 import { Namespace } from "socket.io";
+import { Socket } from "../socket";
+import { TPlainSocketListener, TSocketEventHandler, TSocketEventUsingSocket, TSocketListenerUsingSocket } from "./typings";
 
 export class SocketNamespace {
   public plainListeners: TPlainSocketListener[] = [];

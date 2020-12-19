@@ -1,11 +1,11 @@
 import throttle from "lodash.throttle";
+import { Inject, Singleton } from "typescript-ioc";
 import { SocketNamespace } from "..";
-import { Singleton, Inject } from "typescript-ioc";
-import { ETableClientEvents, ETableServerEvents, TVerb, TGameState, TClientInfo, TSerializedGameState } from "../../typings";
+import { serverTick } from "../../config";
 import { TableHandler, VerbHandler } from "../../stateHandlers";
 import { ConnectionHandler } from "../../stateHandlers/connection/ConnectionHandler";
 import { GameStateStore, TableStateStore } from "../../stores";
-import { serverTick } from "../../config";
+import { ETableClientEvents, ETableServerEvents, TClientInfo, TGameState, TSerializedGameState, TVerb } from "../../typings";
 import { getVerbErrorMessage } from "../../utils";
 
 @Singleton
@@ -20,6 +20,10 @@ export class TableNamespace extends SocketNamespace {
   private gameStateStore: GameStateStore;
   @Inject
   private tableStateStore: TableStateStore;
+
+  private syncGameState = throttle((gameState: TGameState) => {
+    this.emit(ETableServerEvents.SYNC, this.serializeGameState(gameState));
+  }, serverTick);
 
   constructor() {
     super();
@@ -118,10 +122,6 @@ export class TableNamespace extends SocketNamespace {
       console.log(`disconnection reason: ${reason}`);
     });
   }
-
-  private syncGameState = throttle((gameState: TGameState) => {
-    this.emit(ETableServerEvents.SYNC, this.serializeGameState(gameState));
-  }, serverTick);
 
   private serializeGameState(gameState: TGameState): TSerializedGameState {
     return {

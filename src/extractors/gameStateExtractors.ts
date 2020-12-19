@@ -1,5 +1,5 @@
 import { cardNotFoundMessage, clientNotFoundMessage, deckNotFoundMessage, entityNotFoundMessage, handCardNotFoundMessage, handNotFoundMessage } from "../config";
-import { TGameState, EEntityTypes } from "../typings";
+import { EEntityTypes, TGameState } from "../typings";
 
 export const extractClientById = (state: TGameState, clientId: string) => {
   const client = state.clients.get(clientId);

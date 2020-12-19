@@ -10,7 +10,7 @@ export class ConnectionHandler {
   @Inject
   private tableStateStore: TableStateStore;
 
-  disconnect(socketId: string) {
+  public disconnect(socketId: string) {
     const clientId = extractClientIdBySocketId(this.tableStateStore.state, socketId);
     this.gameStateStore.changeState((draft) => {
       const client = draft.clients.get(clientId);

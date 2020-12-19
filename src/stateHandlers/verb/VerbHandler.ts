@@ -1,8 +1,8 @@
 import { Inject, Singleton } from "typescript-ioc";
 import { ECardVerbTypes, EDeckVerbTypes, ESharedVerbTypes, TVerb } from "../../typings";
 import { CardVerbHandler } from "./card";
-import { SharedVerbHandler } from "./shared";
 import { DeckVerbHandler } from "./deck";
+import { SharedVerbHandler } from "./shared";
 
 @Singleton
 export class VerbHandler {
@@ -13,7 +13,7 @@ export class VerbHandler {
   @Inject
   private deckVerbHandler: DeckVerbHandler;
 
-  handleVerb(verb: TVerb) {
+  public handleVerb(verb: TVerb) {
     switch (verb.type) {
       case ESharedVerbTypes.GRAB:
         return this.sharedVerbHandler.grabFromTable(verb);

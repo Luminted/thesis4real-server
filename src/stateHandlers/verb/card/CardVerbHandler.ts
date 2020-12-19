@@ -1,10 +1,10 @@
 import { original } from "immer";
 import { uuid } from "short-uuid";
-import { Singleton, Inject } from "typescript-ioc";
-import { ICardEntity, EEntityTypes, IAddCardVerb, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IReorderHandVerb } from "../../../typings";
-import { GameStateStore } from "../../../stores";
-import { extractCardFromClientHandById, extractClientById, extractCardById, extractClientHandById } from "../../../extractors";
+import { Inject, Singleton } from "typescript-ioc";
 import { zIndexLimit } from "../../../config";
+import { extractCardById, extractCardFromClientHandById, extractClientById, extractClientHandById } from "../../../extractors";
+import { GameStateStore } from "../../../stores";
+import { EEntityTypes, IAddCardVerb, ICardEntity, IFlipVerb, IGrabFromHandVerb, IPutInHandVerb, IReorderHandVerb } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
 
 @Singleton
@@ -12,7 +12,7 @@ export class CardVerbHandler {
   @Inject
   private gameStateStore: GameStateStore;
 
-  grabFromHand(verb: IGrabFromHandVerb) {
+  public grabFromHand(verb: IGrabFromHandVerb) {
     this.gameStateStore.changeState((draft) => {
       const gameState = original(draft);
       const { clientId, entityId, positionX, positionY, grabbedAtX, grabbedAtY, faceUp, grabbedFrom } = verb;
@@ -44,7 +44,7 @@ export class CardVerbHandler {
     });
   }
 
-  putInHand(verb: IPutInHandVerb) {
+  public putInHand(verb: IPutInHandVerb) {
     this.gameStateStore.changeState((draft) => {
       const { clientId, entityId, faceUp, toHandOf } = verb;
       const { metadata, ownerDeck } = extractCardById(draft, entityId);
@@ -59,7 +59,7 @@ export class CardVerbHandler {
     });
   }
 
-  flip(verb: IFlipVerb) {
+  public flip(verb: IFlipVerb) {
     const { entityId } = verb;
     const entity = extractCardById(this.gameStateStore.state, entityId);
 
@@ -68,7 +68,7 @@ export class CardVerbHandler {
     });
   }
 
-  addCard(verb: IAddCardVerb) {
+  public addCard(verb: IAddCardVerb) {
     const { faceUp, positionX, positionY, rotation, metadata } = verb;
 
     this.gameStateStore.changeState((draft) => {
@@ -79,14 +79,14 @@ export class CardVerbHandler {
     });
   }
 
-  reorderHand(verb: IReorderHandVerb) {
+  public reorderHand(verb: IReorderHandVerb) {
     const { clientId, order } = verb;
     this.gameStateStore.changeState((draft) => {
       extractClientHandById(draft, clientId).ordering = order;
     });
   }
 
-  createCardEntity(
+  public createCardEntity(
     positionX: number,
     positionY: number,
     faceUp: boolean,
@@ -111,7 +111,7 @@ export class CardVerbHandler {
     };
   }
 
-  createHandCard(entityId, faceUp, ownerDeck, metadata) {
+  public createHandCard(entityId, faceUp, ownerDeck, metadata) {
     return {
       entityId,
       faceUp,

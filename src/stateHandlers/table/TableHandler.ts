@@ -1,11 +1,11 @@
-import { Inject } from "typescript-ioc";
 import { generate } from "short-uuid";
-import { extractSocketIdByClientId, extractClientById, extractClientHandCardsById, extractClientsSeatById } from "../../extractors";
-import { calcNextZIndex } from "../../utils";
-import { GameStateStore, TableStateStore } from "../../stores";
-import { TClientHand, TClient, EClientConnectionStatuses, TMaybeNull } from "../../typings";
-import { CardVerbHandler } from "../verb/card";
+import { Inject } from "typescript-ioc";
 import { clientAlreadyConnectedMessage, clientAlreadyPresentMessage, seatTakenMessage, zIndexLimit } from "../../config";
+import { extractClientById, extractClientHandCardsById, extractClientsSeatById, extractSocketIdByClientId } from "../../extractors";
+import { GameStateStore, TableStateStore } from "../../stores";
+import { EClientConnectionStatuses, TClient, TClientHand, TMaybeNull } from "../../typings";
+import { calcNextZIndex } from "../../utils";
+import { CardVerbHandler } from "../verb/card";
 
 export class TableHandler {
   @Inject
@@ -15,7 +15,7 @@ export class TableHandler {
   @Inject
   private cardVerbHandler: CardVerbHandler;
 
-  joinTable(requestedSeatId: TMaybeNull<string>, socketId: string, name?: string) {
+  public joinTable(requestedSeatId: TMaybeNull<string>, socketId: string, name?: string) {
     const { emptySeats } = this.tableStateStore.state;
     const clientId = generate();
     const presentClientId = this.tableStateStore.state.socketIdMapping[socketId];
@@ -41,7 +41,7 @@ export class TableHandler {
     }
   }
 
-  rejoin(clientId: string, socketId: string) {
+  public rejoin(clientId: string, socketId: string) {
     this.gameStateStore.changeState((draft) => {
       const client = extractClientById(draft, clientId);
       if (client.status === EClientConnectionStatuses.DISCONNECTED) {
@@ -58,7 +58,7 @@ export class TableHandler {
     });
   }
 
-  leaveTable(clientId: string) {
+  public leaveTable(clientId: string) {
     const { defaultPosition } = this.tableStateStore.state;
 
     // putting back seat into pool
@@ -84,7 +84,7 @@ export class TableHandler {
     });
   }
 
-  createClientHand(clientId: string): TClientHand {
+  public createClientHand(clientId: string): TClientHand {
     return {
       clientId,
       cards: [],

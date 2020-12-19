@@ -1,12 +1,12 @@
-import { Inject, Singleton } from "typescript-ioc";
 import { shuffle } from "@pacote/shuffle";
 import { original } from "immer";
 import { uuid } from "short-uuid";
+import { Inject, Singleton } from "typescript-ioc";
+import { emptyDeckMessage, zIndexLimit } from "../../../config";
 import { extractClientHandById, extractDeckById } from "../../../extractors";
 import { GameStateStore } from "../../../stores";
-import { IAddDeckVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb, IDeckEntity, EEntityTypes, IDrawFaceDownVerb, EDeckVerbTypes } from "../../../typings";
+import { EDeckVerbTypes, EEntityTypes, IAddDeckVerb, IDeckEntity, IDrawFaceDownVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb } from "../../../typings";
 import { calcNextZIndex, removeAndUpdateOrderings } from "../../../utils";
-import { emptyDeckMessage, zIndexLimit } from "../../../config";
 import { CardVerbHandler } from "../card";
 
 @Singleton
@@ -16,7 +16,7 @@ export class DeckVerbHandler {
   @Inject
   private cardVerbHandler: CardVerbHandler;
 
-  drawCard(verb: IDrawFaceUpVerb | IDrawFaceDownVerb, drawFaceUp: boolean) {
+  public drawCard(verb: IDrawFaceUpVerb | IDrawFaceDownVerb, drawFaceUp: boolean) {
     const gameState = this.gameStateStore.state;
     const { entityId: deckEntityId } = verb;
     const deck = extractDeckById(gameState, deckEntityId);
@@ -36,7 +36,7 @@ export class DeckVerbHandler {
     return topCardEntityId;
   }
 
-  reset(verb: IResetVerb) {
+  public reset(verb: IResetVerb) {
     this.gameStateStore.changeState((draft) => {
       const { entityId } = verb;
       const deck = extractDeckById(draft, entityId);
@@ -74,7 +74,7 @@ export class DeckVerbHandler {
     });
   }
 
-  shuffle(verb: IShuffleVerb) {
+  public shuffle(verb: IShuffleVerb) {
     const { entityId } = verb;
     this.gameStateStore.changeState((draft) => {
       const { cards, drawIndex } = extractDeckById(original(draft), entityId);
@@ -84,7 +84,7 @@ export class DeckVerbHandler {
     });
   }
 
-  addDeck(verb: IAddDeckVerb) {
+  public addDeck(verb: IAddDeckVerb) {
     const { positionX, positionY, rotation, metadata, containedCardsMetadata } = verb;
     const newDeckEntityId = uuid();
 
@@ -97,7 +97,7 @@ export class DeckVerbHandler {
     return newDeckEntityId;
   }
 
-  createDeckEntity(
+  public createDeckEntity(
     positionX: number,
     positionY: number,
     zIndex: number,
