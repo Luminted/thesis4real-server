@@ -21,7 +21,7 @@ describe(`Handlers for ${EDeckVerbTypes.DRAW_FACE_UP} and ${EDeckVerbTypes.DRAW_
     type: EDeckVerbTypes.DRAW_FACE_UP,
   };
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       draft.decks.set(deck.entityId, deck);

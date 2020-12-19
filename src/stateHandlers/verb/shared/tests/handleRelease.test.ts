@@ -21,7 +21,7 @@ describe(`Handler for ${ESharedVerbTypes.RELEASE} verb`, () => {
   };
   card.grabbedBy = clientId;
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       draft.cards.set(card.entityId, card);

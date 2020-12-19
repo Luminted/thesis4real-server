@@ -14,7 +14,7 @@ describe(`Handler for ${ESharedVerbTypes.REMOVE} verb`, () => {
   } = mockClient1;
   const { entityId: deckEntityId } = deckEntityMock1;
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       draft.decks.set(deckEntityId, { ...deckEntityMock1 });

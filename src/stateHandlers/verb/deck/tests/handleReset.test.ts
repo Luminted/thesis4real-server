@@ -26,7 +26,7 @@ describe(`Handler for ${EDeckVerbTypes.RESET} verb`, () => {
     entityId: deckToReset.entityId,
   };
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       const client1Hand = tableHandler.createClientHand(client1Id);

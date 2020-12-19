@@ -15,7 +15,7 @@ describe(`Handler for ${ESharedVerbTypes.MOVE_TO} verb`, () => {
   const { entityId: cardEntityId } = cardEntityMock1;
   const { entityId: deckEntityId } = deckEntityMock1;
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       draft.cards.set(cardEntityId, { ...cardEntityMock1 });

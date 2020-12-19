@@ -23,7 +23,7 @@ describe(`Hander for ${ESharedVerbTypes.GRAB} verb`, () => {
     entityType: cardOnTable.entityType,
   };
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       draft.cards.set(cardOnTable.entityId, cardOnTable);

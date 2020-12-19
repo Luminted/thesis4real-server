@@ -30,7 +30,7 @@ describe(`Handler for ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     grabbedFrom: client1Id,
   };
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       const hand = tableHandler.createClientHand(client1Id);

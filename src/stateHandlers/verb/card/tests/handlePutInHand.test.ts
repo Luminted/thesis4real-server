@@ -26,7 +26,7 @@ describe(`Handler for ${ECardVerbTypes.PUT_IN_HAND} verb`, () => {
     faceUp: true,
   };
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       draft.cards.set(entityId, { ...cardEntityMock1 });

@@ -15,7 +15,7 @@ describe(`Handler for ${ESharedVerbTypes.MOVE} verb`, () => {
   } = mockClient1;
   const testedVerbType = ESharedVerbTypes.MOVE;
 
-  beforeEach("Setting up test data...", () => {
+  beforeEach(() => {
     gameStateStore.resetState();
     gameStateStore.changeState((draft) => {
       draft.cards.set(cardEntityMock1.entityId, { ...cardEntityMock1 });
