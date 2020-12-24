@@ -49,6 +49,8 @@ export class VerbHandler {
         return this.cardVerbHandler.reorderHand(verb);
       case ECardVerbTypes.ADD_CARD:
         return this.cardVerbHandler.addCard(verb);
+      default:
+        return;
     }
   }
 }
