@@ -39,5 +39,14 @@ describe("removeAndUpdateOrderings", () => {
       const expectedOrdering = [2, 0, 1];
       assert.deepEqual(newOrdering, expectedOrdering);
     });
+    it("remove all", () => {
+      const ordering = [2, 0, 1];
+      const indexesToRemove = [0, 1, 2];
+
+      const newOrdering = removeAndUpdateOrderings(ordering, indexesToRemove);
+
+      const expectedOrdering: number[] = [];
+      assert.deepEqual(newOrdering, expectedOrdering);
+    });
   });
 });

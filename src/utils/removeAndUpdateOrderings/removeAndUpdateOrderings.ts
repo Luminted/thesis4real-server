@@ -1,7 +1,8 @@
 export const removeAndUpdateOrderings = (ordering: number[], indexesToRemove: number[]) => {
   let ordersToRemove = ordering.filter((_, index) => indexesToRemove.includes(index));
   let updatedOrdering = ordering;
-  for (const orderToRemove of ordersToRemove) {
+  ordersToRemove.forEach((_, index) => {
+    const orderToRemove = ordersToRemove[index];
     updatedOrdering = updatedOrdering.reduce((acc, curr) => {
       if (curr === orderToRemove) {
         return acc;
@@ -19,6 +20,6 @@ export const removeAndUpdateOrderings = (ordering: number[], indexesToRemove: nu
 
       return [...acc, curr];
     }, []);
-  }
+  });
   return updatedOrdering;
 };
