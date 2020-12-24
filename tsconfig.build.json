@@ -1,5 +1,10 @@
 {
     "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noUnusedLocals": true,
+        "noImplicitAny": true,
+        "noUnusedParameters": true,
+    },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", ".vscode", "src/**/*.test.*"]
 }
