@@ -3,6 +3,7 @@ export interface ITestClientConfig {
     startDelay: number
     messageRate: number
     url: string
+    seatId: string
 }
 
 export interface IClientConfig extends ITestClientConfig {
@@ -14,12 +15,8 @@ export enum EClientType {
     TO_HAND_ADDER
 }
 
-export type TMessageTimestamp = {
-    id: number,
-    timestamp: number
-}
-
 export type TScenario = {
+    duration: number
     numberOfCards: number,
     clients: IClientConfig[]
 }

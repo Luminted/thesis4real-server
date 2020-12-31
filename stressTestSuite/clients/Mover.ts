@@ -1,5 +1,4 @@
-import { SerializedGameState } from "../../src/types/dataModelDefinitions";
-import { CardVerbTypes, IAddCardVerb, IGrabVerb, IMoveVerb, SharedVerbTypes } from "../../src/types/verb";
+import { TSerializedGameState, ECardVerbTypes, IAddCardVerb, IGrabVerb, IMoveVerb, ESharedVerbTypes, ETableClientEvents } from "../../src/typings";
 import { TestClient } from "./TestClient";
 import { ITestClientConfig } from "../typings";
 
@@ -13,7 +12,7 @@ export class Mover extends TestClient {
 
         this.main = () => {
             const addCardVerb: IAddCardVerb = {
-                type: CardVerbTypes.ADD_CARD,
+                type: ECardVerbTypes.ADD_CARD,
                 faceUp: true,
                 positionX: 500,
                 positionY: 500,
@@ -21,11 +20,15 @@ export class Mover extends TestClient {
                 metadata
             }
             
-            this.socket.emit("VERB", addCardVerb, (nextGameState: SerializedGameState) => {
-                const card = nextGameState.cards.find(card => card.grabbedBy === null);
-            
+            this.socket.emit(ETableClientEvents.VERB, this.client.clientId, addCardVerb, (err, nextGameState: TSerializedGameState, newCardId: string) => {
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    const card = nextGameState.cards.find(card => card.entityId === newCardId);
+                
                     const grabVerb: IGrabVerb = {
-                        type: SharedVerbTypes.GRAB,
+                        type: ESharedVerbTypes.GRAB,
                         clientId: this.client.clientId,
                         entityId: card.entityId,
                         entityType: card.entityType,
@@ -34,34 +37,41 @@ export class Mover extends TestClient {
                     }
             
                     const moveVerb1: IMoveVerb = {
-                        type: SharedVerbTypes.MOVE,
+                        type: ESharedVerbTypes.MOVE,
                         clientId: this.client.clientId,
                         positionX: 150,
                         positionY: 150
                     }
             
                     const moveVerb2: IMoveVerb = {
-                        type: SharedVerbTypes.MOVE,
+                        type: ESharedVerbTypes.MOVE,
                         clientId: this.client.clientId,
                         positionX: 4,
                         positionY: 4
                     }
             
-                    this.socket.emit("VERB", grabVerb);
-                    
-                    this.mainInterval = setInterval(() => {
-                        this.recordOutgoingMessageTimestamp();
-                        if(this.moveOtherWay){
-                            this.socket.emit("VERB", moveVerb1, () => {
-                              this.recordIncomingMessageTimestamp(); 
-                            });
-                        }else{
-                            this.socket.emit("VERB", moveVerb2, () => {
-                                this.recordIncomingMessageTimestamp();
-                            });
+                    this.socket.emit(ETableClientEvents.VERB, this.client.clientId, grabVerb, err => {
+                        if(!err){
+                            this.mainInterval = setInterval(() => {
+                                this.recordOutgoingMessageTimestamp();
+                                if(this.moveOtherWay){
+                                    this.socket.emit(ETableClientEvents.VERB, this.client.clientId, moveVerb1, () => {
+                                        this.recordIncomingMessageTimestamp(); 
+                                    });
+                                }else{
+                                    this.socket.emit(ETableClientEvents.VERB, this.client.clientId, moveVerb2, () => {
+                                        this.recordIncomingMessageTimestamp();
+                                    });
+                                }
+                                this.moveOtherWay = !this.moveOtherWay;
+                            }, this.messageRate);
                         }
-                        this.moveOtherWay = !this.moveOtherWay;
-                    }, this.messageRate);
+                        else{
+                            console.log(err);
+                        }
+                    });
+                    
+                }
             })
         }
     }

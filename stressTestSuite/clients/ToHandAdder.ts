@@ -1,5 +1,4 @@
-import { SerializedGameState } from "../../src/types/dataModelDefinitions";
-import { CardVerbTypes, IAddCardVerb, IGrabFromHandVerb, IGrabVerb, IPutInHandVerb, SharedVerbTypes } from "../../src/types/verb";
+import { TSerializedGameState, ECardVerbTypes, IAddCardVerb, IGrabFromHandVerb, IGrabVerb, IPutInHandVerb, ESharedVerbTypes, ETableClientEvents } from "../../src/typings";
 import {TestClient} from "./TestClient"
 import { ITestClientConfig } from "../typings";
 
@@ -12,7 +11,7 @@ export class ToHandAdder extends TestClient {
             const metadata = {name:"sk",type:"french"}
 
             const addCardVerb: IAddCardVerb = {
-                type: CardVerbTypes.ADD_CARD,
+                type: ECardVerbTypes.ADD_CARD,
                 faceUp: true,
                 positionX: 500,
                 positionY: 500,
@@ -20,15 +19,21 @@ export class ToHandAdder extends TestClient {
                 metadata
             }
 
-            this.socket.emit("VERB", addCardVerb, (nextGameState: SerializedGameState) => {
-                const card = nextGameState.cards.find(card => card.grabbedBy === null);
-            
+            this.socket.emit(ETableClientEvents.VERB, this.client.clientId, addCardVerb, (err, nextGameState: TSerializedGameState, newCardId: string) => {
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    const card = nextGameState.cards.find(card => card.entityId === newCardId);
+                
                     const putInHandVerb: IPutInHandVerb = {
                         clientId: this.client.clientId,
                         entityId: card.entityId,
-                        type: CardVerbTypes.PUT_IN_HAND
+                        type: ECardVerbTypes.PUT_IN_HAND,
+                        toHandOf: this.client.clientId,
+                        faceUp: true
                     }
-
+    
                     const grabFromHandVerb: IGrabFromHandVerb = {
                         clientId: this.client.clientId,
                         entityId: card.entityId,
@@ -37,25 +42,27 @@ export class ToHandAdder extends TestClient {
                         grabbedFrom: this.client.clientId,
                         positionX: 0,
                         positionY: 0,
-                        type: CardVerbTypes.GRAB_FROM_HAND
+                        type: ECardVerbTypes.GRAB_FROM_HAND,
+                        faceUp: true
                     }
-
+    
                     this.mainInterval = setInterval(() => {
                         this.recordOutgoingMessageTimestamp();
                         if(this.grabFromHand){
                             this.grabFromHand = !this.grabFromHand;
-                            this.socket.emit("VERB", grabFromHandVerb, () => {
+                            this.socket.emit(ETableClientEvents.VERB, this.client.clientId, grabFromHandVerb, () => {
                                 this.recordIncomingMessageTimestamp();
                             });
                         }
                         else{
                             this.grabFromHand = !this.grabFromHand;
-                            this.socket.emit("VERB", putInHandVerb, () => {
+                            this.socket.emit(ETableClientEvents.VERB, this.client.clientId, putInHandVerb, () => {
                                 this.recordIncomingMessageTimestamp();
                             })
                         }
-                    }, this.messageRate);
-                })
+                     }, this.messageRate);
+                }
+            })
         }
     }
 }
