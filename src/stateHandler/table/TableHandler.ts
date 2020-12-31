@@ -3,7 +3,7 @@ import { Inject } from "typescript-ioc";
 import { clientAlreadyConnectedMessage, clientAlreadyPresentMessage, seatTakenMessage, zIndexLimit } from "../../config";
 import { extractClientById, extractClientHandCardsById, extractClientsSeatById, extractSocketIdByClientId } from "../../extractors";
 import { GameStateStore, TableStateStore } from "../../store";
-import { EClientConnectionStatuses, TClient, TClientHand, TMaybeNull } from "../../typings";
+import { EClientConnectionStatuses, TClient, TClientHand, TClientInfo, TMaybeNull } from "../../typings";
 import { calcNextZIndex } from "../../utils";
 import { CardVerbHandler } from "../verb/card";
 
@@ -19,6 +19,7 @@ export class TableHandler {
     const { emptySeats } = this.tableStateStore.state;
     const clientId = generate();
     const presentClientId = this.tableStateStore.state.socketIdMapping[socketId];
+    let newClientInfo: TClientInfo;
 
     if (presentClientId) {
       throw new Error(clientAlreadyPresentMessage);
@@ -32,6 +33,7 @@ export class TableHandler {
       this.gameStateStore.changeState((draft) => {
         const newClient = this.createClient(clientId, requestedSeatId, name);
         const newHand = this.createClientHand(clientId);
+        newClientInfo = newClient.clientInfo;
 
         draft.clients.set(clientId, newClient);
         draft.hands.set(clientId, newHand);
@@ -39,6 +41,8 @@ export class TableHandler {
     } else {
       throw new Error(seatTakenMessage);
     }
+
+    return newClientInfo;
   }
 
   public rejoin(clientId: string, socketId: string) {

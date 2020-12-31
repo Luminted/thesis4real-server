@@ -8,8 +8,8 @@ export class SocketNamespace {
   public onConnect: (socket: SocketIO.Socket) => void | null = null;
   public nameSpace: Namespace;
 
-  public init(route: string, socket: Socket) {
-    const nameSpace = socket.addNamespace(route);
+  public init(name: string, socket: Socket) {
+    const nameSpace = socket.createNameSpace(name);
 
     nameSpace.on("connection", (clientSocket: SocketIO.Socket) => {
       if (this.onConnect !== null) {
@@ -23,7 +23,7 @@ export class SocketNamespace {
 
     this.nameSpace = nameSpace;
 
-    console.log(`socket namespace ${route} initiated`);
+    console.log(`socket namespace ${name} initiated`);
   }
 
   public addEventListener(name: string, handler: TSocketEventHandler) {

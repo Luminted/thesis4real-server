@@ -55,8 +55,8 @@ export type TClientHand = {
 
 export type TClientInfo = {
   clientId: string;
-  name?: string;
   seatId: string;
+  name?: string;
 };
 
 export type TGameState = {

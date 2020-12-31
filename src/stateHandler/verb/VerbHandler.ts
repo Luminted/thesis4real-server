@@ -1,4 +1,6 @@
 import { Inject, Singleton } from "typescript-ioc";
+import { extractClientById } from "../../extractors";
+import { GameStateStore } from "../../store";
 import { ECardVerbTypes, EDeckVerbTypes, ESharedVerbTypes, TVerb } from "../../typings";
 import { CardVerbHandler } from "./card";
 import { DeckVerbHandler } from "./deck";
@@ -12,8 +14,12 @@ export class VerbHandler {
   private cardVerbHandler: CardVerbHandler;
   @Inject
   private deckVerbHandler: DeckVerbHandler;
+  @Inject
+  private gameStateStore: GameStateStore;
 
-  public handleVerb(verb: TVerb) {
+  public handleVerb(clientId: string, verb: TVerb) {
+    extractClientById(this.gameStateStore.state, clientId);
+  
     switch (verb.type) {
       case ESharedVerbTypes.GRAB:
         return this.sharedVerbHandler.grabFromTable(verb);

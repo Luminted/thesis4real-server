@@ -3,8 +3,8 @@ import { Inject, Singleton } from "typescript-ioc";
 import { SocketNamespace } from "..";
 import { serverTick } from "../../config";
 import { ConnectionHandler, TableHandler, VerbHandler } from "../../stateHandler";
-import { GameStateStore, TableStateStore } from "../../store";
-import { ETableClientEvents, ETableServerEvents, TClientInfo, TGameState, TSerializedGameState, TVerb } from "../../typings";
+import { GameStateStore } from "../../store";
+import { ETableClientEvents, ETableServerEvents, TClientInfo, TMaybeNull, TSerializedGameState, TVerb } from "../../typings";
 import { getVerbErrorMessage } from "../../utils";
 
 @Singleton
@@ -17,29 +17,21 @@ export class TableNamespace extends SocketNamespace {
   private connectionHandler: ConnectionHandler;
   @Inject
   private gameStateStore: GameStateStore;
-  @Inject
-  private tableStateStore: TableStateStore;
-
-  private syncGameState = throttle((gameState: TGameState) => {
-    this.emit(ETableServerEvents.SYNC, this.serializeGameState(gameState));
-  }, serverTick);
 
   constructor() {
     super();
 
     this.onConnect = (socket) => {
-      socket.emit(ETableServerEvents.SYNC, this.serializeGameState(this.gameStateStore.state));
+      socket.emit(ETableServerEvents.SYNC, this.serializeGameState());
     };
 
     this.addEventListenerWithSocket(ETableClientEvents.REJOIN_TABLE, (socket) => (clientId: string, ackFunction?: (error: string) => void) => {
       const { id: socketId } = socket;
       let error;
-      console.log(clientId, " trying to rejoin");
 
       try {
         this.tableHandler.rejoin(clientId, socketId);
-        this.syncGameState(this.gameStateStore.state);
-        console.log(clientId, " rejoined");
+        this.syncGameState();
       } catch (e) {
         console.log(e.message, e.stack);
         error = e.message;
@@ -50,36 +42,15 @@ export class TableNamespace extends SocketNamespace {
       }
     });
 
-    this.addEventListener(ETableClientEvents.VERB, (verb: TVerb, ackFunction?: (error: string, gameState: TSerializedGameState, handlerReturnValue: any) => void) => {
-      let error: string;
-      let handlerReturnValue;
-
-      try {
-        handlerReturnValue = this.verbHandler.handleVerb(verb);
-        this.syncGameState(this.gameStateStore.state);
-      } catch (e) {
-        console.log(e.message, e.stack);
-        error = getVerbErrorMessage(verb.type, e.message);
-      }
-
-      if (typeof ackFunction === "function") {
-        ackFunction(error, this.serializeGameState(this.gameStateStore.state), handlerReturnValue);
-      }
-    });
-
-    this.addEventListenerWithSocket(
-      ETableClientEvents.JOIN_TABLE,
-      (socket) => (requestedSeatId: string, name?: string, ackFunction?: (error: string, clientInfo: TClientInfo) => void) => {
+    this.addEventListenerWithSocket(ETableClientEvents.JOIN_TABLE,
+      (socket) => (requestedSeatId: string, name?: string, ackFunction?: (error: TMaybeNull<string>, clientInfo: TClientInfo) => void) => {
         const { id } = socket;
         let error: string;
         let newClientInfo: TClientInfo;
 
         try {
-          this.tableHandler.joinTable(requestedSeatId, id, name);
-          const newClientId = this.tableStateStore.state.socketIdMapping[id];
-          newClientInfo = this.gameStateStore.state.clients.get(newClientId).clientInfo;
-          this.syncGameState(this.gameStateStore.state);
-          console.log(newClientId, " joined with name ", name);
+          newClientInfo = this.tableHandler.joinTable(requestedSeatId, id, name);
+          this.syncGameState();
         } catch (e) {
           console.log(e.message, e.stack);
 
@@ -92,12 +63,11 @@ export class TableNamespace extends SocketNamespace {
       },
     );
 
-    this.addEventListener(ETableClientEvents.LEAVE_TABLE, (clientId: string, ackFunction?: (error: string) => void) => {
+    this.addEventListener(ETableClientEvents.LEAVE_TABLE, (clientId: string, ackFunction?: (error: TMaybeNull<string>) => void) => {
       let error;
-
       try {
         this.tableHandler.leaveTable(clientId);
-        this.syncGameState(this.gameStateStore.state);
+        this.syncGameState();
       } catch (e) {
         console.log(e.message, e.stack);
         error = e.message;
@@ -113,24 +83,46 @@ export class TableNamespace extends SocketNamespace {
 
       try {
         this.connectionHandler.disconnect(id);
-        this.syncGameState(this.gameStateStore.state);
+        this.syncGameState();
       } catch (e) {
         console.log(e.message, e.stack);
       }
 
       console.log(`disconnection reason: ${reason}`);
     });
+
+    this.addEventListener(ETableClientEvents.VERB, (clientId: string, verb: TVerb, ackFunction?: (error: TMaybeNull<string>, gameState: TSerializedGameState, handlerReturnValue: any) => void) => {
+      let error: string;
+      let handlerReturnValue;
+
+      try {
+        handlerReturnValue = this.verbHandler.handleVerb(clientId, verb);
+        this.syncGameState();
+      } catch (e) {
+        console.log(e.message, e.stack);
+        error = getVerbErrorMessage(verb.type, e.message);
+      }
+
+      if (typeof ackFunction === "function") {
+        ackFunction(error, this.serializeGameState(), handlerReturnValue);
+      }
+    });
   }
 
-  private serializeGameState(gameState: TGameState): TSerializedGameState {
+  private syncGameState = throttle(() => {
+    this.emit(ETableServerEvents.SYNC, this.serializeGameState());
+  }, serverTick);
+
+  private serializeGameState(): TSerializedGameState {
+    const {cards, clients, decks, hands} = this.gameStateStore.state;
     return {
-      cards: [...gameState.cards.values()],
-      clients: [...gameState.clients.values()].map(({ clientInfo, status }) => ({
+      cards: [...cards.values()],
+      clients: [...clients.values()].map(({ clientInfo, status }) => ({
         clientInfo,
         status,
       })),
-      hands: [...gameState.hands.values()],
-      decks: [...gameState.decks.values()].map(({ cards: _, ...rest }) => ({
+      hands: [...hands.values()],
+      decks: [...decks.values()].map(({ cards: _, ...rest }) => ({
         ...rest,
       })),
     };

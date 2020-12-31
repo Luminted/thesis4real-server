@@ -11,7 +11,7 @@ export enum ESharedVerbTypes {
 }
 
 /**
- * @entityType used for lookup
+ * @entityType used for finding entity
  */
 interface ISharedVerb extends IGenericVerb {
   entityType: EEntityTypes;

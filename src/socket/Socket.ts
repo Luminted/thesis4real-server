@@ -10,14 +10,9 @@ export class Socket {
     this.socket = SocketIO();
 
     tableNameSpace.init("table", this);
-    console.log("Socket initiated");
   }
 
-  public emit(name: string, ...args: any) {
-    this.socket.emit(name, ...args);
-  }
-
-  public addNamespace(name: string) {
+  public createNameSpace(name: string) {
     return this.socket.of(name);
   }
 

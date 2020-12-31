@@ -70,13 +70,16 @@ export class CardVerbHandler {
 
   public addCard(verb: IAddCardVerb) {
     const { faceUp, positionX, positionY, rotation, metadata } = verb;
+    const newCardEntityId = uuid();
 
     this.gameStateStore.changeState((draft) => {
       const nextZIndex = calcNextZIndex(draft, zIndexLimit);
-      const newCard = this.createCardEntity(positionX, positionY, faceUp, uuid(), null, nextZIndex, rotation, null, metadata);
+      const newCard = this.createCardEntity(positionX, positionY, faceUp, newCardEntityId, null, nextZIndex, rotation, null, metadata);
 
       draft.cards.set(newCard.entityId, newCard);
     });
+
+    return newCardEntityId;
   }
 
   public reorderHand(verb: IReorderHandVerb) {

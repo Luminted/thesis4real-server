@@ -2,7 +2,6 @@ export enum ETableClientEvents {
   // built in events
   CONNECT = "connect",
   DISCONNECT = "disconnect",
-  RECONNECT = "reconnect",
 
   JOIN_TABLE = "JOIN_TABLE",
   REJOIN_TABLE = "REJOIN_TABLE",
@@ -11,6 +10,7 @@ export enum ETableClientEvents {
 }
 
 export enum ETableServerEvents {
+  CONNECT = "connect",
   SYNC = "SYNC",
 }
 
