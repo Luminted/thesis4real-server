@@ -19,7 +19,7 @@
   "dependencies": {
     "@pacote/shuffle": "^1.0.6",
     "hashmap": "^2.4.0",
-    "immer": "^6.0.5",
+    "immer": "^8.0.1",
     "immutable": "^4.0.0-rc.12",
     "install": "^0.13.0",
     "lodash.throttle": "^4.1.1",
