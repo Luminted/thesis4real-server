@@ -5,8 +5,8 @@ import { ITestClientConfig } from "../typings";
 export class Mover extends TestClient {
     private moveOtherWay = false;
 
-    constructor(config: ITestClientConfig){
-        super(config);
+    constructor(config: ITestClientConfig, url: string){
+        super(config, url);
 
         const metadata = {name:"sk",type:"french"}
 
@@ -14,8 +14,8 @@ export class Mover extends TestClient {
             const addCardVerb: IAddCardVerb = {
                 type: ECardVerbTypes.ADD_CARD,
                 faceUp: true,
-                positionX: 500,
-                positionY: 500,
+                positionX: 500 + Math.random() * 10000,
+                positionY: 500 + Math.random() * 10000,
                 rotation: 0,
                 metadata
             }
@@ -56,11 +56,11 @@ export class Mover extends TestClient {
                                 this.recordOutgoingMessageTimestamp();
                                 if(this.moveOtherWay){
                                     this.socket.emit(ETableClientEvents.VERB, this.client.clientId, moveVerb1, () => {
-                                        this.recordIncomingMessageTimestamp(); 
+                                        if(this.isProbe) this.recordIncomingMessageTimestamp(); 
                                     });
                                 }else{
                                     this.socket.emit(ETableClientEvents.VERB, this.client.clientId, moveVerb2, () => {
-                                        this.recordIncomingMessageTimestamp();
+                                        if(this.isProbe) this.recordIncomingMessageTimestamp();
                                     });
                                 }
                                 this.moveOtherWay = !this.moveOtherWay;

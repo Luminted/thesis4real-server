@@ -1,14 +1,14 @@
-import { TSerializedGameState, ECardVerbTypes, IAddCardVerb, IGrabFromHandVerb, IGrabVerb, IPutInHandVerb, ESharedVerbTypes, ETableClientEvents } from "../../src/typings";
+import { TSerializedGameState, ECardVerbTypes, IAddCardVerb, IGrabFromHandVerb, IPutInHandVerb, ETableClientEvents } from "../../src/typings";
 import {TestClient} from "./TestClient"
-import { ITestClientConfig } from "../typings";
+import { ICardEntityMetadata, ITestClientConfig } from "../typings";
 
 export class ToHandAdder extends TestClient {
     private grabFromHand = false;
-    constructor(config: ITestClientConfig){
-        super(config);
+    constructor(config: ITestClientConfig, url: string){
+        super(config, url);
 
         this.main = () => {
-            const metadata = {name:"sk",type:"french"}
+            const metadata: ICardEntityMetadata = {name:"sk",type:"french", back: "bcb"}
 
             const addCardVerb: IAddCardVerb = {
                 type: ECardVerbTypes.ADD_CARD,
@@ -51,13 +51,15 @@ export class ToHandAdder extends TestClient {
                         if(this.grabFromHand){
                             this.grabFromHand = !this.grabFromHand;
                             this.socket.emit(ETableClientEvents.VERB, this.client.clientId, grabFromHandVerb, () => {
-                                this.recordIncomingMessageTimestamp();
+                                // console.log(err)
+                                if(this.isProbe) this.recordIncomingMessageTimestamp();
                             });
                         }
                         else{
                             this.grabFromHand = !this.grabFromHand;
-                            this.socket.emit(ETableClientEvents.VERB, this.client.clientId, putInHandVerb, () => {
-                                this.recordIncomingMessageTimestamp();
+                            this.socket.emit(ETableClientEvents.VERB, this.client.clientId, putInHandVerb, (err) => {
+                                // console.log(err)
+                                if(this.isProbe) this.recordIncomingMessageTimestamp();
                             })
                         }
                      }, this.messageRate);

@@ -2,8 +2,8 @@ export interface ITestClientConfig {
     duration: number
     startDelay: number
     messageRate: number
-    url: string
     seatId: string
+    isProbe?: boolean
 }
 
 export interface IClientConfig extends ITestClientConfig {
@@ -20,3 +20,12 @@ export type TScenario = {
     numberOfCards: number,
     clients: IClientConfig[]
 }
+
+export interface IEntityMetadata {
+    name: string;
+    type: string;
+  }
+  
+  export interface ICardEntityMetadata extends IEntityMetadata {
+    back: string;
+  }

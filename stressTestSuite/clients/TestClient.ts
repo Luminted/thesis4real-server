@@ -4,6 +4,8 @@ import { ITestClientConfig } from '../typings';
 
 export class TestClient {
 
+    public isProbe: boolean;
+
     protected incomingMessageTimestamps: {[key in number]: number};
     protected outgoingMessageTimestamps: {[key in number]: number};
     protected duration: number;
@@ -22,7 +24,7 @@ export class TestClient {
     private incomingMessageId = 1;
     private outgoingMessageId = 1;
 
-    constructor({duration, messageRate, startDelay, url, seatId}: ITestClientConfig){
+    constructor({duration, messageRate, startDelay, seatId, isProbe}: ITestClientConfig, url: string){
         this.duration = duration;
         this.startDelay = startDelay;
         this.messageRate = messageRate;
@@ -31,6 +33,7 @@ export class TestClient {
         this.incomingMessageTimestamps = {};
         this.outgoingMessageTimestamps = {};
         this.collectedResponses = [];
+        this.isProbe = !!isProbe;
     }
 
     start(){
@@ -41,6 +44,7 @@ export class TestClient {
                     if(!err){
                         this.client = clientInfo;
                         this.main();
+                        console.log("start delay ended ", this.startDelay);
                     }
                     else{
                         console.log(err);
