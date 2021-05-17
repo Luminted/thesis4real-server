@@ -1,7 +1,7 @@
 import { EClientType, TScenario } from "../typings";
 
 export const config = {
-    duration : 300000,
+    duration : 360000,
     messageRate : 1000/60
 }
 
