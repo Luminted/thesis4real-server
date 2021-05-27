@@ -1,6 +1,7 @@
 import { generate } from "short-uuid";
 import { Inject } from "typescript-ioc";
 import { clientAlreadyConnectedMessage, clientAlreadyPresentMessage, seatTakenMessage, zIndexLimit } from "../../config";
+import { StateHandlerError } from "../../errors";
 import { extractClientById, extractClientHandCardsById, extractClientsSeatById, extractSocketIdByClientId } from "../../extractors";
 import { GameStateStore, TableStateStore } from "../../store";
 import { EClientConnectionStatuses, TClient, TClientHand, TClientInfo, TMaybeNull } from "../../typings";
@@ -22,7 +23,7 @@ export class TableHandler {
     let newClientInfo: TClientInfo;
 
     if (presentClientId) {
-      throw new Error(clientAlreadyPresentMessage);
+      throw new StateHandlerError(clientAlreadyPresentMessage);
     }
 
     if (emptySeats.includes(requestedSeatId)) {
@@ -39,7 +40,7 @@ export class TableHandler {
         draft.hands.set(clientId, newHand);
       });
     } else {
-      throw new Error(seatTakenMessage);
+      throw new StateHandlerError(seatTakenMessage);
     }
 
     return newClientInfo;
@@ -51,7 +52,7 @@ export class TableHandler {
       if (client.status === EClientConnectionStatuses.DISCONNECTED) {
         client.status = EClientConnectionStatuses.CONNECTED;
       } else {
-        throw new Error(clientAlreadyConnectedMessage);
+        throw new StateHandlerError(clientAlreadyConnectedMessage);
       }
     });
 

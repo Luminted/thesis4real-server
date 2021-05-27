@@ -1,4 +1,5 @@
 import { cardNotFoundMessage, clientNotFoundMessage, deckNotFoundMessage, entityNotFoundMessage, handCardNotFoundMessage, handNotFoundMessage } from "../config";
+import { ExtractorError } from "../errors";
 import { EEntityTypes, TGameState } from "../typings";
 
 export const extractClientById = (state: TGameState, clientId: string) => {
@@ -7,7 +8,7 @@ export const extractClientById = (state: TGameState, clientId: string) => {
     return client;
   }
 
-  throw new Error(clientNotFoundMessage);
+  throw new ExtractorError(clientNotFoundMessage);
 };
 
 export const extractGrabbedEntityOfClientById = (state: TGameState, clientId: string) => {
@@ -20,7 +21,7 @@ export const extractCardById = (state: TGameState, entityId: string) => {
     return card;
   }
 
-  throw new Error(cardNotFoundMessage);
+  throw new ExtractorError(cardNotFoundMessage);
 };
 
 export const extractDeckById = (state: TGameState, entityId: string) => {
@@ -29,7 +30,7 @@ export const extractDeckById = (state: TGameState, entityId: string) => {
     return deck;
   }
 
-  throw new Error(deckNotFoundMessage);
+  throw new ExtractorError(deckNotFoundMessage);
 };
 
 export const extractEntityByTypeAndId = (state: TGameState, entityType: EEntityTypes, entityId: string) => {
@@ -39,7 +40,7 @@ export const extractEntityByTypeAndId = (state: TGameState, entityType: EEntityT
   if (entityType === EEntityTypes.DECK) {
     return extractDeckById(state, entityId);
   }
-  throw new Error(entityNotFoundMessage);
+  throw new ExtractorError(entityNotFoundMessage);
 };
 
 export const extractClientHandById = (state: TGameState, clientId: string) => {
@@ -48,7 +49,7 @@ export const extractClientHandById = (state: TGameState, clientId: string) => {
     return hand;
   }
 
-  throw new Error(handNotFoundMessage);
+  throw new ExtractorError(handNotFoundMessage);
 };
 
 export const extractCardFromClientHandById = (state: TGameState, clientId: string, entityId: string) => {
@@ -59,7 +60,7 @@ export const extractCardFromClientHandById = (state: TGameState, clientId: strin
     return extractedCard;
   }
 
-  throw new Error(handCardNotFoundMessage);
+  throw new ExtractorError(handCardNotFoundMessage);
 };
 
 export const extractClientHandCardsById = (state: TGameState, clientId: string) => {

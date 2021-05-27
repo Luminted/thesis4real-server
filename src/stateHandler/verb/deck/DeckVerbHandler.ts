@@ -3,6 +3,7 @@ import { original } from "immer";
 import { uuid } from "short-uuid";
 import { Inject, Singleton } from "typescript-ioc";
 import { emptyDeckMessage, zIndexLimit } from "../../../config";
+import { StateHandlerError } from "../../../errors";
 import { extractClientHandById, extractDeckById } from "../../../extractors";
 import { GameStateStore } from "../../../store";
 import { EEntityTypes, IAddDeckVerb, IDeckEntity, IDrawFaceDownVerb, IDrawFaceUpVerb, IResetVerb, IShuffleVerb } from "../../../typings";
@@ -130,7 +131,7 @@ export class DeckVerbHandler {
     const topCard = cards[deck.drawIndex];
 
     if (!topCard) {
-      throw new Error(emptyDeckMessage);
+      throw new StateHandlerError(emptyDeckMessage);
     }
 
     return topCard;

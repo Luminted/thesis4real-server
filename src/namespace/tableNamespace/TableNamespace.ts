@@ -2,6 +2,7 @@ import throttle from "lodash.throttle";
 import { Inject, Singleton } from "typescript-ioc";
 import { SocketNamespace } from "..";
 import { serverTick } from "../../config";
+import { EErrorTypes } from "../../errors";
 import { ConnectionHandler, TableHandler, VerbHandler } from "../../stateHandler";
 import { GameStateStore } from "../../store";
 import { ETableClientEvents, ETableServerEvents, TClientInfo, TMaybeNull, TSerializedGameState, TVerb } from "../../typings";
@@ -17,6 +18,10 @@ export class TableNamespace extends SocketNamespace {
   private connectionHandler: ConnectionHandler;
   @Inject
   private gameStateStore: GameStateStore;
+
+  private syncGameState = throttle(() => {
+    this.emit(ETableServerEvents.SYNC, this.serializeGameState());
+  }, serverTick);
 
   constructor() {
     super();
@@ -42,7 +47,8 @@ export class TableNamespace extends SocketNamespace {
       }
     });
 
-    this.addEventListenerWithSocket(ETableClientEvents.JOIN_TABLE,
+    this.addEventListenerWithSocket(
+      ETableClientEvents.JOIN_TABLE,
       (socket) => (requestedSeatId: string, name?: string, ackFunction?: (error: TMaybeNull<string>, clientInfo: TClientInfo) => void) => {
         const { id } = socket;
         let error: string;
@@ -91,30 +97,29 @@ export class TableNamespace extends SocketNamespace {
       console.log(`disconnection reason: ${reason}`);
     });
 
-    this.addEventListener(ETableClientEvents.VERB, (clientId: string, verb: TVerb, ackFunction?: (error: TMaybeNull<string>, gameState: TSerializedGameState, handlerReturnValue: any) => void) => {
-      let error: string;
-      let handlerReturnValue;
+    this.addEventListener(
+      ETableClientEvents.VERB,
+      (clientId: string, verb: TVerb, ackFunction?: (error: TMaybeNull<string>, gameState: TSerializedGameState, handlerReturnValue: any) => void) => {
+        let error: string;
+        let handlerReturnValue;
 
-      try {
-        handlerReturnValue = this.verbHandler.handleVerb(clientId, verb);
-        this.syncGameState();
-      } catch (e) {
-        console.log(e.message, e.stack);
-        error = getVerbErrorMessage(verb.type, e.message);
-      }
+        try {
+          handlerReturnValue = this.verbHandler.handleVerb(clientId, verb);
+          this.syncGameState();
+        } catch (e) {
+          console.log(e.message, e.stack);
+          error = e.name === EErrorTypes.ExtractorError || e.name === EErrorTypes.StateHandlerError ? getVerbErrorMessage(verb.type, e.message) : e.message;
+        }
 
-      if (typeof ackFunction === "function") {
-        ackFunction(error, this.serializeGameState(), handlerReturnValue);
-      }
-    });
+        if (typeof ackFunction === "function") {
+          ackFunction(error, this.serializeGameState(), handlerReturnValue);
+        }
+      },
+    );
   }
 
-  private syncGameState = throttle(() => {
-    this.emit(ETableServerEvents.SYNC, this.serializeGameState());
-  }, serverTick);
-
   private serializeGameState(): TSerializedGameState {
-    const {cards, clients, decks, hands} = this.gameStateStore.state;
+    const { cards, clients, decks, hands } = this.gameStateStore.state;
     return {
       cards: [...cards.values()],
       clients: [...clients.values()].map(({ clientInfo, status }) => ({

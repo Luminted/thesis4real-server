@@ -1,4 +1,5 @@
 import { entryNotFoundMessage } from "../config";
+import { ExtractorError } from "../errors";
 import { TCardTable } from "../typings";
 
 export const extractEmptySeats = (state: TCardTable) => {
@@ -11,7 +12,7 @@ export const extractClientIdBySocketId = (state: TCardTable, socketId: string) =
     return clientId;
   }
 
-  throw new Error(entryNotFoundMessage);
+  throw new ExtractorError(entryNotFoundMessage);
 };
 
 export const extractSocketIdByClientId = (state: TCardTable, clientId: string) => {
@@ -28,5 +29,5 @@ export const extractSocketIdByClientId = (state: TCardTable, clientId: string) =
     return socketId;
   }
 
-  throw new Error(entryNotFoundMessage);
+  throw new ExtractorError(entryNotFoundMessage);
 };
