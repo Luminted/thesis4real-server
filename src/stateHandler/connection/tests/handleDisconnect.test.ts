@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../errors";
 import { extractClientById } from "../../../extractors";
 import { mockClient1 } from "../../../mocks";
 import { GameStateStore, TableStateStore } from "../../../store";
@@ -30,5 +31,11 @@ describe(`Handler for ${ETableClientEvents.DISCONNECT}`, () => {
 
     const disconnectedClinet = extractClientById(gameStateStore.state, clientId);
     assert.equal(disconnectedClinet.status, EClientConnectionStatuses.DISCONNECTED);
+  });
+
+  it("should throw ExtractorError if socket connection does not exist", () => {
+    assert.throws(() => connectionHandler.disconnect(null), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

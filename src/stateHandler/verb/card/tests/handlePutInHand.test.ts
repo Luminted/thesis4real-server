@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractCardById, extractCardFromClientHandById, extractClientHandById, extractGrabbedEntityOfClientById } from "../../../../extractors";
 import { cardEntityMock1, handCardMock1, mockClient1, mockClient2 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -76,5 +77,44 @@ describe(`Handler for ${ECardVerbTypes.PUT_IN_HAND} verb`, () => {
     const { ordering } = extractClientHandById(gameStateStore.state, clientId2);
     const expectedOrdering = [1, 0, 2];
     assert.deepEqual(ordering, expectedOrdering);
+  });
+  it("should throw ExtractorError if client does not exist", () => {
+    const verb: IPutInHandVerb = {
+      entityId,
+      clientId: "nonExistentClientId",
+      toHandOf: clientId2,
+      type: ECardVerbTypes.PUT_IN_HAND,
+      faceUp: true,
+    };
+
+    assert.throws(() => cardVerbHandler.putInHand(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
+  });
+  it("should throw ExtractorError if card does not exist", () => {
+    const verb: IPutInHandVerb = {
+      entityId: "nonExistentCardId",
+      clientId: clientId1,
+      toHandOf: clientId2,
+      type: ECardVerbTypes.PUT_IN_HAND,
+      faceUp: true,
+    };
+
+    assert.throws(() => cardVerbHandler.putInHand(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
+  });
+  it("should throw ExtractorError if client hand does not exist", () => {
+    const verb: IPutInHandVerb = {
+      entityId,
+      clientId: clientId1,
+      toHandOf: "nonExistentClientId",
+      type: ECardVerbTypes.PUT_IN_HAND,
+      faceUp: true,
+    };
+
+    assert.throws(() => cardVerbHandler.putInHand(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

@@ -1,9 +1,10 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractEntityByTypeAndId, extractGrabbedEntityOfClientById } from "../../../../extractors";
 import { cardEntityMock1, mockClient1 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
-import { EEntityTypes, ESharedVerbTypes, IReleaseVerb } from "../../../../typings";
+import { ESharedVerbTypes, IReleaseVerb } from "../../../../typings";
 import { SharedVerbHandler } from "../SharedVerbHandler";
 
 describe(`Handler for ${ESharedVerbTypes.RELEASE} verb`, () => {
@@ -42,5 +43,29 @@ describe(`Handler for ${ESharedVerbTypes.RELEASE} verb`, () => {
 
     const releasedEntity = extractEntityByTypeAndId(gameStateStore.state, entityType, entityId);
     assert.equal(releasedEntity.grabbedBy, null);
+  });
+  it("should throw ExtractorError if entity does not exist", () => {
+    const verb: IReleaseVerb = {
+      clientId,
+      type: ESharedVerbTypes.RELEASE,
+      entityId: "nonExistingEntityId",
+      entityType: card.entityType,
+    };
+
+    assert.throws(() => sharedVerbHandler.release(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
+  });
+  it("should throw ExtractorError if client does not exist", () => {
+    const verb: IReleaseVerb = {
+      clientId: "nonExistingClientId",
+      type: ESharedVerbTypes.RELEASE,
+      entityId: card.entityId,
+      entityType: card.entityType,
+    };
+
+    assert.throws(() => sharedVerbHandler.release(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractDeckById } from "../../../../extractors";
 import { deckEntityMock1 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -34,6 +35,17 @@ describe(`Handler for ${EDeckVerbTypes.SHUFFLE} verb`, () => {
     const shuffledDeck = extractDeckById(gameStateStore.state, entityId);
     intactPart.forEach((card, index) => {
       assert.equal(card.entityId, shuffledDeck.cards[index].entityId);
+    });
+  });
+
+  it("should throw ExtractorError if deck does not exist", () => {
+    const verb: IShuffleVerb = {
+      entityId: "nonExistentDeckId",
+      type: EDeckVerbTypes.SHUFFLE,
+    };
+
+    assert.throws(() => deckVerbHandler.shuffle(verb), {
+      name: EErrorTypes.ExtractorError,
     });
   });
 });

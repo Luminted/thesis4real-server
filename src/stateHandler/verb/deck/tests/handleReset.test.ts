@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractClientHandById, extractDeckById } from "../../../../extractors";
 import { cardEntityMock1, cardEntityMock2, deckEntityMock1, handCardMock1, handCardMock2, mockClient1, mockClient2 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -110,5 +111,15 @@ describe(`Handler for ${EDeckVerbTypes.RESET} verb`, () => {
     const expectedOrdering = [1, 0];
     const { ordering } = extractClientHandById(gameStateStore.state, client1Id);
     assert.deepEqual(ordering, expectedOrdering);
+  });
+  it("should throw ExtractorError if deck does not exist", () => {
+    const verb: IResetVerb = {
+      type: verbType,
+      entityId: "nonExistentDeckId",
+    };
+
+    assert.throws(() => deckVerbHandler.reset(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

@@ -19,7 +19,7 @@ export class VerbHandler {
 
   public handleVerb(clientId: string, verb: TVerb) {
     extractClientById(this.gameStateStore.state, clientId);
-  
+
     switch (verb.type) {
       case ESharedVerbTypes.GRAB:
         return this.sharedVerbHandler.grabFromTable(verb);

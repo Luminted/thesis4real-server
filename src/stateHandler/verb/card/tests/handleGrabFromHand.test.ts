@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractCardById, extractClientById, extractClientHandById } from "../../../../extractors";
 import { handCardMock1, handCardMock2, mockClient1, mockClient2 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -112,5 +113,57 @@ describe(`Handler for ${ECardVerbTypes.GRAB_FROM_HAND} verb`, () => {
     const grabbedCard = extractCardById(gameStateStore.state, verb.entityId);
 
     assert.equal(grabbedCard.zIndex, 1);
+  });
+
+  it("should throw ExtractorError if client does not exist", () => {
+    const verb: IGrabFromHandVerb = {
+      entityId,
+      clientId: "nonExistentClientId",
+      faceUp: false,
+      type: ECardVerbTypes.GRAB_FROM_HAND,
+      positionX: 0,
+      positionY: 0,
+      grabbedAtX: 14,
+      grabbedAtY: 15,
+      grabbedFrom: client1Id,
+    };
+
+    assert.throws(() => cardVerbHandler.grabFromHand(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
+  });
+  it("should throw ExtractorError if card does not exist", () => {
+    const verb: IGrabFromHandVerb = {
+      entityId: "nonExistentCardId",
+      clientId: client2Id,
+      faceUp: false,
+      type: ECardVerbTypes.GRAB_FROM_HAND,
+      positionX: 0,
+      positionY: 0,
+      grabbedAtX: 14,
+      grabbedAtY: 15,
+      grabbedFrom: client1Id,
+    };
+
+    assert.throws(() => cardVerbHandler.grabFromHand(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
+  });
+  it("should throw ExtractorError if client hand does not exist", () => {
+    const verb: IGrabFromHandVerb = {
+      entityId,
+      clientId: client2Id,
+      faceUp: false,
+      type: ECardVerbTypes.GRAB_FROM_HAND,
+      positionX: 0,
+      positionY: 0,
+      grabbedAtX: 14,
+      grabbedAtY: 15,
+      grabbedFrom: "nonExistentClientId",
+    };
+
+    assert.throws(() => cardVerbHandler.grabFromHand(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

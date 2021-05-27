@@ -1,10 +1,12 @@
 import assert from "assert";
 import cloneDeep from "lodash.clonedeep";
 import { Container } from "typescript-ioc";
+import { cardNotFoundMessage } from "../../../../config";
+import { EErrorTypes } from "../../../../errors";
 import { extractCardById, extractEntityByTypeAndId, extractGrabbedEntityOfClientById } from "../../../../extractors";
 import { cardEntityMock1, cardEntityMock2, mockClient1, mockClient2 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
-import { ESharedVerbTypes, IGrabVerb } from "../../../../typings";
+import { EEntityTypes, ESharedVerbTypes, IGrabVerb } from "../../../../typings";
 import { SharedVerbHandler } from "../SharedVerbHandler";
 
 describe(`Hander for ${ESharedVerbTypes.GRAB} verb`, () => {
@@ -82,5 +84,34 @@ describe(`Hander for ${ESharedVerbTypes.GRAB} verb`, () => {
     const bumpedZindex = gameStateStore.state.topZIndex;
     assert.equal(grabbedCard.zIndex, originalTopZIndex + 1);
     assert.equal(bumpedZindex, originalTopZIndex + 1);
+  });
+  it("should throw ExtractorError if entity does not exist", () => {
+    const verb: IGrabVerb = {
+      clientId,
+      type: ESharedVerbTypes.GRAB,
+      positionX: 0,
+      positionY: 1,
+      entityId: "nonExistingEntityId",
+      entityType: EEntityTypes.CARD,
+    };
+
+    assert.throws(() => sharedVerbHandler.grabFromTable(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
+  });
+
+  it("should throw an ExtractorError if client does not exist", () => {
+    const verb: IGrabVerb = {
+      clientId: "nonExistingClientId",
+      type: ESharedVerbTypes.GRAB,
+      positionX: 0,
+      positionY: 1,
+      entityId: cardOnTable.entityId,
+      entityType: cardOnTable.entityType,
+    };
+
+    assert.throws(() => sharedVerbHandler.grabFromTable(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

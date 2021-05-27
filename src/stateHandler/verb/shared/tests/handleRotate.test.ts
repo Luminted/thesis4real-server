@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractCardById } from "../../../../extractors";
 import { cardEntityMock1, mockClient1 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -34,5 +35,18 @@ describe(`Handler for ${ESharedVerbTypes.ROTATE} verb`, () => {
     const card = extractCardById(gameStateStore.state, entityId);
 
     assert.equal(card.rotation, cardEntityMock1.rotation + verb.angle);
+  });
+
+  it("should thorw ExtractorError if entity does not exist", () => {
+    const verb: IRotateVerb = {
+      entityType,
+      entityId: "nonExistendEntityId",
+      type: ESharedVerbTypes.ROTATE,
+      angle: 12,
+    };
+
+    assert.throws(() => sharedVerbHandler.rotate(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

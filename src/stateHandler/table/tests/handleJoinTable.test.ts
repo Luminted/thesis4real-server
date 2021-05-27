@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../errors";
 import { extractClientById, extractClientHandById, extractClientIdBySocketId } from "../../../extractors";
 import { GameStateStore, TableStateStore } from "../../../store";
 import { EClientConnectionStatuses, ETableClientEvents } from "../../../typings";
@@ -52,12 +53,14 @@ describe(`Handler for ${ETableClientEvents.JOIN_TABLE}`, () => {
     } = extractClientById(gameStateStore.state, clientId);
     assert(name, givenName);
   });
-  it("should throw error if requested seat is not empty", () => {
+  it("should throw ExtractorError if requested seat is not empty", () => {
     tableStateStore.changeState((draft) => {
       draft.emptySeats = draft.emptySeats.filter((seatId) => seatId !== requestedSeatId);
     });
 
-    assert.throws(() => tableHandler.joinTable(requestedSeatId, socketId));
+    assert.throws(() => tableHandler.joinTable(requestedSeatId, socketId), {
+      name: EErrorTypes.StateHandlerError,
+    });
   });
   it("should remove assigned seat from empty seats", () => {
     tableHandler.joinTable(requestedSeatId, socketId);
@@ -75,12 +78,14 @@ describe(`Handler for ${ETableClientEvents.JOIN_TABLE}`, () => {
     const createdClient = extractClientById(gameStateStore.state, clientId);
     assert.equal(createdClient.status, EClientConnectionStatuses.CONNECTED);
   });
-  it("should throw error if cient is already present", () => {
+  it("should throw StateHandlerError if cient is already present", () => {
     tableStateStore.changeState((draft) => {
       draft.socketIdMapping[socketId] = "client-1";
     });
 
-    assert.throws(() => tableHandler.joinTable(requestedSeatId, socketId));
+    assert.throws(() => tableHandler.joinTable(requestedSeatId, socketId), {
+      name: EErrorTypes.StateHandlerError,
+    });
   });
   it("should map clients socket ID to client ID", () => {
     tableHandler.joinTable(requestedSeatId, socketId);

@@ -1,6 +1,7 @@
 import assert from "assert";
 import cloneDeep from "lodash.clonedeep";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractCardById, extractDeckById } from "../../../../extractors";
 import { deckEntityMock1, mockClient1 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -77,11 +78,23 @@ describe(`Handlers for ${EDeckVerbTypes.DRAW_FACE_UP} and ${EDeckVerbTypes.DRAW_
 
     assert.equal(card.rotation, rotation);
   });
-  it("should throw error if deck is empty", () => {
+  it("should throw StateHandlerError if deck is empty", () => {
     gameStateStore.changeState((draft) => {
       draft.decks.set(entityId, { ...deckEntityMock1, cards: [], drawIndex: 0, numberOfCards: 0 });
     });
 
-    assert.throws(() => deckVerbHandler.drawCard(verb, true));
+    assert.throws(() => deckVerbHandler.drawCard(verb, true), {
+      name: EErrorTypes.StateHandlerError,
+    });
+  });
+  it("should throw ExtractorError if deck does not exist", () => {
+    const verb: IDrawFaceUpVerb = {
+      entityId: "nonExistentDeckId",
+      type: EDeckVerbTypes.DRAW_FACE_UP,
+    };
+
+    assert.throws(() => deckVerbHandler.drawCard(verb, true), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

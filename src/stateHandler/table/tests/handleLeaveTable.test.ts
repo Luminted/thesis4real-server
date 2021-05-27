@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../errors";
 import { extractCardById, extractClientIdBySocketId } from "../../../extractors";
 import { cardEntityMock1, handCardMock1, handCardMock2, mockClient1 } from "../../../mocks";
 import { GameStateStore, TableStateStore } from "../../../store";
@@ -45,7 +46,7 @@ describe(`Handler for ${ETableClientEvents.LEAVE_TABLE}`, () => {
     const removedHand = gameStateStore.state.hands.get(clientId);
     assert.equal(removedHand, undefined);
   });
-  it("should put cards in clients hand on table at default point", () => {
+  it("should put cards from clients hand on table at default point", () => {
     tableHandler.leaveTable(clientId);
 
     const gameState = gameStateStore.state;
@@ -88,5 +89,10 @@ describe(`Handler for ${ETableClientEvents.LEAVE_TABLE}`, () => {
     tableHandler.leaveTable(clientId);
 
     assert.throws(() => extractClientIdBySocketId(tableStateStore.state, socketId));
+  });
+  it("should throw ExtractorError if client does not exist", () => {
+    assert.throws(() => tableHandler.leaveTable(null), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

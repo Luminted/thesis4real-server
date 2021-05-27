@@ -1,6 +1,7 @@
 import assert from "assert";
 import cloneDeep from "lodash.clonedeep";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractCardById, extractClientById } from "../../../../extractors";
 import { cardEntityMock1, mockClient1 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -98,7 +99,7 @@ describe(`Handler for ${ESharedVerbTypes.MOVE} verb`, () => {
     assert.equal(movedCard.positionX, cardEntityMock1.positionX + verb.positionX - grabbedAt.x);
     assert.equal(movedCard.positionY, cardEntityMock1.positionY + verb.positionY - grabbedAt.y);
   });
-  it("should ignore input if the entityId in the input is null", () => {
+  it("should ignore verb if grabbedEntity of client is null", () => {
     const originalState = cloneDeep(gameStateStore.state);
     const verb: IMoveVerb = {
       clientId,
@@ -109,6 +110,44 @@ describe(`Handler for ${ESharedVerbTypes.MOVE} verb`, () => {
 
     sharedVerbHandler.move(verb);
 
-    assert.deepEqual(gameStateStore.state.cards, originalState.cards);
+    const { state } = gameStateStore;
+
+    assert.equal(extractClientById(state, clientId).grabbedEntity, null);
+    assert.deepEqual(state, originalState);
+  });
+  it("should throw ExtractorError if cliend does not exist", () => {
+    const verb: IMoveVerb = {
+      clientId: "nonExistingClientId",
+      type: testedVerbType,
+      positionX: 1,
+      positionY: 2,
+    };
+
+    assert.throws(() => sharedVerbHandler.move(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
+  });
+  it("should throw ExtractorError if grabbed entity does not exist", () => {
+    const { entityId, entityType } = cardEntityMock1;
+    const verb: IMoveVerb = {
+      clientId,
+      type: testedVerbType,
+      positionX: 1,
+      positionY: 2,
+    };
+
+    gameStateStore.changeState((draft) => {
+      extractClientById(draft, clientId).grabbedEntity = {
+        entityId,
+        entityType,
+        grabbedAtX: 1,
+        grabbedAtY: 2,
+      };
+      draft.cards.delete(cardEntityMock1.entityId);
+    });
+
+    assert.throws(() => sharedVerbHandler.move(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractClientHandById } from "../../../../extractors";
 import { handCardMock1, mockClient1 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -38,5 +39,16 @@ describe(`Handler for ${ECardVerbTypes.REORDER_HAND} verb`, () => {
 
     const { ordering } = extractClientHandById(gameStateStore.state, clientId);
     assert.deepEqual(ordering, verb.order);
+  });
+  it("should throw ExtractorError if client hand does not exist", () => {
+    const verb: IReorderHandVerb = {
+      clientId: "nonExistentClient",
+      type: ECardVerbTypes.REORDER_HAND,
+      order: [0, 3, 2, 1],
+    };
+
+    assert.throws(() => cardVerbHandler.reorderHand(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });

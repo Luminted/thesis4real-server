@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../errors";
 import { extractClientById } from "../../../extractors";
 import { mockClient1 } from "../../../mocks";
 import { GameStateStore, TableStateStore } from "../../../store";
@@ -41,11 +42,13 @@ describe(`Handler for ${ETableClientEvents.CONNECT}`, () => {
     assert.equal(socketIdMapping[socketId], undefined);
   });
 
-  it("should throw error if client with given id does not exist", () => {
-    assert.throws(() => tableHandler.rejoin("whatever", socketId));
+  it("should throw ExtractorError if client with given id does not exist", () => {
+    assert.throws(() => tableHandler.rejoin(null, socketId), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 
-  it(`should throw error if given clients status is ${EClientConnectionStatuses.CONNECTED}`, () => {
+  it(`should throw StateHandlerError if given clients status is ${EClientConnectionStatuses.CONNECTED}`, () => {
     const {
       clientInfo: { clientId: connectedClientId },
     } = mockClient1;
@@ -54,6 +57,8 @@ describe(`Handler for ${ETableClientEvents.CONNECT}`, () => {
       draft.clients.set(connectedClientId, { ...mockClient1, status: EClientConnectionStatuses.CONNECTED });
     });
 
-    assert.throws(() => tableHandler.rejoin(connectedClientId, socketId));
+    assert.throws(() => tableHandler.rejoin(connectedClientId, socketId), {
+      name: EErrorTypes.StateHandlerError,
+    });
   });
 });

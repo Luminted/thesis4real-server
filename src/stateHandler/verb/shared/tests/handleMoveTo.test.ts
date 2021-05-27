@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Container } from "typescript-ioc";
+import { EErrorTypes } from "../../../../errors";
 import { extractCardById, extractDeckById } from "../../../../extractors";
 import { cardEntityMock1, deckEntityMock1, mockClient1 } from "../../../../mocks";
 import { GameStateStore } from "../../../../store";
@@ -54,5 +55,19 @@ describe(`Handler for ${ESharedVerbTypes.MOVE_TO} verb`, () => {
     const movedDeck = extractDeckById(gameStateStore.state, deckEntityId);
     assert.equal(movedDeck.positionX, verb.positionX);
     assert.equal(movedDeck.positionY, verb.positionY);
+  });
+
+  it("should throw ExtractorError if entity does not exist", () => {
+    const verb: IMoveToVerb = {
+      type: ESharedVerbTypes.MOVE_TO,
+      entityId: "nonExistingEntityId",
+      entityType: EEntityTypes.DECK,
+      positionX: 888,
+      positionY: 999,
+    };
+
+    assert.throws(() => sharedVerbHandler.moveTo(verb), {
+      name: EErrorTypes.ExtractorError,
+    });
   });
 });
