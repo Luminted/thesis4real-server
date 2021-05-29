@@ -5,11 +5,9 @@
   "scripts": {
     "start": "node -r dotenv/config ./build/index.js",
     "start:dev": "node -r ts-node/register -r dotenv/config ./src/index.ts",
-    "start:debug": "NODE_ENV=development npm run start -- --inspect=9229 ",
     "dev": "NODE_ENV=development nodemon",
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "test": "mocha './src/**/*.test.ts' -r ts-node/register",
-    "test:debug": "mocha './src/**/*.test.ts' --inspect=5859 -r ts-node/register",
     "test:stress": "node -r ts-node/register ./stressTestSuite/index.ts",
     "clean": "rimraf ./build",
     "lint": "tslint --fix -c tslint.json -p ./tsconfig.json"
