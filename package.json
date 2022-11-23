@@ -23,7 +23,7 @@
     "lodash.throttle": "^4.1.1",
     "lodash.clonedeep": "^4.5.0",
     "short-uuid": "^3.1.1",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "typescript-immutable": "^1.0.0",
     "typescript-ioc": "^3.2.2"
   },
